@@ -8,10 +8,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    src/model/account.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    src/model/account.h
 
 FORMS += \
     mainwindow.ui
