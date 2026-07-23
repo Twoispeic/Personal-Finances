@@ -7,7 +7,9 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
+    src/goals/MucTieu.cpp \
     src/models/NguoiDung.cpp \
+    src/models/ThuNhap.cpp \
     src/models/ThuNhap.cpp \
     src/models/ChiTieu.cpp \
     src/goals/MucTieu.cpp \
@@ -30,7 +32,9 @@ SOURCES += \
     src/gui/BieuDoWidget.cpp
 
 HEADERS += \
+    src/goals/MucTieu.h \
     src/models/NguoiDung.h \
+    src/models/ThuNhap.h \
     src/models/ThuNhap.h \
     src/models/ChiTieu.h \
     src/models/LoaiChiTieu.h \
