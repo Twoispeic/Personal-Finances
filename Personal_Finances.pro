@@ -7,6 +7,7 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
+    src/database/KetNoiDatabase.cpp \
     src/goals/MucTieu.cpp \
     src/models/NguoiDung.cpp \
     src/models/ThuNhap.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
     src/goals/MucTieuFactory.cpp \
     src/patterns/ChienLuocNganHan.cpp \
     src/patterns/ChienLuocDaiHan.cpp \
+    src/patterns/ChienLuocTietKiem.cpp \
     src/patterns/TrangThaiChuaXong.cpp \
     src/patterns/TrangThaiHoanThanh.cpp \
     src/database/KetNoiDatabase.cpp \
@@ -32,6 +34,7 @@ SOURCES += \
     src/gui/BieuDoWidget.cpp
 
 HEADERS += \
+    src/database/KetNoiDatabase.h \
     src/goals/MucTieu.h \
     src/models/NguoiDung.h \
     src/models/ThuNhap.h \
@@ -42,6 +45,7 @@ HEADERS += \
     src/goals/MucTieuNganHan.h \
     src/goals/MucTieuDaiHan.h \
     src/goals/MucTieuFactory.h \
+    src/patterns/ChienLuocTietKiem.h \
     src/patterns/ChienLuocTietKiem.h \
     src/patterns/ChienLuocNganHan.h \
     src/patterns/ChienLuocDaiHan.h \
