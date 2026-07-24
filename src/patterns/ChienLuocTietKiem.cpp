@@ -1,3 +1,5 @@
 #include "ChienLuocTietKiem.h"
 
-ChienLuocTietKiem::ChienLuocTietKiem() {}
+ChienLuocTietKiem::ChienLuocTietKiem() {
+
+}
