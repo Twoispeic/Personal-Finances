@@ -1,11 +1,13 @@
 #include "MucTieuDaiHan.h"
 
-MucTieuDaiHan::MucTieuDaiHan() {
-    soKyTraGop = 0;
-    soTienMoiKy = 0.0;
+// Constructor nhận vào số tiền mục tiêu dài hạn khớp với file .h
+MucTieuDaiHan::MucTieuDaiHan(double mucTieu) {
+    this->soTienMucTieu = mucTieu;
+    this->soTienDaTietKiem = 0.0;
+    this->soKyTraGop = 0;
+    this->soTienMoiKy = 0.0;
 }
 
 bool MucTieuDaiHan::kiemTraHoanThanh() {
-    // Logic: Hoàn thành nếu số tiền đã tiết kiệm >= số tiền mục tiêu
     return (soTienDaTietKiem >= soTienMucTieu);
 }

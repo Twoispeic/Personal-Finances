@@ -1,8 +1,7 @@
-#ifndef MUCTIEUDAIHAN_H
+#ifndef MUC TIEU DAI HAN_H
 #define MUCTIEUDAIHAN_H
 
 #include "MucTieu.h"
-#include "../patterns/TrangThaiMucTieu.h"
 
 class MucTieuDaiHan : public MucTieu {
 private:
@@ -10,8 +9,11 @@ private:
     double soTienMoiKy;
 
 public:
-    MucTieuDaiHan();
+    // Khai báo constructor có nhận tham số double
+    MucTieuDaiHan(double mucTieu);
+
+    // Override hàm kiểm tra hoàn thành từ class cha
     bool kiemTraHoanThanh() override;
 };
 
-#endif // MUCTIEUDAIHAN_H
+#endif
