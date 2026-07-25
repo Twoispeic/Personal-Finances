@@ -1,4 +1,4 @@
-QT       += core gui widgets sql charts
+QT       += core gui sql charts
 
 CONFIG   += c++17
 
@@ -7,8 +7,8 @@ TEMPLATE = app
 
 SOURCES += \
     main.cpp \
-    src/database/KetNoiDatabase.cpp \
     src/goals/MucTieu.cpp \
+    src/goals/MucTieuDaiHan.cpp \
     src/goals/MucTieuNganHan.cpp \
     src/models/NguoiDung.cpp \
     src/models/ThuNhap.cpp \
@@ -25,8 +25,6 @@ SOURCES += \
     src/patterns/TrangThaiChuaXong.cpp \
     src/patterns/TrangThaiHoanThanh.cpp \
     src/patterns/TrangThaiHoanThanh.cpp \
-    src/database/KetNoiDatabase.cpp \
-    src/database/NguoiDungRepository.cpp \
     src/database/ThuNhapRepository.cpp \
     src/database/ChiTieuRepository.cpp \
     src/database/MucTieuRepository.cpp \
@@ -34,11 +32,14 @@ SOURCES += \
     src/gui/DashboardWidget.cpp \
     src/gui/ThuNhapChiTieuWidget.cpp \
     src/gui/MucTieuWidget.cpp \
-    src/gui/BieuDoWidget.cpp
+    src/gui/BieuDoWidget.cpp \
+    src/views/dashboardwidget.cpp
 
 HEADERS += \
-    src/database/KetNoiDatabase.h \
+    src/goals/ChienLuocDeuDan.h \
+    src/goals/ChienLuocTietKiem.h \
     src/goals/MucTieu.h \
+    src/goals/MucTieuDaiHan.h \
     src/goals/MucTieuNganHan.h \
     src/models/NguoiDung.h \
     src/models/ThuNhap.h \
@@ -60,8 +61,6 @@ HEADERS += \
     src/patterns/TrangThaiMucTieu.h \
     src/patterns/TrangThaiChuaXong.h \
     src/patterns/TrangThaiHoanThanh.h \
-    src/database/KetNoiDatabase.h \
-    src/database/NguoiDungRepository.h \
     src/database/ThuNhapRepository.h \
     src/database/ChiTieuRepository.h \
     src/database/MucTieuRepository.h \
@@ -69,14 +68,16 @@ HEADERS += \
     src/gui/DashboardWidget.h \
     src/gui/ThuNhapChiTieuWidget.h \
     src/gui/MucTieuWidget.h \
-    src/gui/BieuDoWidget.h
+    src/gui/BieuDoWidget.h \
+    src/views/dashboardwidget.h
 
 FORMS += \
     src/gui/mainwindow.ui \
     src/gui/DashboardWidget.ui \
     src/gui/ThuNhapChiTieuWidget.ui \
     src/gui/MucTieuWidget.ui \
-    src/gui/BieuDoWidget.ui
+    src/gui/BieuDoWidget.ui \
+    src/views/dashboardwidget.ui
 
 RESOURCES += \
     resources/icons.qrc

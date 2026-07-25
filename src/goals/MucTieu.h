@@ -1,10 +1,13 @@
-#ifndef MUCTIEU_H
-#define MUCTIEU_H
+#include "MucTieu.h"
 
-class MucTieu
-{
-public:
-    MucTieu();
-};
+MucTieu::MucTieu() {
+    this->tenMucTieu = "";
+    this->soTienMucTieu = 0.0;
+    this->soTienDaTietKiem = 0.0;
+    this->trangThai = nullptr;
+    this->chienLuoc = nullptr;
+}
 
-#endif // MUCTIEU_H
+MucTieu::~MucTieu() {
+    // Destructor
+}
