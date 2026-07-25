@@ -1,29 +1,29 @@
-#ifndef MUCTIEU_H
-#define MUCTIEU_H
+#include "MucTieuNganHan.h"
+#include <iostream>
 
-#include <QString>
+// Constructor thiết lập số tiền ban đầu
+MucTieuNganHan::MucTieuNganHan(double mucTieu) {
+    this->soTienMucTieu = mucTieu;
+    this->soTienDaTietKiem = 0.0;
+}
 
-// Khai báo trước cho các class Design Pattern
-class TrangThaiMucTieu;
-class ChienLuocTietKiem;
+// Logic đắp tiền vào mục tiêu
+void MucTieuNganHan::themTienTietKiem(double tienThem) {
+    if (tienThem > 0) {
+        soTienDaTietKiem += tienThem;
+    }
 
-class MucTieu {
-protected:
-    QString tenMucTieu;
-    double soTienMucTieu;     // Đã bổ sung biến này
-    double soTienDaTietKiem;  // Đã bổ sung biến này
-    TrangThaiMucTieu* trangThai;
-    ChienLuocTietKiem* chienLuoc;
+    // Sau khi thêm tiền thì tự động kiểm tra xem đã đạt mục tiêu chưa
+    kiemTraHoanThanh();
+}
 
-public:
-    MucTieu();
-    virtual ~MucTieu();
-
-    virtual void capNhatTietKiem(double soTien);
-    virtual double tinhTienDoPhanTram();
-
-    // Hàm ảo thuần túy biến class này thành abstract
-    virtual bool kiemTraHoanThanh() = 0;
-};
-
-#endif // MUCTIEU_H
+// Logic kiểm tra trạng thái hoàn thành (Khớp kiểu bool với class cha)
+bool MucTieuNganHan::kiemTraHoanThanh() {
+    if (soTienDaTietKiem >= soTienMucTieu) {
+        std::cout << "Chuc mung! Ban da hoan thanh muc tieu ngan han.\n";
+        return true;
+    } else {
+        std::cout << "Tien do: " << soTienDaTietKiem << " / " << soTienMucTieu << "\n";
+        return false;
+    }
+}

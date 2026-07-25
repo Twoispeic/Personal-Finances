@@ -1,29 +1,19 @@
-#ifndef MUCTIEU_H
-#define MUCTIEU_H
+#ifndef MUCTIEUNGANHAN_H
+#define MUCTIEUNGANHAN_H
 
-#include <QString>
+#include "MucTieu.h"
+#include "../patterns/TrangThaiMucTieu.h" // Nối với code của nhóm trưởng
 
-// Khai báo trước cho các class Design Pattern
-class TrangThaiMucTieu;
-class ChienLuocTietKiem;
-
-class MucTieu {
-protected:
-    QString tenMucTieu;
-    double soTienMucTieu;
-    double soTienDaTietKiem;
-    TrangThaiMucTieu* trangThai;
-    ChienLuocTietKiem* chienLuoc;
-
+class MucTieuNganHan : public MucTieu {
 public:
-    MucTieu();
-    virtual ~MucTieu();
+    // Khởi tạo mục tiêu
+    MucTieuNganHan(double mucTieu);
 
-    virtual void capNhatTietKiem(double soTien);
-    virtual double tinhTienDoPhanTram();
+    // Các hàm xử lý
+    void themTienTietKiem(double tienThem);
 
-    // Hàm ảo thuần túy biến class này thành abstract
-    virtual bool kiemTraHoanThanh() = 0;
+    // Đã đổi thành bool và thêm override cho khớp với class cha
+    bool kiemTraHoanThanh() override;
 };
 
-#endif // MUCTIEU_H
+#endif // MUCTIEUNGANHAN_H

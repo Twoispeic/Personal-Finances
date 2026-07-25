@@ -2,6 +2,7 @@
 #define MUCTIEUDAIHAN_H
 
 #include "MucTieu.h"
+#include "../patterns/TrangThaiMucTieu.h"
 
 class MucTieuDaiHan : public MucTieu {
 private:
