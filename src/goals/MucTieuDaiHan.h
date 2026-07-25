@@ -5,8 +5,8 @@
 
 class MucTieuDaiHan : public MucTieu {
 private:
-    int soKyTraGop;       // Thuộc tính riêng theo đúng UML
-    double soTienMoiKy;   // Thuộc tính riêng theo đúng UML
+    int soKyTraGop;     // Thuộc tính riêng theo đúng UML
+    double soTienMoiKy; // Thuộc tính riêng theo đúng UML
 
 public:
     MucTieuDaiHan();
@@ -16,4 +16,4 @@ public:
     bool kiemTraHoanThanh() override;
 };
 
-#endif // MUCTIEUDAIHAN_H
+#endif // MUCTIEUDAIHAN_H 

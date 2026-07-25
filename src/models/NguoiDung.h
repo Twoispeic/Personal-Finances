@@ -1,22 +1,10 @@
-#ifndef NGUOIDUNG_H
-#define NGUOIDUNG_H
+#ifndef ACCOUNT_H
+#define ACCOUNT_H
 
-#include <QString>
-
-class NguoiDung {
-private:
-    QString ten;
-    QString congViec;
-
+class Account
+{
 public:
-    NguoiDung();
-    NguoiDung(QString tenND, QString congViecND);
-
-    QString getTen() const;
-    void setTen(const QString &tenND);
-
-    QString getCongViec() const;
-    void setCongViec(const QString &congViecND);
+    Account();
 };
 
-#endif // NGUOIDUNG_H
+#endif // ACCOUNT_H

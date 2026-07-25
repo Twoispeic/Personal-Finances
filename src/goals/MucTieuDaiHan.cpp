@@ -14,4 +14,4 @@ MucTieuDaiHan::MucTieuDaiHan(double soTien, int kyTraGop, double tienMoiKy) {
 
 bool MucTieuDaiHan::kiemTraHoanThanh() {
     return (soTienDaTietKiem >= soTienMucTieu);
-}
+} 

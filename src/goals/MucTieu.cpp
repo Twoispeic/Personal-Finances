@@ -1,5 +1,6 @@
 #include "MucTieu.h"
 
+
 MucTieu::MucTieu() {
     this->tenMucTieu = "";
     this->soTienMucTieu = 0.0;
@@ -20,3 +21,5 @@ double MucTieu::tinhTienDoPhanTram() {
     if (soTienMucTieu <= 0) return 0.0;
     return (soTienDaTietKiem / soTienMucTieu) * 100.0;
 }
+
+MucTieu::MucTieu() {}
