@@ -1,13 +1,29 @@
-#include "MucTieu.h"
+#ifndef MUCTIEU_H
+#define MUCTIEU_H
 
-MucTieu::MucTieu() {
-    this->tenMucTieu = "";
-    this->soTienMucTieu = 0.0;
-    this->soTienDaTietKiem = 0.0;
-    this->trangThai = nullptr;
-    this->chienLuoc = nullptr;
-}
+#include <QString>
 
-MucTieu::~MucTieu() {
-    // Destructor
-}
+// Khai báo trước cho các lớp Design Pattern liên quan
+class TrangThaiMucTieu;
+class ChienLuocTietKiem;
+
+class MucTieu {
+protected:
+    QString tenMucTieu;
+    double soTienMucTieu;
+    double soTienDaTietKiem;
+    TrangThaiMucTieu* trangThai;
+    ChienLuocTietKiem* chienLuoc;
+
+public:
+    MucTieu();
+    virtual ~MucTieu();
+
+    virtual void capNhatTietKiem(double soTien);
+    virtual double tinhTienDoPhanTram();
+
+    // Hàm thuần túy bắt buộc lớp con phải định nghĩa
+    virtual bool kiemTraHoanThanh() = 0;
+};
+
+#endif // MUCTIEU_H

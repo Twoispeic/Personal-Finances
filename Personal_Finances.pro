@@ -32,12 +32,9 @@ SOURCES += \
     src/gui/DashboardWidget.cpp \
     src/gui/ThuNhapChiTieuWidget.cpp \
     src/gui/MucTieuWidget.cpp \
-    src/gui/BieuDoWidget.cpp \
-    src/views/dashboardwidget.cpp
+    src/gui/BieuDoWidget.cpp
 
 HEADERS += \
-    src/goals/ChienLuocDeuDan.h \
-    src/goals/ChienLuocTietKiem.h \
     src/goals/MucTieu.h \
     src/goals/MucTieuDaiHan.h \
     src/goals/MucTieuNganHan.h \
@@ -68,16 +65,14 @@ HEADERS += \
     src/gui/DashboardWidget.h \
     src/gui/ThuNhapChiTieuWidget.h \
     src/gui/MucTieuWidget.h \
-    src/gui/BieuDoWidget.h \
-    src/views/dashboardwidget.h
+    src/gui/BieuDoWidget.h
 
 FORMS += \
     src/gui/mainwindow.ui \
     src/gui/DashboardWidget.ui \
     src/gui/ThuNhapChiTieuWidget.ui \
     src/gui/MucTieuWidget.ui \
-    src/gui/BieuDoWidget.ui \
-    src/views/dashboardwidget.ui
+    src/gui/BieuDoWidget.ui
 
 RESOURCES += \
     resources/icons.qrc

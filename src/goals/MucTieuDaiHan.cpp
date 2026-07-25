@@ -1,11 +1,15 @@
 #include "MucTieuDaiHan.h"
 
-// Constructor nhận vào số tiền mục tiêu dài hạn khớp với file .h
-MucTieuDaiHan::MucTieuDaiHan(double mucTieu) {
-    this->soTienMucTieu = mucTieu;
-    this->soTienDaTietKiem = 0.0;
+MucTieuDaiHan::MucTieuDaiHan() {
     this->soKyTraGop = 0;
     this->soTienMoiKy = 0.0;
+}
+
+MucTieuDaiHan::MucTieuDaiHan(double soTien, int kyTraGop, double tienMoiKy) {
+    this->soTienMucTieu = soTien;
+    this->soKyTraGop = kyTraGop;
+    this->soTienMoiKy = tienMoiKy;
+    this->soTienDaTietKiem = 0.0;
 }
 
 bool MucTieuDaiHan::kiemTraHoanThanh() {
