@@ -10,7 +10,7 @@ private:
 
 public:
     MucTieuDaiHan();
-    MucTieuDaiHan(double soTien, int kyTraGop, double tienMoiKy);
+    MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy);
 
     // Override lại hàm thuần túy từ lớp cha
     bool kiemTraHoanThanh() override;

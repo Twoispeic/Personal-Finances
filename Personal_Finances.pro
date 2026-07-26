@@ -13,6 +13,7 @@ SOURCES += \
     src/database/ChiTieuRepository.cpp \
     src/database/MucTieuRepository.cpp \
     src/goals/MucTieu.cpp \
+    src/goals/MucTieuFactory.cpp \
     src/goals/MucTieuNganHan.cpp \
     src/goals/MucTieuDaiHan.cpp \
     src/goals/MucTieuFactory.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     src/database/ChiTieuRepository.h \
     src/database/MucTieuRepository.h \
     src/goals/MucTieu.h \
+    src/goals/MucTieuFactory.h \
     src/goals/MucTieuNganHan.h \
     src/goals/MucTieuDaiHan.h \
     src/goals/MucTieuFactory.h \
