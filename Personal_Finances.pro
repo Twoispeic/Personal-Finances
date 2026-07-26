@@ -1,9 +1,11 @@
-QT       += core gui sql charts
+QT += core gui sql charts
 
-CONFIG   += c++17
+CONFIG += c++17
 
 TARGET = QuanLyTaiChinh
 TEMPLATE = app
+
+INCLUDEPATH += $$PWD/src
 
 SOURCES += \
     main.cpp \
@@ -16,10 +18,9 @@ SOURCES += \
     src/goals/MucTieuFactory.cpp \
     src/goals/MucTieuNganHan.cpp \
     src/goals/MucTieuDaiHan.cpp \
-    src/goals/MucTieuFactory.cpp \
+    src/models/ChiTieu.cpp \
     src/models/NguoiDung.cpp \
     src/models/ThuNhap.cpp \
-    src/models/ChiTieu.cpp \
     src/patterns/ChienLuocDaiHan.cpp \
     src/patterns/ChienLuocNganHan.cpp \
     src/patterns/TrangThaiChuaXong.cpp \
@@ -37,10 +38,9 @@ HEADERS += \
     src/goals/MucTieuFactory.h \
     src/goals/MucTieuNganHan.h \
     src/goals/MucTieuDaiHan.h \
-    src/goals/MucTieuFactory.h \
+    src/models/ChiTieu.h \
     src/models/NguoiDung.h \
     src/models/ThuNhap.h \
-    src/models/ChiTieu.h \
     src/models/LoaiChiTieu.h \
     src/patterns/ChienLuocDaiHan.h \
     src/patterns/ChienLuocNganHan.h \
