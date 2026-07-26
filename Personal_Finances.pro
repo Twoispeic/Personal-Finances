@@ -32,6 +32,7 @@ HEADERS += \
     src/database/ThuNhapRepository.h \
     src/database/ChiTieuRepository.h \
     src/database/MucTieuRepository.h \
+    src/goals/LoaiMucTieu.h \
     src/goals/MucTieu.h \
     src/goals/MucTieuFactory.h \
     src/goals/MucTieuNganHan.h \
