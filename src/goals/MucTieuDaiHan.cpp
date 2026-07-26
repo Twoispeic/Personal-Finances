@@ -5,12 +5,8 @@ MucTieuDaiHan::MucTieuDaiHan() {
     this->soTienMoiKy = 0.0;
 }
 
-MucTieuDaiHan::MucTieuDaiHan(double soTien, int kyTraGop, double tienMoiKy) {
-    this->soTienMucTieu = soTien;
-    this->soKyTraGop = kyTraGop;
-    this->soTienMoiKy = tienMoiKy;
-    this->soTienDaTietKiem = 0.0;
-}
+MucTieuDaiHan::MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy)
+    : MucTieu(ten, soTienMucTieu), soKyTraGop(soKyTraGop), soTienMoiKy(soTienMoiKy) {};
 
 bool MucTieuDaiHan::kiemTraHoanThanh() {
     return (soTienDaTietKiem >= soTienMucTieu);

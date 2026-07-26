@@ -18,12 +18,19 @@ protected:
 public:
     MucTieu();
     virtual ~MucTieu();
+    MucTieu(const QString& ten, double soTienMucTieu);
+
+    //Từ factory mà ra
+    void datChienLuoc(ChienLuocTietKiem* cl);
+    void datTrangThai(TrangThaiMucTieu* tt);
 
     virtual void capNhatTietKiem(double soTien);
     virtual double tinhTienDoPhanTram();
 
     // Hàm thuần túy bắt buộc lớp con phải định nghĩa
     virtual bool kiemTraHoanThanh() = 0;
+    //Hàm color
+    QString layMauSacHienTai() const;
 };
 
 #endif // MUCTIEU_H 
