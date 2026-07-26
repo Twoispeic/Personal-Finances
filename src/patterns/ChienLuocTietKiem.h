@@ -1,12 +1,10 @@
 #ifndef CHIENLUOCTIETKIEM_H
 #define CHIENLUOCTIETKIEM_H
 
-//Strategy
-class ChienLuocTietKiem
-{
+class ChienLuocTietKiem {
 public:
-    virtual ~ChienLuocTietKiem();
-    virtual double phanBoTien(double soTienDu)=0;
+    virtual ~ChienLuocTietKiem() {}
+    virtual double phanBoTien(double soTienDu, double soTienConThieu) = 0;
 };
 
 #endif // CHIENLUOCTIETKIEM_H

@@ -16,15 +16,15 @@ protected:
     ChienLuocTietKiem* chienLuoc;
 
 public:
-    MucTieu();
-    virtual ~MucTieu();
     MucTieu(const QString& ten, double soTienMucTieu);
+    virtual ~MucTieu();
+
 
     //Từ factory mà ra
     void datChienLuoc(ChienLuocTietKiem* cl);
     void datTrangThai(TrangThaiMucTieu* tt);
 
-    virtual void capNhatTietKiem(double soTien);
+    virtual double capNhatTietKiem(double soTienDu);
     virtual double tinhTienDoPhanTram();
 
     // Hàm thuần túy bắt buộc lớp con phải định nghĩa

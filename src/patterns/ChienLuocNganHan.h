@@ -6,7 +6,7 @@
 class ChienLuocNganHan : public ChienLuocTietKiem
 {
 public:
-    double phanBoTien(double soTienDu) override ;
+    double phanBoTien(double soTienDu,double soTienConThieu) override ;
 };
 
 #endif // CHIENLUOCNGANHAN_H

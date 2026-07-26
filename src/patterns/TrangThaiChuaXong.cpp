@@ -8,6 +8,6 @@ QString TrangThaiChuaXong::layMauSac() const {
 
 void TrangThaiChuaXong::kiemTraChuyen(MucTieu* mucTieu) {
     if (mucTieu->tinhTienDoPhanTram() >= 100.0) {
-        mucTieu->datTrangThai(std::make_unique<TrangThaiHoanThanh>());
+        mucTieu->datTrangThai(new TrangThaiHoanThanh());
     }
 }

@@ -9,7 +9,7 @@ private:
     double soTienTraGopMoiThang;
 public:
     ChienLuocDaiHan(double soTienMoiThang);
-    double phanBoTien(double soTienDu) override ;
+    double phanBoTien(double soTienDu, double soTienConThieu) override ;
 };
 
 #endif // CHIENLUOCDAIHAN_H
