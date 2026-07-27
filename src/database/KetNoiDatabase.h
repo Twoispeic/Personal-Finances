@@ -4,7 +4,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 #include <QDebug>
-
+//Singleton
 class KetNoiDatabase {
 private:
     QSqlDatabase db;
