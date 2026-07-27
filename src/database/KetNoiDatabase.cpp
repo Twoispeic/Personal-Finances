@@ -1,5 +1,10 @@
 #include "KetNoiDatabase.h"
 
+KetNoiDatabase& KetNoiDatabase::getInstance() {
+    static KetNoiDatabase instance;
+    return instance;
+}
+
 KetNoiDatabase::KetNoiDatabase() {
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("PersonalFinances.db");
