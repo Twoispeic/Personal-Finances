@@ -22,6 +22,10 @@ public:
     double getSoTien() const;
     LoaiChiTieu getLoai() const;
     QDate getNgay() const;
+
+    void setSoTien(double soTien);
+    void setLoai(LoaiChiTieu loai);
+    void setNgay(const QDate& ngay);
 };
 
 #endif // CHITIEU_H

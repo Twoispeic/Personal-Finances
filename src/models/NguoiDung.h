@@ -19,21 +19,24 @@ public:
     NguoiDung();
     NguoiDung(QString ten, QString congViec);
 
-    // Getters & Setters
+
     QString getTen() const;
     void setTen(const QString &ten);
 
     QString getCongViec() const;
     void setCongViec(const QString &congViec);
 
-    // Nghiệp vụ UML
+    //UML
     void themThuNhap(const ThuNhap &thuNhap);
     void themChiTieu(const ChiTieu &chiTieu);
-    MucTieu* taoMucTieu(LoaiMucTieu loai);
+    MucTieu* taoMucTieuNganHan(const QString& ten, double soTienMucTieu, int thoiHanThang);
+    MucTieu* taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy);
 
     double tinhTongThuNhap() const;
     double tinhTongChiTieu() const;
     double tinhSoDuThang() const;
+    // tự tính từ soDuThang, không cần tham số vì đã có sẵn 2 hàm tính tổng
+    void phanBoTienTietKiem();
 };
 
 #endif // NGUOIDUNG_H
