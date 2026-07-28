@@ -13,6 +13,8 @@ public:
 
     // Override lại hàm thuần túy từ lớp cha
     bool kiemTraHoanThanh() override;
+    //Getter
+    int getThoiHanThang() const;
 };
 
 #endif // MUCTIEUNGANHAN_H

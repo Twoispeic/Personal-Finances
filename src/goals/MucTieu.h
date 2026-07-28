@@ -31,6 +31,11 @@ public:
     virtual bool kiemTraHoanThanh() = 0;
     //Hàm color
     QString layMauSacHienTai() const;
+
+    QString getTenMucTieu() const;
+    double getSoTienMucTieu() const;
+    double getSoTienDaTietKiem() const;
+    void datSoTienDaTietKiem(double soTien);
 };
 
 #endif // MUCTIEU_H 

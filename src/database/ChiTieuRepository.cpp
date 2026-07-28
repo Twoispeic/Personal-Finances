@@ -1,0 +1,69 @@
+#include "ChiTieuRepository.h"
+#include "KetNoiDatabase.h"
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
+ChiTieuRepository::ChiTieuRepository() {}
+
+QString ChiTieuRepository::loaiSangText(LoaiChiTieu loai) const {
+    switch (loai) {
+    case DIEN_NUOC_WIFI: return "DIEN_NUOC_WIFI";
+    case TRO_AN_UONG:    return "TRO_AN_UONG";
+    default:             return "KHAC";
+    }
+}
+
+LoaiChiTieu ChiTieuRepository::textSangLoai(const QString &text) const {
+    if (text == "DIEN_NUOC_WIFI") return DIEN_NUOC_WIFI;
+    if (text == "TRO_AN_UONG") return TRO_AN_UONG;
+    return KHAC;
+}
+
+bool ChiTieuRepository::taoBang() {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+
+    QSqlQuery query;
+    QString sql = "CREATE TABLE IF NOT EXISTS ChiTieu ("
+                  "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                  "loai TEXT, "
+                  "soTien REAL, "
+                  "ngay TEXT)";
+    return query.exec(sql);
+}
+
+bool ChiTieuRepository::them(const ChiTieu &chiTieu) {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+
+    QSqlQuery query;
+    query.prepare("INSERT INTO ChiTieu (loai, soTien, ngay) VALUES (:loai, :soTien, :ngay)");
+    query.bindValue(":loai", loaiSangText(chiTieu.getLoai()));
+    query.bindValue(":soTien", chiTieu.getSoTien());
+    query.bindValue(":ngay", chiTieu.getNgay().toString(Qt::ISODate));
+    return query.exec();
+}
+
+QList<ChiTieu> ChiTieuRepository::layTatCa() {
+    QList<ChiTieu> ketQua;
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return ketQua;
+
+    QSqlQuery query("SELECT loai, soTien, ngay FROM ChiTieu");
+    while (query.next()) {
+        LoaiChiTieu loai = textSangLoai(query.value("loai").toString());
+        double soTien = query.value("soTien").toDouble();
+        QDate ngay = QDate::fromString(query.value("ngay").toString(), Qt::ISODate);
+        ketQua.append(ChiTieu(loai, soTien, ngay));
+    }
+    return ketQua;
+}
+
+QMap<LoaiChiTieu, double> ChiTieuRepository::tinhTongTheoLoai() {
+    QMap<LoaiChiTieu, double> ketQua;
+    ketQua[DIEN_NUOC_WIFI] = 0;
+    ketQua[TRO_AN_UONG] = 0;
+    ketQua[KHAC] = 0;
+
+    for (const ChiTieu &ct : layTatCa()) {
+        ketQua[ct.getLoai()] += ct.getSoTien();
+    }
+    return ketQua;
+}

@@ -55,10 +55,10 @@ double NguoiDung::tinhSoDuThang() const {
 
 void NguoiDung::phanBoTienTietKiem() {
     double conLai = tinhSoDuThang();
-    if (conLai <= 0) return;   // tháng này âm/hòa vốn, không có gì để tiết kiệm
+    if (conLai <= 0) return;
 
     // Bước 1: ưu tiên dài hạn trước
-    for (MucTieu* mt : danhSachMucTieu) {
+    for (MucTieu* const &mt : danhSachMucTieu) {
         if (dynamic_cast<MucTieuDaiHan*>(mt) != nullptr) {
             conLai -= mt->capNhatTietKiem(conLai);
             if (conLai <= 0) break;
@@ -66,7 +66,7 @@ void NguoiDung::phanBoTienTietKiem() {
     }
 
     // Bước 2: còn dư thì tally vào ngắn hạn
-    for (MucTieu* mt : danhSachMucTieu) {
+    for (MucTieu* const &mt : danhSachMucTieu) {
         if (dynamic_cast<MucTieuNganHan*>(mt) != nullptr) {
             conLai -= mt->capNhatTietKiem(conLai);
             if (conLai <= 0) break;

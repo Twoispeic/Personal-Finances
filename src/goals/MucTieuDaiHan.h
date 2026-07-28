@@ -14,6 +14,9 @@ public:
 
     // Override lại hàm thuần túy từ lớp cha
     bool kiemTraHoanThanh() override;
+    //getter
+    int getSoKyTraGop() const;
+    double getSoTienMoiKy() const;
 };
 
 #endif // MUCTIEUDAIHAN_H 

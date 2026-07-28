@@ -1,5 +1,5 @@
 #include "NguoiDungRepository.h"
-
+#include "KetNoiDatabase.h"
 NguoiDungRepository::NguoiDungRepository() {}
 
 bool NguoiDungRepository::taoBang() {
@@ -16,11 +16,19 @@ bool NguoiDungRepository::taoBang() {
 bool NguoiDungRepository::luuNguoiDung(const NguoiDung &nguoiDung) {
     if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
 
+    QSqlQuery kiemTra;
+    kiemTra.exec("SELECT COUNT(*) FROM NguoiDung");
+    kiemTra.next();
+    bool daCoDuLieu = kiemTra.value(0).toInt() > 0;
+
     QSqlQuery query;
-    query.prepare("INSERT INTO NguoiDung (ten, congViec) VALUES (:ten, :congViec)");
+    if (daCoDuLieu) {
+        query.prepare("UPDATE NguoiDung SET ten = :ten, congViec = :congViec WHERE id = 1");
+    } else {
+        query.prepare("INSERT INTO NguoiDung (ten, congViec) VALUES (:ten, :congViec)");
+    }
     query.bindValue(":ten", nguoiDung.getTen());
     query.bindValue(":congViec", nguoiDung.getCongViec());
-
     return query.exec();
 }
 
