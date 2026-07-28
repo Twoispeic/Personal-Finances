@@ -9,8 +9,11 @@ INCLUDEPATH += $$PWD/src
 
 SOURCES += \
     main.cpp \
+    src/database/ChiTieuRepository.cpp \
     src/database/KetNoiDatabase.cpp \
+    src/database/MucTieuRepository.cpp \
     src/database/NguoiDungRepository.cpp \
+    src/database/ThuNhapRepository.cpp \
     src/database/ThuNhapRepository.cpp \
     src/database/ChiTieuRepository.cpp \
     src/database/MucTieuRepository.cpp \
@@ -28,8 +31,11 @@ SOURCES += \
     src/gui/mainwindow.cpp
 
 HEADERS += \
+    src/database/ChiTieuRepository.h \
     src/database/KetNoiDatabase.h \
+    src/database/MucTieuRepository.h \
     src/database/NguoiDungRepository.h \
+    src/database/ThuNhapRepository.h \
     src/database/ThuNhapRepository.h \
     src/database/ChiTieuRepository.h \
     src/database/MucTieuRepository.h \
