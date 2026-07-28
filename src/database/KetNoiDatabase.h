@@ -9,9 +9,15 @@ class KetNoiDatabase {
 private:
     QSqlDatabase db;
 
-public:
     KetNoiDatabase();
     ~KetNoiDatabase();
+
+    KetNoiDatabase(const KetNoiDatabase&) = delete;
+    KetNoiDatabase& operator=(const KetNoiDatabase&) = delete;
+
+public:
+    // Phương thức tĩnh lấy instance duy nhất
+    static KetNoiDatabase& getInstance();
 
     bool moKetNoi();
     void dongKetNoi();

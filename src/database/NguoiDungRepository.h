@@ -7,12 +7,8 @@
 #include <QtSql/QSqlError>
 
 class NguoiDungRepository {
-private:
-    KetNoiDatabase &dbConnection;
-
 public:
-    NguoiDungRepository(KetNoiDatabase &db);
-
+    NguoiDungRepository();
     bool taoBang();
     bool luuNguoiDung(const NguoiDung &nguoiDung);
     NguoiDung layThongTinNguoiDung();

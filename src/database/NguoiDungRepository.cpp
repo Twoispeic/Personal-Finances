@@ -1,9 +1,9 @@
 #include "NguoiDungRepository.h"
 
-NguoiDungRepository::NguoiDungRepository(KetNoiDatabase &db) : dbConnection(db) {}
+NguoiDungRepository::NguoiDungRepository() {}
 
 bool NguoiDungRepository::taoBang() {
-    if (!dbConnection.moKetNoi()) return false;
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
 
     QSqlQuery query;
     QString sql = "CREATE TABLE IF NOT EXISTS NguoiDung ("
@@ -14,7 +14,7 @@ bool NguoiDungRepository::taoBang() {
 }
 
 bool NguoiDungRepository::luuNguoiDung(const NguoiDung &nguoiDung) {
-    if (!dbConnection.moKetNoi()) return false;
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
 
     QSqlQuery query;
     query.prepare("INSERT INTO NguoiDung (ten, congViec) VALUES (:ten, :congViec)");
@@ -26,7 +26,7 @@ bool NguoiDungRepository::luuNguoiDung(const NguoiDung &nguoiDung) {
 
 NguoiDung NguoiDungRepository::layThongTinNguoiDung() {
     NguoiDung nd;
-    if (!dbConnection.moKetNoi()) return nd;
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return nd;
 
     QSqlQuery query("SELECT ten, congViec FROM NguoiDung LIMIT 1");
     if (query.next()) {
