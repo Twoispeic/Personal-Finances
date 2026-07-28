@@ -7,6 +7,10 @@ NguoiDung::NguoiDung() : ten(""), congViec("") {}
 NguoiDung::NguoiDung(QString ten, QString congViec)
     : ten(ten), congViec(congViec) {}
 
+NguoiDung::~NguoiDung() {
+    qDeleteAll(danhSachMucTieu);
+}
+
 QString NguoiDung::getTen() const { return ten; }
 void NguoiDung::setTen(const QString &ten) { this->ten = ten; }
 
@@ -72,4 +76,13 @@ void NguoiDung::phanBoTienTietKiem() {
             if (conLai <= 0) break;
         }
     }
+}
+
+// demo conclude
+void NguoiDung::ketThucThang() {
+    phanBoTienTietKiem();   // phân bổ tiền dư theo đúng logic đã có
+
+    // "Đóng sổ" tháng: xoá buffer trong RAM, vì dữ liệu thật đã lưu xuống DB rồi
+    danhSachThuNhap.clear();
+    danhSachChiTieu.clear();
 }

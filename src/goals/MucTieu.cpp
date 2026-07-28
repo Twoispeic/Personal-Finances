@@ -47,5 +47,6 @@ QString MucTieu::getTenMucTieu() const { return tenMucTieu; }
 double MucTieu::getSoTienMucTieu() const { return soTienMucTieu; }
 
 double MucTieu::getSoTienDaTietKiem() const { return soTienDaTietKiem; }
+
 void MucTieu::datSoTienDaTietKiem(double soTien) { soTienDaTietKiem = soTien; }
 

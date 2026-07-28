@@ -8,7 +8,6 @@ private:
     int thoiHanThang; // Thuộc tính riêng theo đúng UML
 
 public:
-    MucTieuNganHan();
     MucTieuNganHan(const QString& ten, double soTienMucTieu, int thoiHanThang);
 
     // Override lại hàm thuần túy từ lớp cha
