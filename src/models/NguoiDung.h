@@ -18,7 +18,7 @@ private:
 public:
     NguoiDung();
     NguoiDung(QString ten, QString congViec);
-
+    ~NguoiDung();
 
     QString getTen() const;
     void setTen(const QString &ten);
@@ -37,6 +37,8 @@ public:
     double tinhSoDuThang() const;
     // tự tính từ soDuThang, không cần tham số vì đã có sẵn 2 hàm tính tổng
     void phanBoTienTietKiem();
+    //Conclude thang de review
+    void ketThucThang();
 };
 
 #endif // NGUOIDUNG_H

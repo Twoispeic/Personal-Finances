@@ -1,6 +1,6 @@
 #ifndef TRANGTHAIMUCTIEU_H
 #define TRANGTHAIMUCTIEU_H
-#include <Qstring>
+#include <QString>
 //state pattern
 class MucTieu;
 class TrangThaiMucTieu{

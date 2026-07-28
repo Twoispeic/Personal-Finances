@@ -14,9 +14,6 @@ SOURCES += \
     src/database/MucTieuRepository.cpp \
     src/database/NguoiDungRepository.cpp \
     src/database/ThuNhapRepository.cpp \
-    src/database/ThuNhapRepository.cpp \
-    src/database/ChiTieuRepository.cpp \
-    src/database/MucTieuRepository.cpp \
     src/goals/MucTieu.cpp \
     src/goals/MucTieuFactory.cpp \
     src/goals/MucTieuNganHan.cpp \
@@ -36,9 +33,6 @@ HEADERS += \
     src/database/MucTieuRepository.h \
     src/database/NguoiDungRepository.h \
     src/database/ThuNhapRepository.h \
-    src/database/ThuNhapRepository.h \
-    src/database/ChiTieuRepository.h \
-    src/database/MucTieuRepository.h \
     src/goals/LoaiMucTieu.h \
     src/goals/MucTieu.h \
     src/goals/MucTieuFactory.h \
@@ -47,7 +41,6 @@ HEADERS += \
     src/models/ChiTieu.h \
     src/models/NguoiDung.h \
     src/models/ThuNhap.h \
-    src/models/LoaiChiTieu.h \
     src/patterns/ChienLuocDaiHan.h \
     src/patterns/ChienLuocNganHan.h \
     src/patterns/ChienLuocTietKiem.h \
