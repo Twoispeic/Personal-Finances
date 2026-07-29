@@ -25,7 +25,12 @@ SOURCES += \
     src/patterns/ChienLuocNganHan.cpp \
     src/patterns/TrangThaiChuaXong.cpp \
     src/patterns/TrangThaiHoanThanh.cpp \
-    src/gui/mainwindow.cpp
+    src/gui/mainwindow.cpp\
+    src/gui/dashboardwidget.cpp \
+    src/gui/thunhapchitieuwidget.cpp \
+    src/gui/muctieuwidget.cpp \
+    src/gui/bieudowidget.cpp \
+    src/gui/goptietkiemdialog.cpp
 
 HEADERS += \
     src/database/ChiTieuRepository.h \
@@ -47,12 +52,24 @@ HEADERS += \
     src/patterns/TrangThaiChuaXong.h \
     src/patterns/TrangThaiHoanThanh.h \
     src/patterns/TrangThaiMucTieu.h \
-    src/gui/mainwindow.h
+    src/gui/mainwindow.h\
+    src/gui/dashboardwidget.h \
+    src/gui/thunhapchitieuwidget.h \
+    src/gui/muctieuwidget.h \
+    src/gui/bieudowidget.h \
+    src/gui/goptietkiemdialog.h
+
 
 FORMS += \
-    src/gui/mainwindow.ui
+    src/gui/mainwindow.ui\
+    src/gui/dashboardwidget.ui \
+    src/gui/thunhapchitieuwidget.ui \
+    src/gui/muctieuwidget.ui \
+    src/gui/bieudowidget.ui \
+    src/gui/goptietkiemdialog.ui
 
 RESOURCES += \
+    resources/icons.qrc \
     resources/icons.qrc
 
 # Default rules for deployment.
