@@ -57,11 +57,11 @@ double NguoiDung::tinhSoDuThang() const {
     return tinhTongThuNhap() - tinhTongChiTieu();
 }
 
-void NguoiDung::phanBoTienTietKiem() {
+double NguoiDung::phanBoTienTietKiem() {
     double conLai = tinhSoDuThang();
-    if (conLai <= 0) return;
+    if (conLai <= 0) return 0.0;
 
-    // Bước 1: ưu tiên dài hạn trước
+    // Dài hạn — luôn bắt buộc, tự động chạy
     for (MucTieu* const &mt : danhSachMucTieu) {
         if (dynamic_cast<MucTieuDaiHan*>(mt) != nullptr) {
             conLai -= mt->capNhatTietKiem(conLai);
@@ -69,13 +69,15 @@ void NguoiDung::phanBoTienTietKiem() {
         }
     }
 
-    // Bước 2: còn dư thì tally vào ngắn hạn
-    for (MucTieu* const &mt : danhSachMucTieu) {
-        if (dynamic_cast<MucTieuNganHan*>(mt) != nullptr) {
-            conLai -= mt->capNhatTietKiem(conLai);
-            if (conLai <= 0) break;
-        }
-    }
+    return conLai;   // trả về phần còn dư, để GUI hỏi người dùng có muốn góp cho ngắn hạn không
+}
+
+bool NguoiDung::gopTietKiemNganHan(MucTieu* mt, double soTien) {
+    if (mt == nullptr || soTien <= 0) return false;
+    if (dynamic_cast<MucTieuNganHan*>(mt) == nullptr) return false;   // chỉ áp dụng cho ngắn hạn
+
+    mt->capNhatTietKiem(soTien);
+    return true;
 }
 
 // demo conclude

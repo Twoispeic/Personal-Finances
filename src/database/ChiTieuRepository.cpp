@@ -67,3 +67,40 @@ QMap<LoaiChiTieu, double> ChiTieuRepository::tinhTongTheoLoai() {
     }
     return ketQua;
 }
+
+// ChiTieuRepository.cpp
+QList<ChiTieu> ChiTieuRepository::locTheoLoai(LoaiChiTieu loai) {
+    QList<ChiTieu> ketQua;
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return ketQua;
+
+    QSqlQuery query;
+    query.prepare("SELECT loai, soTien, ngay FROM ChiTieu WHERE loai = :loai");
+    query.bindValue(":loai", loaiSangText(loai));
+    query.exec();
+
+    while (query.next()) {
+        double soTien = query.value("soTien").toDouble();
+        QDate ngay = QDate::fromString(query.value("ngay").toString(), Qt::ISODate);
+        ketQua.append(ChiTieu(loai, soTien, ngay));
+    }
+    return ketQua;
+}
+
+QList<ChiTieu> ChiTieuRepository::locTheoKhoangThoiGian(const QDate& tuNgay, const QDate& denNgay) {
+    QList<ChiTieu> ketQua;
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return ketQua;
+
+    QSqlQuery query;
+    query.prepare("SELECT loai, soTien, ngay FROM ChiTieu WHERE ngay BETWEEN :tu AND :den");
+    query.bindValue(":tu", tuNgay.toString(Qt::ISODate));
+    query.bindValue(":den", denNgay.toString(Qt::ISODate));
+    query.exec();
+
+    while (query.next()) {
+        LoaiChiTieu loai = textSangLoai(query.value("loai").toString());
+        double soTien = query.value("soTien").toDouble();
+        QDate ngay = QDate::fromString(query.value("ngay").toString(), Qt::ISODate);
+        ketQua.append(ChiTieu(loai, soTien, ngay));
+    }
+    return ketQua;
+}
