@@ -18,6 +18,11 @@ SOURCES += \
     src/goals/MucTieuFactory.cpp \
     src/goals/MucTieuNganHan.cpp \
     src/goals/MucTieuDaiHan.cpp \
+    src/gui/BieuDoWidget.cpp \
+    src/gui/DashboardWidget.cpp \
+    src/gui/GopTietKiemDialog.cpp \
+    src/gui/MucTieuWidget.cpp \
+    src/gui/ThuNhapChiTieuWidget.cpp \
     src/models/ChiTieu.cpp \
     src/models/NguoiDung.cpp \
     src/models/ThuNhap.cpp \
@@ -43,6 +48,11 @@ HEADERS += \
     src/goals/MucTieuFactory.h \
     src/goals/MucTieuNganHan.h \
     src/goals/MucTieuDaiHan.h \
+    src/gui/BieuDoWidget.h \
+    src/gui/DashboardWidget.h \
+    src/gui/GopTietKiemDialog.h \
+    src/gui/MucTieuWidget.h \
+    src/gui/ThuNhapChiTieuWidget.h \
     src/models/ChiTieu.h \
     src/models/NguoiDung.h \
     src/models/ThuNhap.h \
@@ -61,6 +71,11 @@ HEADERS += \
 
 
 FORMS += \
+    src/gui/BieuDoWidget.ui \
+    src/gui/DashboardWidget.ui \
+    src/gui/GopTietKiemDialog.ui \
+    src/gui/MucTieuWidget.ui \
+    src/gui/ThuNhapChiTieuWidget.ui \
     src/gui/mainwindow.ui\
     src/gui/dashboardwidget.ui \
     src/gui/thunhapchitieuwidget.ui \
