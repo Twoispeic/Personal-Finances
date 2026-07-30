@@ -55,8 +55,8 @@ SOURCES += \
     src/gui/goptietkiemdialog.cpp\
     src/widgets/MucTieuWidget.cpp \
     src/widgets/GopTietKiemDialog.cpp \
-    src/widgets/MucTieuWidget.h \
-    src/widgets/GopTietKiemDialog.h \
+    src/widgets/MucTieuWidget.cpp \
+    src/widgets/GopTietKiemDialog.cpp \
     src/gui/mainwindow.cpp \
     src/gui/sidebarwidget.cpp \
     src/gui/input/trangchuwidget.cpp \
