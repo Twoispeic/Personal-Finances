@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ThuNhapChiTieuWidget</class>
- <widget class="QWidget" name="ThuNhapChiTieuWidget">
+ <class>taomuctieudialog</class>
+ <widget class="QWidget" name="taomuctieudialog">
   <property name="geometry">
    <rect>
     <x>0</x>

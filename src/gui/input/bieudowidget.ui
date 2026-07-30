@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MucTieuWidget</class>
- <widget class="QWidget" name="MucTieuWidget">
+ <class>bieudowidget</class>
+ <widget class="QWidget" name="bieudowidget">
   <property name="geometry">
    <rect>
     <x>0</x>
