@@ -2,21 +2,21 @@
 #define BIEUDOWIDGET_H
 
 #include <QWidget>
+#include <QMap>
+#include "models/ChiTieu.h"
 
-namespace Ui {
-class bieudowidget;
-}
+namespace Ui { class BieuDoWidget; }
 
-class bieudowidget : public QWidget
-{
+class BieuDoWidget : public QWidget {
     Q_OBJECT
-
 public:
-    explicit bieudowidget(QWidget *parent = nullptr);
-    ~bieudowidget();
+    explicit BieuDoWidget(QWidget* parent = nullptr);
+    ~BieuDoWidget();
+
+    void veBieuDoChiTieu(const QMap<LoaiChiTieu, double>& duLieu);
 
 private:
-    Ui::bieudowidget *ui;
+    Ui::BieuDoWidget* ui;
 };
 
 #endif // BIEUDOWIDGET_H
