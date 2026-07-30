@@ -30,21 +30,11 @@ SOURCES += \
     src/patterns/ChienLuocNganHan.cpp \
     src/patterns/TrangThaiChuaXong.cpp \
     src/patterns/TrangThaiHoanThanh.cpp \
-<<<<<<< Updated upstream
-    src/gui/mainwindow.cpp\
-    src/gui/dashboardwidget.cpp \
-    src/gui/thunhapchitieuwidget.cpp \
-    src/gui/muctieuwidget.cpp \
-    src/gui/bieudowidget.cpp \
-    src/gui/goptietkiemdialog.cpp
-=======
     src/widgets/MucTieuWidget.cpp \
     src/widgets/GopTietKiemDialog.cpp \
     src/widgets/MucTieuWidget.h \
     src/widgets/GopTietKiemDialog.h \
     src/gui/mainwindow.cpp
->>>>>>> Stashed changes
-
 HEADERS += \
     src/database/ChiTieuRepository.h \
     src/database/KetNoiDatabase.h \
