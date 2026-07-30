@@ -7,15 +7,17 @@ ChiTieuRepository::ChiTieuRepository() {}
 
 QString ChiTieuRepository::loaiSangText(LoaiChiTieu loai) const {
     switch (loai) {
-    case DIEN_NUOC_WIFI: return "DIEN_NUOC_WIFI";
-    case TRO_AN_UONG:    return "TRO_AN_UONG";
-    default:             return "KHAC";
+    case TIEN_SINH_HOAT: return "TIEN_SINH_HOAT";
+    case TIEN_DIEN_NUOC: return "TIEN_DIEN_NUOC";
+    case TIEN_NHA:        return "TIEN_NHA";
+    default:               return "KHAC";
     }
 }
 
 LoaiChiTieu ChiTieuRepository::textSangLoai(const QString &text) const {
-    if (text == "DIEN_NUOC_WIFI") return DIEN_NUOC_WIFI;
-    if (text == "TRO_AN_UONG") return TRO_AN_UONG;
+    if (text == "TIEN_SINH_HOAT") return TIEN_SINH_HOAT;
+    if (text == "TIEN_DIEN_NUOC") return TIEN_DIEN_NUOC;
+    if (text == "TIEN_NHA") return TIEN_NHA;
     return KHAC;
 }
 
@@ -56,10 +58,12 @@ QList<ChiTieu> ChiTieuRepository::layTatCa() {
     return ketQua;
 }
 
+
 QMap<LoaiChiTieu, double> ChiTieuRepository::tinhTongTheoLoai() {
     QMap<LoaiChiTieu, double> ketQua;
-    ketQua[DIEN_NUOC_WIFI] = 0;
-    ketQua[TRO_AN_UONG] = 0;
+    ketQua[TIEN_SINH_HOAT] = 0;
+    ketQua[TIEN_DIEN_NUOC] = 0;
+    ketQua[TIEN_NHA] = 0;
     ketQua[KHAC] = 0;
 
     for (const ChiTieu &ct : layTatCa()) {

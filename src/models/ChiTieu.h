@@ -1,11 +1,11 @@
 #ifndef CHITIEU_H
 #define CHITIEU_H
-
 #include <QDate>
 
 enum LoaiChiTieu {
-    DIEN_NUOC_WIFI,
-    TRO_AN_UONG,
+    TIEN_SINH_HOAT,
+    TIEN_DIEN_NUOC,
+    TIEN_NHA,
     KHAC
 };
 
@@ -27,5 +27,4 @@ public:
     void setLoai(LoaiChiTieu loai);
     void setNgay(const QDate& ngay);
 };
-
 #endif // CHITIEU_H
