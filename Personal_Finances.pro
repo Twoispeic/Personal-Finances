@@ -70,8 +70,6 @@ HEADERS += \
 
 FORMS += \
     src/gui/mainwindow.ui\
-    src/gui/dashboardwidget.ui \
-    src/gui/thunhapchitieuwidget.ui \
     src/gui/muctieuwidget.ui \
     src/gui/bieudowidget.ui \
     src/gui/goptietkiemdialog.ui
