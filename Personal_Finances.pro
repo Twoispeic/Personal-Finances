@@ -25,7 +25,9 @@ SOURCES += \
     src/patterns/ChienLuocNganHan.cpp \
     src/patterns/TrangThaiChuaXong.cpp \
     src/patterns/TrangThaiHoanThanh.cpp \
-<<<<<<< Updated upstream
+<<<<<<< Updated upstream \
+    src/widgets/GopTietKiemDialog.cpp \
+    src/widgets/MucTieuWidget.cpp
     src/gui/mainwindow.cpp\
     src/gui/dashboardwidget.cpp \
     src/gui/thunhapchitieuwidget.cpp \
@@ -65,7 +67,9 @@ HEADERS += \
     src/gui/thunhapchitieuwidget.h \
     src/gui/muctieuwidget.h \
     src/gui/bieudowidget.h \
-    src/gui/goptietkiemdialog.h
+    src/gui/goptietkiemdialog.h \
+    src/widgets/GopTietKiemDialog.h \
+    src/widgets/MucTieuWidget.h
 
 
 FORMS += \
