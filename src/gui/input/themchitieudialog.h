@@ -1,22 +1,21 @@
 #ifndef THEMCHITIEUDIALOG_H
 #define THEMCHITIEUDIALOG_H
 
-#include <QWidget>
+#include <QDialog>
+#include "models/ChiTieu.h"
 
-namespace Ui {
-class themchitieudialog;
-}
+namespace Ui { class ThemChiTieuDialog; }
 
-class themchitieudialog : public QWidget
-{
+class ThemChiTieuDialog : public QDialog {
     Q_OBJECT
-
 public:
-    explicit themchitieudialog(QWidget *parent = nullptr);
-    ~themchitieudialog();
+    explicit ThemChiTieuDialog(QWidget* parent = nullptr);
+    ~ThemChiTieuDialog();
+
+    ChiTieu layChiTieuMoi() const;
 
 private:
-    Ui::themchitieudialog *ui;
+    Ui::ThemChiTieuDialog* ui;
 };
 
 #endif // THEMCHITIEUDIALOG_H
