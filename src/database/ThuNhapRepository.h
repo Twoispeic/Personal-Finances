@@ -10,6 +10,7 @@ public:
     bool taoBang();
     bool them(const ThuNhap &thuNhap);
     QList<ThuNhap> layTatCa();
+    bool luuThuNhapThang(double soTien);
 };
 
 #endif // THUNHAPREPOSITORY_H

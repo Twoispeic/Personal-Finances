@@ -5,27 +5,35 @@
 #include "models/NguoiDung.h"
 
 namespace Ui { class MainWindow; }
-class DashboardWidget;
-class ThuNhapChiTieuWidget;
-class MucTieuWidget;
-class BieuDoWidget;
+class SidebarWidget;
+class TrangChuWidget;
+class QuanLyChiTieuWidget;
+class ThuNhapCaNhanWidget;
+class MucTieuTaiChinhWidget;
+class MucTieu;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
-
 public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 public slots:
-    void capNhatGiaoDien();
+    void capNhatTatCaTrang();
 
 private slots:
-    void onKetThucThangClicked();
+    void onSidebarChonTrang(int chiSoTrang);
     void onMoDialogGopTietKiem(MucTieu* mt);
 
 private:
     NguoiDung nguoiDungHienTai;
+
+    SidebarWidget* sidebar;
+    TrangChuWidget* trangChu;
+    QuanLyChiTieuWidget* quanLyChiTieu;
+    ThuNhapCaNhanWidget* thuNhapCaNhan;
+    MucTieuTaiChinhWidget* mucTieuTaiChinh;
+
     Ui::MainWindow* ui;
 };
 

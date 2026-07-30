@@ -41,3 +41,26 @@ QList<ThuNhap> ThuNhapRepository::layTatCa() {
     }
     return ketQua;
 }
+
+bool ThuNhapRepository::luuThuNhapThang(double soTien) {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+
+    QString thangHienTai = QDate::currentDate().toString("yyyy-MM");
+
+    QSqlQuery kiemTra;
+    kiemTra.prepare("SELECT id FROM ThuNhap WHERE strftime('%Y-%m', ngay) = :thang");
+    kiemTra.bindValue(":thang", thangHienTai);
+    kiemTra.exec();
+
+    QSqlQuery query;
+    if (kiemTra.next()) {
+        int id = kiemTra.value("id").toInt();
+        query.prepare("UPDATE ThuNhap SET soTien = :soTien WHERE id = :id");
+        query.bindValue(":id", id);
+    } else {
+        query.prepare("INSERT INTO ThuNhap (loai, soTien, ngay) VALUES ('Thu nhap thang', :soTien, :ngay)");
+        query.bindValue(":ngay", QDate::currentDate().toString(Qt::ISODate));
+    }
+    query.bindValue(":soTien", soTien);
+    return query.exec();
+}

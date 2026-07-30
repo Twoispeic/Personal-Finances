@@ -69,12 +69,12 @@ double NguoiDung::phanBoTienTietKiem() {
         }
     }
 
-    return conLai;   // trả về phần còn dư, để GUI hỏi người dùng có muốn góp cho ngắn hạn không
+    return conLai;   // trả về phần còn dư, để GUI hỏi có muốn góp ngắn hạn không
 }
 
 bool NguoiDung::gopTietKiemNganHan(MucTieu* mt, double soTien) {
     if (mt == nullptr || soTien <= 0) return false;
-    if (dynamic_cast<MucTieuNganHan*>(mt) == nullptr) return false;   // chỉ áp dụng cho ngắn hạn
+    if (dynamic_cast<MucTieuNganHan*>(mt) == nullptr) return false;
 
     mt->capNhatTietKiem(soTien);
     return true;
