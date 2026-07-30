@@ -14,11 +14,11 @@
 #include "muctieuwidget.h"
 #include "bieudowidget.h"
 
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
+namespace Ui { class MainWindow; }
+class DashboardWidget;
+class ThuNhapChiTieuWidget;
+class MucTieuWidget;
+class BieuDoWidget;
 
 /*
  * MainWindow - ghep 4 widget: Dashboard, ThuNhapChiTieu, MucTieu, BieuDo.
@@ -39,8 +39,12 @@ public:
     ~MainWindow() override;
 
 public slots:
-    void onKetThucThangClicked();
     void capNhatGiaoDien();
+
+private slots:
+    void onKetThucThangClicked();
+    void onMoDialogGopTietKiem(MucTieu* mt);
+
 
 private:
     Ui::MainWindow* ui;
