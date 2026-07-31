@@ -6,7 +6,7 @@
 
 MucTieuTaiChinhWidget::MucTieuTaiChinhWidget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::muctieutaichinhwidget)
+    , ui(new Ui::MucTieuTaiChinhWidget)
 {
     ui->setupUi(this);
 

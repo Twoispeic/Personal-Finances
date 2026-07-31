@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>goptietkiemdialog</class>
- <widget class="QWidget" name="goptietkiemdialog">
+ <class>GopTietKiemDialog</class>
+ <widget class="QWidget" name="GopTietKiemDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

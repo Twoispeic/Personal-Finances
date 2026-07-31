@@ -6,7 +6,7 @@ GopTietKiemDialog::GopTietKiemDialog(double soTienConDu, MucTieu* mucTieu, QWidg
     : QDialog(parent)
     , soTienConDu(soTienConDu)       // Gán số tiền dư vào biến nội bộ
     , mucTieuDuocChon(mucTieu)       // Gán mục tiêu vào biến nội bộ
-    , ui(new Ui::goptietkiemdialog)  // Đã được viết thường để tránh lỗi "incomplete type"
+    , ui(new Ui::GopTietKiemDialog)  // Đã được viết thường để tránh lỗi "incomplete type"
 {
     ui->setupUi(this);
 

@@ -4,7 +4,7 @@
 
 QuanLyChiTieuWidget::QuanLyChiTieuWidget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::quanlychitieuwidget)
+    , ui(new Ui::QuanLyChiTieuWidget)
 {
     ui->setupUi(this);
 

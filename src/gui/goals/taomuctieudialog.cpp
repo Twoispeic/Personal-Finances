@@ -4,7 +4,7 @@
 
 TaoMucTieuDialog::TaoMucTieuDialog(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::taomuctieudialog)
+    , ui(new Ui::TaoMucTieuDialog)
 {
     ui->setupUi(this);
 

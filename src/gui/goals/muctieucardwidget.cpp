@@ -5,7 +5,7 @@
 MucTieuCardWidget::MucTieuCardWidget(MucTieu* mt, QWidget *parent)
     : QWidget(parent)
     , mucTieuGanVoi(mt) // Gán dữ liệu vào biến nội bộ
-    , ui(new Ui::muctieucardwidget)
+    , ui(new Ui::MucTieuCardWidget)
 {
     ui->setupUi(this);
 

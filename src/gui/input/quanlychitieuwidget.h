@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-namespace Ui { class quanlychitieuwidget; }
+namespace Ui { class QuanLyChiTieuWidget; }
 
 class QuanLyChiTieuWidget : public QWidget {
     Q_OBJECT
@@ -21,7 +21,7 @@ private slots:
     void onLocThayDoi();
 
 private:
-    Ui::quanlychitieuwidget* ui;
+    Ui::QuanLyChiTieuWidget* ui;
 };
 
 #endif // QUANLYCHITIEUWIDGET_H

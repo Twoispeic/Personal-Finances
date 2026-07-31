@@ -4,7 +4,7 @@
 #include <QDialog>
 #include "goals/MucTieu.h"
 
-namespace Ui { class goptietkiemdialog; }
+namespace Ui { class GopTietKiemDialog; }
 
 class GopTietKiemDialog : public QDialog {
     Q_OBJECT
@@ -17,7 +17,7 @@ public:
 private:
     double soTienConDu;
     MucTieu* mucTieuDuocChon;
-    Ui::goptietkiemdialog* ui;
+    Ui::GopTietKiemDialog* ui;
 };
 
 #endif // GOPTIETKIEMDIALOG_H
