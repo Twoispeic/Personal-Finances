@@ -10,7 +10,7 @@ MucTieuCardWidget::MucTieuCardWidget(MucTieu* mt, QWidget *parent)
     ui->setupUi(this);
 
     // TODO: Lấy thông tin từ biến 'mucTieuGanVoi' hiển thị lên label
-    // if (mucTieuGanVoi) { ui->lblTen->setText(mucTieuGanVoi->getTen()); }
+    // if (mucTieuGanVoi) { ui->lblTen->setText(mucTieuGanVoi->getTenMucTieu()); }
 
     // TODO: Kết nối nút Góp tiền
     // connect(ui->btnGopTien, &QPushButton::clicked, this, &MucTieuCardWidget::onGopClicked);
