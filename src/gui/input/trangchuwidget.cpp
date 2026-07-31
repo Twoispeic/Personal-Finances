@@ -22,7 +22,7 @@ void TrangChuWidget::capNhatTongQuan(NguoiDung* nd)
         qDebug() << "Chưa có dữ liệu người dùng!";
         return;
     }
-    ui->lblTongTien->setText(QString::number(nd->tinhTongThuNhap()));
+   // ui->lblTongTien->setText(QString::number(nd->tinhTongThuNhap()));
     qDebug() << "Đang cập nhật tổng quan giao diện...";
 }
 
