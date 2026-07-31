@@ -27,7 +27,7 @@ void ThuNhapCaNhanWidget::hienThiSoTienThangHienTai(double soTien)
 
 void ThuNhapCaNhanWidget::onLuuThuNhapClicked() {
     bool hopLe;
-        double soTien = ui->TEN_THAT->text().toDouble(&hopLe);
+    double soTien = ui->TEN_THAT->text().toDouble(&hopLe);
     if (!hopLe || soTien < 0) return;
 
     ThuNhapRepository repo;
