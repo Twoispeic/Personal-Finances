@@ -25,6 +25,10 @@ SOURCES += \
     src/gui/bieudowidget.cpp \
     src/gui/goptietkiemdialog.cpp \
     src/gui/goptietkiemdialog.cpp \
+    src/gui/input/quanlychitieuwidget.cpp \
+    src/gui/input/themchitieudialog.cpp \
+    src/gui/input/thunhapcanhanwidget.cpp \
+    src/gui/input/trangchuwidget.cpp \
     src/gui/muctieucardwidget.cpp \
     src/gui/muctieutaichinhwidget.cpp \
     src/gui/quanlychitieuwidget.cpp \
@@ -41,10 +45,18 @@ SOURCES += \
     src/patterns/ChienLuocNganHan.cpp \
     src/patterns/TrangThaiChuaXong.cpp \
     src/patterns/TrangThaiHoanThanh.cpp \
+    src/widgets/GopTietKiemDialog.cpp \
+    src/widgets/MucTieuWidget.cpp\
+    src/gui/mainwindow.cpp\
+    src/gui/dashboardwidget.cpp \
+    src/gui/thunhapchitieuwidget.cpp \
+    src/gui/muctieuwidget.cpp \
+    src/gui/bieudowidget.cpp \
+    src/gui/goptietkiemdialog.cpp\
     src/widgets/MucTieuWidget.cpp \
     src/widgets/GopTietKiemDialog.cpp \
-    src/widgets/MucTieuWidget.h \
-    src/widgets/GopTietKiemDialog.h \
+    src/widgets/MucTieuWidget.cpp \
+    src/widgets/GopTietKiemDialog.cpp \
     src/gui/mainwindow.cpp \
     src/gui/sidebarwidget.cpp \
     src/gui/input/trangchuwidget.cpp \
@@ -56,7 +68,7 @@ SOURCES += \
     src/gui/goals/muctieucardwidget.cpp \
     src/gui/goals/taomuctieudialog.cpp \
     src/gui/goals/goptietkiemdialog.cpp
-HEADERS += \
+HEADERS +=\
     src/database/ChiTieuRepository.h \
     src/database/KetNoiDatabase.h \
     src/database/MucTieuRepository.h \
@@ -74,6 +86,10 @@ HEADERS += \
     src/gui/bieudowidget.h \
     src/gui/goptietkiemdialog.h \
     src/gui/goptietkiemdialog.h \
+    src/gui/input/quanlychitieuwidget.h \
+    src/gui/input/themchitieudialog.h \
+    src/gui/input/thunhapcanhanwidget.h \
+    src/gui/input/trangchuwidget.h \
     src/gui/muctieucardwidget.h \
     src/gui/muctieutaichinhwidget.h \
     src/gui/quanlychitieuwidget.h \
@@ -92,6 +108,14 @@ HEADERS += \
     src/patterns/TrangThaiChuaXong.h \
     src/patterns/TrangThaiHoanThanh.h \
     src/patterns/TrangThaiMucTieu.h \
+    src/gui/mainwindow.h\
+    src/gui/dashboardwidget.h \
+    src/gui/thunhapchitieuwidget.h \
+    src/gui/muctieuwidget.h \
+    src/gui/bieudowidget.h \
+    src/gui/goptietkiemdialog.h \
+    src/widgets/GopTietKiemDialog.h \
+    src/widgets/MucTieuWidget.h\
     src/gui/mainwindow.h \
     src/gui/sidebarwidget.h \
     src/gui/input/trangchuwidget.h \
@@ -103,7 +127,7 @@ HEADERS += \
     src/gui/goals/muctieucardwidget.h \
     src/gui/goals/taomuctieudialog.h \
     src/gui/goals/goptietkiemdialog.h
-FORMS += \
+FORMS +=\
     src/gui/goals/muctieutaichinhwidget.ui \
     src/gui/mainwindow.ui \
     src/gui/sidebarwidget.ui \
@@ -117,7 +141,6 @@ FORMS += \
     src/gui/goals/muctieucardwidget.ui \
     src/gui/goals/taomuctieudialog.ui \
     src/gui/goals/goptietkiemdialog.ui
-
 RESOURCES += \
     resources/icons.qrc \
     resources/icons.qrc
