@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-namespace Ui { class ThuNhapCaNhanWidget; }
+namespace Ui { class thunhapcanhanwidget; }
 
 class ThuNhapCaNhanWidget : public QWidget {
     Q_OBJECT
@@ -20,7 +20,7 @@ private slots:
     void onLuuThuNhapClicked();
 
 private:
-    Ui::ThuNhapCaNhanWidget* ui;
+    Ui::thunhapcanhanwidget* ui;
 };
 
 #endif // THUNHAPCANHANWIDGET_H

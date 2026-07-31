@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-namespace Ui { class TaoMucTieuDialog; }
+namespace Ui { class taomuctieudialog; }
 
 class TaoMucTieuDialog : public QDialog {
     Q_OBJECT
@@ -23,7 +23,7 @@ public:
 private:
     bool dangONganHan;
 
-    Ui::TaoMucTieuDialog* ui;
+    Ui::taomuctieudialog* ui;
 };
 
 #endif // TAOMUCTIEUDIALOG_H

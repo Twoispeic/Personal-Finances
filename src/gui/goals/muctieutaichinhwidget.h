@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 #include "models/NguoiDung.h"
 
-namespace Ui { class MucTieuTaiChinhWidget; }
+namespace Ui { class muctieutaichinhwidget; }
 class MucTieu;
 
 class MucTieuTaiChinhWidget : public QWidget {
@@ -29,7 +29,7 @@ private:
     QVBoxLayout* layoutNganHan;
     QVBoxLayout* layoutDaiHan;
 
-    Ui::MucTieuTaiChinhWidget* ui;
+    Ui::muctieutaichinhwidget* ui;
 };
 
 #endif // MUCTIEUTAICHINHWIDGET_H

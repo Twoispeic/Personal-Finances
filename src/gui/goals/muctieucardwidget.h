@@ -4,7 +4,7 @@
 #include <QWidget>
 #include "goals/MucTieu.h"
 
-namespace Ui { class MucTieuCardWidget; }
+namespace Ui { class muctieucardwidget; }
 
 class MucTieuCardWidget : public QWidget {
     Q_OBJECT
@@ -20,7 +20,7 @@ private slots:
 
 private:
     MucTieu* mucTieuGanVoi;
-    Ui::MucTieuCardWidget* ui;
+    Ui::muctieucardwidget* ui;
 };
 
 #endif // MUCTIEUCARDWIDGET_H
