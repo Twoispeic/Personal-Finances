@@ -75,11 +75,6 @@ void MainWindow::capNhatTatCaTrang() {
     mucTieuTaiChinh->taiLaiDanhSach(&nguoiDungHienTai);
 }
 
-void MainWindow::onSidebarChonTrang(int chiSoTrang) {
-    // Không dùng tới vì đã nối trực tiếp qua lambda ở constructor,
-    // giữ lại khai báo để khớp .h, có thể xoá slot này nếu không cần
-}
-
 void MainWindow::onMoDialogGopTietKiem(MucTieu* mt) {
     double conDu = nguoiDungHienTai.tinhSoDuThang();
     GopTietKiemDialog dlg(conDu, mt, this);
