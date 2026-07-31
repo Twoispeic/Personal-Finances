@@ -4,7 +4,7 @@
 
 ThuNhapCaNhanWidget::ThuNhapCaNhanWidget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::thunhapcanhanwidget)
+    , ui(new Ui::ThuNhapCaNhanWidget)
 {
     ui->setupUi(this);
 
@@ -26,9 +26,16 @@ void ThuNhapCaNhanWidget::hienThiSoTienThangHienTai(double soTien)
 
 void ThuNhapCaNhanWidget::onLuuThuNhapClicked()
 {
-    // TODO: Lấy dữ liệu từ ô nhập, lưu vào Database
-    qDebug() << "Đã bấm nút Lưu thu nhập!";
+    bool hopLe;
+    double soTien = ui->oNhapSoTien->text().toDouble(&hopLe);   // tên biến ví dụ, cần khớp objectName thật
 
-    // Phát tín hiệu báo cho các màn hình khác biết dữ liệu đã thay đổi
+    if (!hopLe || soTien < 0) {
+        qDebug() << "So tien khong hop le!";
+        return;
+    }
+
+    ThuNhapRepository repo;
+    repo.luuThuNhapThang(soTien);   // hàm UPSERT đã viết ở tin trước
+
     emit duLieuThayDoi();
 }

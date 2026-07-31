@@ -24,6 +24,7 @@ private slots:
 private:
     BieuDoWidget* bieuDoThuNho;
     Ui::TrangChuWidget* ui;
+    NguoiDung* nguoiDungHienTai;
 };
 
 #endif // TRANGCHUWIDGET_H
