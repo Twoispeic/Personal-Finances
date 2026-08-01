@@ -8,7 +8,7 @@ class MucTieu;   // forward declaration — chỉ trả về con trỏ, không c
 class MucTieuFactory {
 public:
     static MucTieu* taoMucTieuNganHan(const QString& ten, double soTienMucTieu, int thoiHanThang);
-    static MucTieu* taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy);
+    static MucTieu* taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop);
 };
 
 #endif

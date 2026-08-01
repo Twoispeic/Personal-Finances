@@ -26,7 +26,7 @@ MucTieuTaiChinhWidget::~MucTieuTaiChinhWidget()
 void MucTieuTaiChinhWidget::taiLaiDanhSach(NguoiDung* nd)
 {
     if (!nd) return; // Kiểm tra an toàn
-
+    nguoiDungHienTai = nd;
     qDebug() << "Đang tải lại danh sách mục tiêu...";
     capNhatOTong(nd);
 
@@ -39,15 +39,15 @@ void MucTieuTaiChinhWidget::capNhatOTong(NguoiDung* nd)
     // TODO: Tính toán và hiển thị lên giao diện
 }
 
-void MucTieuTaiChinhWidget::onThemMucTieuClicked()
-{
-    qDebug() << "Đang mở cửa sổ tạo mục tiêu mới!";
-
-    /* Mẫu code gọi popup sau này:
+void MucTieuTaiChinhWidget::onThemMucTieuClicked() {
     TaoMucTieuDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
-        // Xử lý lưu và cập nhật giao diện
+        if (dialog.laNganHan()) {
+            nguoiDungHienTai->taoMucTieuNganHan(dialog.layTen(), dialog.laySoTienMucTieu(), dialog.layThoiHanThang());
+        } else {
+            // Bỏ dialog.laySoTienMoiKy() — chỉ còn 3 tham số
+            nguoiDungHienTai->taoMucTieuDaiHan(dialog.layTen(), dialog.laySoTienMucTieu(), dialog.laySoKyTraGop());
+        }
         emit duLieuThayDoi();
     }
-    */
 }

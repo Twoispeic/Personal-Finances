@@ -5,9 +5,11 @@
 
 TrangChuWidget::TrangChuWidget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::TrangChuWidget)   // viết hoa đúng chuẩn
+    , bieuDoThuNho(nullptr)      // đưa lên trước
+    , ui(new Ui::TrangChuWidget) // đưa xuống sau
 {
     ui->setupUi(this);
+    bieuDoThuNho = new BieuDoWidget(this);
 }
 
 TrangChuWidget::~TrangChuWidget()

@@ -15,8 +15,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , nguoiDungHienTai("", "")
+    , nguoiDungHienTai("", "")   // đổi lên trước
+    , ui(new Ui::MainWindow)     // đổi xuống sau
 {
     ui->setupUi(this);
 
@@ -73,11 +73,6 @@ void MainWindow::capNhatTatCaTrang() {
     quanLyChiTieu->taiLaiDanhSach();
     thuNhapCaNhan->hienThiSoTienThangHienTai(nguoiDungHienTai.tinhTongThuNhap());
     mucTieuTaiChinh->taiLaiDanhSach(&nguoiDungHienTai);
-}
-
-void MainWindow::onSidebarChonTrang(int chiSoTrang) {
-    // Không dùng tới vì đã nối trực tiếp qua lambda ở constructor,
-    // giữ lại khai báo để khớp .h, có thể xoá slot này nếu không cần
 }
 
 void MainWindow::onMoDialogGopTietKiem(MucTieu* mt) {

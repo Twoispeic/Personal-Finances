@@ -1,8 +1,8 @@
 #include "MucTieuDaiHan.h"
 
-MucTieuDaiHan::MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy)
-    : MucTieu(ten, soTienMucTieu), soKyTraGop(soKyTraGop), soTienMoiKy(soTienMoiKy) {};
-
+MucTieuDaiHan::MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop)
+    : MucTieu(ten, soTienMucTieu), soKyTraGop(soKyTraGop),
+    soTienMoiKy(soKyTraGop > 0 ? soTienMucTieu / soKyTraGop : 0.0) {}
 bool MucTieuDaiHan::kiemTraHoanThanh() {
     return (soTienDaTietKiem >= soTienMucTieu);
 }

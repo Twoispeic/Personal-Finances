@@ -1,0 +1,106 @@
+/* ===== Nền chung toàn app ===== */
+QWidget {
+    background-color: #12172B;
+    color: #E4E6F0;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+/* ===== Sidebar ===== */
+#SidebarWidget {
+    background-color: #0D111F;
+}
+#SidebarWidget QPushButton {
+    text-align: left;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: transparent;
+    color: #9AA0B4;
+    font-size: 14px;
+}
+#SidebarWidget QPushButton:hover {
+    background-color: #1B2138;
+    color: #FFFFFF;
+}
+#SidebarWidget QPushButton:checked {
+    background-color: #2A3358;
+    color: #6FE3B4;
+    font-weight: bold;
+}
+
+/* ===== Card / Frame (thẻ số liệu, chi tiêu, mục tiêu) ===== */
+QFrame {
+    background-color: #1A2036;
+    border-radius: 14px;
+    padding: 4px;
+}
+
+/* ===== Label tiêu đề nhỏ trong card (VD: "TIỀN KIẾM ĐƯỢC") ===== */
+QLabel[vaiTro="tieuDeNho"] {
+    color: #8A90A6;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* ===== Label số tiền lớn ===== */
+QLabel[vaiTro="soTienLon"] {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* ===== Nút chính (Kết thúc tháng, Lưu...) ===== */
+QPushButton {
+    background-color: #6FE3B4;
+    color: #0D111F;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #58C79C;
+}
+QPushButton:pressed {
+    background-color: #439E7C;
+}
+
+/* ===== ProgressBar mục tiêu ===== */
+QProgressBar {
+    background-color: #262C46;
+    border-radius: 8px;
+    text-align: center;
+    color: white;
+    height: 16px;
+}
+QProgressBar::chunk {
+    border-radius: 8px;
+    background-color: #6FE3B4;   /* xanh khi gần/đã hoàn thành */
+}
+
+/* ===== Input (SpinBox, ComboBox, LineEdit) ===== */
+QLineEdit, QDoubleSpinBox, QSpinBox, QComboBox, QDateEdit {
+    background-color: #262C46;
+    border: 1px solid #363D5C;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: #E4E6F0;
+}
+
+/* ===== Bảng chi tiêu ===== */
+QTableWidget {
+    background-color: #1A2036;
+    border: none;
+    gridline-color: #262C46;
+}
+QHeaderView::section {
+    background-color: #0D111F;
+    color: #8A90A6;
+    border: none;
+    padding: 6px;
+}
+
+TIEN_SINH_HOAT → #6FE3B4  (xanh mint — màu nhấn chính)
+TIEN_DIEN_NUOC → #5B9BFF  (xanh dương)
+TIEN_NHA       → #FF8C6B  (cam san hô)
+KHAC           → #A78BFA  (tím nhạt)

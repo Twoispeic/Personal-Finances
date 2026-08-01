@@ -88,8 +88,7 @@ QList<MucTieu*> MucTieuRepository::layTatCa() {
             mt = MucTieuFactory::taoMucTieuNganHan(ten, soTienMT, thoiHan);
         } else {
             int soKy = query.value("soKyTraGop").toInt();
-            double soTienKy = query.value("soTienMoiKy").toDouble();
-            mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTienMT, soKy, soTienKy);
+            mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTienMT, soKy);
         }
 
         mt->datSoTienDaTietKiem(soTienDTK);   // nạp lại tiến độ, không tính lại qua Strategy

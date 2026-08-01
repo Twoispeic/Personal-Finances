@@ -18,7 +18,6 @@ public:
     int layThoiHanThang() const;      // chỉ dùng nếu ngắn hạn
 
     int laySoKyTraGop() const;        // chỉ dùng nếu dài hạn
-    double laySoTienMoiKy() const;    // chỉ dùng nếu dài hạn
 
 private:
     bool dangONganHan;

@@ -25,22 +25,12 @@ void ThuNhapCaNhanWidget::hienThiSoTienThangHienTai(double soTien)
     qDebug() << "Đang hiển thị thu nhập tháng hiện tại:" << soTien;
 }
 
- void ThuNhapCaNhanWidget::onLuuThuNhapClicked()
-    {
-        // TẠM TẮT TOÀN BỘ LOGIC VÌ GIAO DIỆN CHƯA HOÀN THIỆN
-        // bool hopLe;
-        // double soTien = ui->oNhapSoTien->text().toDouble(&hopLe);
+void ThuNhapCaNhanWidget::onLuuThuNhapClicked() {
+    double soTien = ui->spinSoTienThuNhap->value();
+    if (soTien < 0) return;
 
-        // if (!hopLe || soTien < 0) {
-        //     qDebug() << "So tien khong hop le!";
-        //     return;
-        // }
+    ThuNhapRepository repo;
+    repo.luuThuNhapThang(soTien);
 
-        // ThuNhapRepository repo;
-        // repo.luuThuNhapThang(soTien);
-
-        qDebug() << "Đã giả lập bấm nút lưu thu nhập!";
-
-        // Tạm thời cứ phát tín hiệu để các màn hình khác biết
-        emit duLieuThayDoi();
-    }
+    emit duLieuThayDoi();
+}
