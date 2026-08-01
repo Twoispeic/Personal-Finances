@@ -5,9 +5,8 @@
 
 TrangChuWidget::TrangChuWidget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::TrangChuWidget)
-    , bieuDoThuNho(nullptr)
-    , nguoiDungHienTai(nullptr)
+    , bieuDoThuNho(nullptr)      // đưa lên trước
+    , ui(new Ui::TrangChuWidget) // đưa xuống sau
 {
     ui->setupUi(this);
     bieuDoThuNho = new BieuDoWidget(this);

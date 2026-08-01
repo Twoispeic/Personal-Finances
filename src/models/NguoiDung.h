@@ -30,7 +30,7 @@ public:
     void themThuNhap(const ThuNhap &thuNhap);
     void themChiTieu(const ChiTieu &chiTieu);
     MucTieu* taoMucTieuNganHan(const QString& ten, double soTienMucTieu, int thoiHanThang);
-    MucTieu* taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy);
+    MucTieu* taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop);
 
     double tinhTongThuNhap() const;
     double tinhTongChiTieu() const;

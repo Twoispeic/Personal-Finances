@@ -31,8 +31,8 @@ MucTieu* NguoiDung::taoMucTieuNganHan(const QString& ten, double soTienMucTieu, 
     return mt;
 }
 
-MucTieu* NguoiDung::taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy) {
-    MucTieu* mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTienMucTieu, soKyTraGop, soTienMoiKy);
+MucTieu* NguoiDung::taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop) {
+    MucTieu* mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTienMucTieu, soKyTraGop);
     danhSachMucTieu.append(mt);
     return mt;
 }
