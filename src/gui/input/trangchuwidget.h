@@ -1,26 +1,30 @@
-#ifndef BIEUDOWIDGET_H
-#define BIEUDOWIDGET_H
+#ifndef TRANGCHUWIDGET_H
+#define TRANGCHUWIDGET_H
 
 #include <QWidget>
+#include "models/NguoiDung.h"
 
-namespace Ui {
+namespace Ui { class TrangChuWidget; }
 class BieuDoWidget;
-}
 
-class bieudowidget : public QWidget
-{
+class TrangChuWidget : public QWidget {
     Q_OBJECT
-
 public:
-    explicit bieudowidget(QWidget *parent = nullptr);
-    ~bieudowidget();
+    explicit TrangChuWidget(QWidget* parent = nullptr);
+    ~TrangChuWidget();
 
-protected:
-    // HÀM ẢO (VIRTUAL FUNCTION): Dùng để tự vẽ biểu đồ (Thỏa mãn tiêu chí OOP)
-    void paintEvent(QPaintEvent *event) override;
+    void capNhatTongQuan(NguoiDung* nd);
+
+signals:
+    void duLieuThayDoi();
+
+private slots:
+    void onKetThucThangClicked();
 
 private:
-    Ui::BieuDoWidget *ui;
+    BieuDoWidget* bieuDoThuNho;
+    Ui::TrangChuWidget* ui;
+    NguoiDung* nguoiDungHienTai;
 };
 
-#endif // BIEUDOWIDGET_H
+#endif // TRANGCHUWIDGET_H
