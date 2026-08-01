@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QMap>
+#include <QtCharts/QChartView>
 #include "models/ChiTieu.h"
 
 namespace Ui { class BieuDoWidget; }

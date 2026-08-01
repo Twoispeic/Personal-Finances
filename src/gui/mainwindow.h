@@ -22,7 +22,6 @@ public slots:
     void capNhatTatCaTrang();
 
 private slots:
-    void onSidebarChonTrang(int chiSoTrang);
     void onMoDialogGopTietKiem(MucTieu* mt);
 
 private:

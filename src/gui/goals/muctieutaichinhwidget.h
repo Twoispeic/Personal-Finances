@@ -24,6 +24,7 @@ private slots:
     void onThemMucTieuClicked();
 
 private:
+    NguoiDung* nguoiDungHienTai;
     void capNhatOTong(NguoiDung* nd);
 
     QVBoxLayout* layoutNganHan;

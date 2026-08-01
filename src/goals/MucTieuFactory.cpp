@@ -13,9 +13,10 @@ MucTieu* MucTieuFactory::taoMucTieuNganHan(const QString& ten, double soTienMucT
     return mt;
 }
 
-MucTieu* MucTieuFactory::taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy) {
-    MucTieu* mt = new MucTieuDaiHan(ten, soTienMucTieu, soKyTraGop, soTienMoiKy);
-    mt->datChienLuoc(new ChienLuocDaiHan(soTienMoiKy));
+MucTieu* MucTieuFactory::taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop) {
+    MucTieu* mt = new MucTieuDaiHan(ten, soTienMucTieu, soKyTraGop);
+    double soTienMoiKy = static_cast<MucTieuDaiHan*>(mt)->getSoTienMoiKy();
+    mt->datChienLuoc(new ChienLuocDaiHan(soTienMoiKy));   // Strategy vẫn cần số tiền/kỳ, lấy từ MucTieu vừa tạo
     mt->datTrangThai(new TrangThaiChuaXong());
     return mt;
 }

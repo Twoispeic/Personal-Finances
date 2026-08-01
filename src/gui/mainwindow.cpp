@@ -15,8 +15,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , nguoiDungHienTai("", "")
+    , nguoiDungHienTai("", "")   // đổi lên trước
+    , ui(new Ui::MainWindow)     // đổi xuống sau
 {
     ui->setupUi(this);
 

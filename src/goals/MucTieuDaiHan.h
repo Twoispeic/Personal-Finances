@@ -9,7 +9,7 @@ private:
     double soTienMoiKy; // Thuộc tính riêng theo đúng UML
 
 public:
-    MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop, double soTienMoiKy);
+    MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop);
 
     // Override lại hàm thuần túy từ lớp cha
     bool kiemTraHoanThanh() override;
