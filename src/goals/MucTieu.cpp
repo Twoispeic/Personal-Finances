@@ -50,3 +50,5 @@ double MucTieu::getSoTienDaTietKiem() const { return soTienDaTietKiem; }
 
 void MucTieu::datSoTienDaTietKiem(double soTien) { soTienDaTietKiem = soTien; }
 
+int MucTieu::getId() const { return id; }
+void MucTieu::datId(int idMoi) { id = idMoi; }
