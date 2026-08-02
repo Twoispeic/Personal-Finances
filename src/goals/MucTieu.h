@@ -14,6 +14,7 @@ protected:
     double soTienDaTietKiem;
     TrangThaiMucTieu* trangThai;
     ChienLuocTietKiem* chienLuoc;
+    int id = -1;
 
 public:
     MucTieu(const QString& ten, double soTienMucTieu);
@@ -36,6 +37,9 @@ public:
     double getSoTienMucTieu() const;
     double getSoTienDaTietKiem() const;
     void datSoTienDaTietKiem(double soTien);
+
+    int getId() const;
+    void datId(int idMoi);
 };
 
 #endif // MUCTIEU_H 

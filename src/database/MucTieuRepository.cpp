@@ -72,10 +72,11 @@ QList<MucTieu*> MucTieuRepository::layTatCa() {
     QList<MucTieu*> ketQua;
     if (!KetNoiDatabase::getInstance().moKetNoi()) return ketQua;
 
-    QSqlQuery query("SELECT loaiMucTieu, tenMucTieu, soTienMucTieu, soTienDaTietKiem, "
+    QSqlQuery query("SELECT id,loaiMucTieu, tenMucTieu, soTienMucTieu, soTienDaTietKiem, "
                     "trangThai, thoiHanThang, soKyTraGop, soTienMoiKy FROM MucTieu");
 
     while (query.next()) {
+        int id = query.value("id").toInt();
         QString loai = query.value("loaiMucTieu").toString();
         QString ten = query.value("tenMucTieu").toString();
         double soTienMT = query.value("soTienMucTieu").toDouble();
@@ -90,7 +91,7 @@ QList<MucTieu*> MucTieuRepository::layTatCa() {
             int soKy = query.value("soKyTraGop").toInt();
             mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTienMT, soKy);
         }
-
+        mt->datId(id);
         mt->datSoTienDaTietKiem(soTienDTK);   // nạp lại tiến độ, không tính lại qua Strategy
         if (trangThai == "HoanThanh") {
             mt->datTrangThai(new TrangThaiHoanThanh());
