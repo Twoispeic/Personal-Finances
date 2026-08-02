@@ -1,15 +1,24 @@
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
 
-#include <QApplication>
-#include <QFile>
-#include <QApplication>
+#include "controller/AppController.h"
+#include "database/KetNoiDatabase.h"
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
+int main(int argc, char *argv[]) {
+    QGuiApplication app(argc, argv);   // đổi từ QApplication sang QGuiApplication
 
-    QFile fileQss("style.qss");   // xem cách 2 bên dưới nếu chưa dùng .qrc
-    if (fileQss.open(QFile::ReadOnly)) {
-        a.setStyleSheet(QLatin1String(fileQss.readAll()));
-    }
-    return QApplication::exec();
+    KetNoiDatabase::getInstance().moKetNoi();
+
+    QQmlApplicationEngine engine;
+
+    AppController controller;
+    engine.rootContext()->setContextProperty("appController", &controller);
+
+    const QUrl url(QStringLiteral("qrc:/qml/Main.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
+                     &app, []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
 }
