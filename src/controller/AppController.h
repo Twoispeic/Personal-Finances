@@ -40,6 +40,7 @@ private:
     ChiTieuController* m_chiTieu;
     ThuNhapController* m_thuNhap;
     MucTieuController* m_mucTieu;
+    void dongBoNguoiDungTuDatabase();
 };
 
 #endif // APPCONTROLLER_H

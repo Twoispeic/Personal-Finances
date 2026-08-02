@@ -9,6 +9,9 @@ Dialog {
     standardButtons: Dialog.Ok | Dialog.Cancel
     width: 350
 
+    x: (parent.width - width) / 2
+    y: (parent.height - height) / 2
+
     property int mucTieuId: -1
     property double soTienConDu: 0
     property string tenMucTieu: ""

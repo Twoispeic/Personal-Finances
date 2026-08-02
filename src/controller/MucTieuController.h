@@ -7,15 +7,12 @@
 
 class MucTieuController : public QObject {
     Q_OBJECT
-    // Danh sách chung
     Q_PROPERTY(QVariantList danhSach READ danhSach NOTIFY duLieuThayDoi)
-
-    // BỔ SUNG: Tách riêng danh sách cho Trang Chủ & Trang Mục Tiêu dễ render UI khác nhau
     Q_PROPERTY(QVariantList danhSachNganHan READ danhSachNganHan NOTIFY duLieuThayDoi)
     Q_PROPERTY(QVariantList danhSachDaiHan READ danhSachDaiHan NOTIFY duLieuThayDoi)
-
-    // BỔ SUNG: Đếm số lượng mục tiêu đã hoàn thành (dùng cho khu vực tổng quan)
     Q_PROPERTY(int soLuongHoanThanh READ soLuongHoanThanh NOTIFY duLieuThayDoi)
+    Q_PROPERTY(double tongDaTietKiem READ tongDaTietKiem NOTIFY duLieuThayDoi)
+    Q_PROPERTY(double tongMucTieu READ tongMucTieu NOTIFY duLieuThayDoi)
 
 public:
     explicit MucTieuController(NguoiDung* nd, QObject* parent = nullptr);
@@ -24,6 +21,8 @@ public:
     QVariantList danhSachNganHan() const;
     QVariantList danhSachDaiHan() const;
     int soLuongHoanThanh() const;
+    double tongDaTietKiem() const;
+    double tongMucTieu() const;
 
     Q_INVOKABLE void themNganHan(const QString& ten, double soTien, int thoiHan);
     Q_INVOKABLE void themDaiHan(const QString& ten, double soTien, int soKy);

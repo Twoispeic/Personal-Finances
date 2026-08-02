@@ -1,5 +1,7 @@
 #include "AppController.h"
 #include "database/NguoiDungRepository.h"
+#include "database/ThuNhapRepository.h"
+#include "database/ChiTieuRepository.h"
 
 AppController::AppController(QObject* parent)
     : QObject(parent), nguoiDungHienTai("", "")
@@ -14,9 +16,17 @@ AppController::AppController(QObject* parent)
     m_thuNhap = new ThuNhapController(&nguoiDungHienTai, this);
     m_mucTieu = new MucTieuController(&nguoiDungHienTai, this);
 
-    // Khi 1 trong 3 controller con đổi dữ liệu -> AppController cũng báo thay đổi (vì tongThuNhap/tongChiTieu phụ thuộc chúng)
-    connect(m_chiTieu, &ChiTieuController::duLieuThayDoi, this, &AppController::duLieuThayDoi);
-    connect(m_thuNhap, &ThuNhapController::duLieuThayDoi, this, &AppController::duLieuThayDoi);
+    dongBoNguoiDungTuDatabase();   // đồng bộ ngay lúc khởi động
+
+    // Đổi 2 kết nối này — đồng bộ lại RAM mỗi khi ChiTieu/ThuNhap đổi
+    connect(m_chiTieu, &ChiTieuController::duLieuThayDoi, this, [this]() {
+        dongBoNguoiDungTuDatabase();
+        emit duLieuThayDoi();
+    });
+    connect(m_thuNhap, &ThuNhapController::duLieuThayDoi, this, [this]() {
+        dongBoNguoiDungTuDatabase();
+        emit duLieuThayDoi();
+    });
     connect(m_mucTieu, &MucTieuController::duLieuThayDoi, this, &AppController::duLieuThayDoi);
 }
 
@@ -29,4 +39,15 @@ double AppController::ketThucThang() {
     m_mucTieu->taiLai();
     emit duLieuThayDoi();
     return conDu;
+}
+
+void AppController::dongBoNguoiDungTuDatabase() {
+    nguoiDungHienTai.xoaDanhSachThuNhap();
+    nguoiDungHienTai.xoaDanhSachChiTieu();
+
+    for (const ThuNhap& tn : ThuNhapRepository().layTatCa())
+        nguoiDungHienTai.themThuNhap(tn);
+
+    for (const ChiTieu& ct : ChiTieuRepository().layTatCa())
+        nguoiDungHienTai.themChiTieu(ct);
 }

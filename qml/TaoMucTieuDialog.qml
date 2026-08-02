@@ -9,6 +9,8 @@ Dialog {
     standardButtons: Dialog.Ok | Dialog.Cancel
     width: 400
 
+    x: (parent.width - width) / 2
+    y: (parent.height - height) / 2
     ColumnLayout {
         anchors.fill: parent
         spacing: 12
