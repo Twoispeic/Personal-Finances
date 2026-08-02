@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>Main.qml</file>
+        <file>TrangChuPage.qml</file>
+        <file>QuanLyChiTieuPage.qml</file>
+        <file>ThuNhapPage.qml</file>
+        <file>MucTieuPage.qml</file>
+        <file>ThemChiTieuDialog.qml</file>
+        <file>TaoMucTieuDialog.qml</file>
+        <file>GopTietKiemDialog.qml</file>
+    </qresource>
+</RCC>
