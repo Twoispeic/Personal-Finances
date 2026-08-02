@@ -83,3 +83,19 @@ void MucTieuController::gop(int mucTieuId, double soTien) {
     qDeleteAll(ds);
     taiLai();
 }
+
+double MucTieuController::tongDaTietKiem() const {
+    double tong = 0;
+    for (const QVariant& v : m_danhSach) {
+        tong += v.toMap()["soTienDaTietKiem"].toDouble();
+    }
+    return tong;
+}
+
+double MucTieuController::tongMucTieu() const {
+    double tong = 0;
+    for (const QVariant& v : m_danhSach) {
+        tong += v.toMap()["soTienMucTieu"].toDouble();
+    }
+    return tong;
+}

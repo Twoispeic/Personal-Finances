@@ -88,3 +88,7 @@ void NguoiDung::ketThucThang() {
     danhSachThuNhap.clear();
     danhSachChiTieu.clear();
 }
+
+// NguoiDung.cpp
+void NguoiDung::xoaDanhSachThuNhap() { danhSachThuNhap.clear(); }
+void NguoiDung::xoaDanhSachChiTieu() { danhSachChiTieu.clear(); }

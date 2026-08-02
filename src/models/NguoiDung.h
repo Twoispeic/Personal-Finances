@@ -40,6 +40,10 @@ public:
     bool gopTietKiemNganHan(MucTieu* mt, double soTien);
     //Conclude thang de review
     void ketThucThang();
+
+    // NguoiDung.h — thêm vào public
+    void xoaDanhSachThuNhap();
+    void xoaDanhSachChiTieu();
 };
 
 #endif // NGUOIDUNG_H
