@@ -15,8 +15,11 @@ class AppController : public QObject {
     Q_PROPERTY(ChiTieuController* chiTieu READ chiTieu CONSTANT)
     Q_PROPERTY(ThuNhapController* thuNhap READ thuNhap CONSTANT)
     Q_PROPERTY(MucTieuController* mucTieu READ mucTieu CONSTANT)
+    Q_PROPERTY(QString tenNguoiDung READ tenNguoiDung NOTIFY duLieuThayDoi)
+
 
 public:
+    QString tenNguoiDung() const { return nguoiDungHienTai.getTen(); }
     explicit AppController(QObject* parent = nullptr);
 
     double tongThuNhap() const;

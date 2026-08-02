@@ -10,11 +10,20 @@ MucTieuController::MucTieuController(NguoiDung* nd, QObject* parent)
 }
 
 QVariantList MucTieuController::danhSach() const { return m_danhSach; }
+QVariantList MucTieuController::danhSachNganHan() const { return m_danhSachNganHan; }
+QVariantList MucTieuController::danhSachDaiHan() const { return m_danhSachDaiHan; }
+int MucTieuController::soLuongHoanThanh() const { return m_soLuongHoanThanh; }
 
 void MucTieuController::taiLai() {
+    // Reset lại toàn bộ list và biến đếm
     m_danhSach.clear();
+    m_danhSachNganHan.clear();
+    m_danhSachDaiHan.clear();
+    m_soLuongHoanThanh = 0;
+
     MucTieuRepository repo;
-    QList<MucTieu*> ds = repo.layTatCa();
+    const QList<MucTieu*> ds = repo.layTatCa();
+
     for (MucTieu* mt : ds) {
         QVariantMap m;
         m["id"] = mt->getId();
@@ -23,9 +32,26 @@ void MucTieuController::taiLai() {
         m["soTienDaTietKiem"] = mt->getSoTienDaTietKiem();
         m["tienDo"] = mt->tinhTienDoPhanTram();
         m["mauSac"] = mt->layMauSacHienTai();
-        m["laNganHan"] = (dynamic_cast<MucTieuNganHan*>(mt) != nullptr);
+
+        bool laNganHan = (dynamic_cast<MucTieuNganHan*>(mt) != nullptr);
+        m["laNganHan"] = laNganHan;
+
+        // Đếm số lượng mục tiêu đã đạt 100%
+        if (mt->kiemTraHoanThanh()) {
+            m_soLuongHoanThanh++;
+        }
+
+        // Bỏ vào danh sách tổng
         m_danhSach.append(m);
+
+        // Phân loại vào danh sách hiển thị riêng biệt
+        if (laNganHan) {
+            m_danhSachNganHan.append(m);
+        } else {
+            m_danhSachDaiHan.append(m);
+        }
     }
+
     qDeleteAll(ds);
     emit duLieuThayDoi();
 }

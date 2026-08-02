@@ -1,15 +1,37 @@
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QQuickStyle> // BỔ SUNG: Dùng để ép style QML
+#include <QQmlEngine>  // BỔ SUNG: Dùng để đăng ký Type
 
-#include <QApplication>
-#include <QFile>
-#include <QApplication>
+#include "controller/AppController.h"
+#include "controller/ChiTieuController.h" // Khai báo thêm để QML biết
+#include "controller/ThuNhapController.h" // Khai báo thêm để QML biết
+#include "controller/MucTieuController.h" // Khai báo thêm để QML biết
+#include "database/KetNoiDatabase.h"
 
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
+int main(int argc, char *argv[]) {
+    // Ép QML dùng style Basic để cho phép đổi màu nút, bo góc thoải mái
+    QQuickStyle::setStyle("Basic");
 
-    QFile fileQss("style.qss");   // xem cách 2 bên dưới nếu chưa dùng .qrc
-    if (fileQss.open(QFile::ReadOnly)) {
-        a.setStyleSheet(QLatin1String(fileQss.readAll()));
-    }
-    return QApplication::exec();
+    QGuiApplication app(argc, argv);
+
+    KetNoiDatabase::getInstance().moKetNoi();
+
+    QQmlApplicationEngine engine;
+
+    // Đăng ký các class Controller con để QML nhận diện được con trỏ (chữa lỗi null)
+    qmlRegisterUncreatableType<ChiTieuController>("SoTayTien", 1, 0, "ChiTieuController", "Khong the tao truc tiep");
+    qmlRegisterUncreatableType<ThuNhapController>("SoTayTien", 1, 0, "ThuNhapController", "Khong the tao truc tiep");
+    qmlRegisterUncreatableType<MucTieuController>("SoTayTien", 1, 0, "MucTieuController", "Khong the tao truc tiep");
+
+    AppController controller;
+    engine.rootContext()->setContextProperty("appController", &controller);
+
+    const QUrl url(QStringLiteral("qrc:/qml/Main.qml"));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
+                     &app, []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
 }
