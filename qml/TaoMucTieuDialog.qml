@@ -46,9 +46,9 @@ Dialog {
 
     onAccepted: {
         if (tabBar.currentIndex === 0) {
-            appController.themMucTieuNganHan(txtTenNganHan.text, spinSoTienNganHan.value, spinThoiHan.value)
+            appController.mucTieu.themNganHan(txtTenNganHan.text, spinSoTienNganHan.value, spinThoiHan.value)
         } else {
-            appController.themMucTieuDaiHan(txtTenDaiHan.text, spinSoTienDaiHan.value, spinSoKy.value)
+            appController.mucTieu.themDaiHan(txtTenDaiHan.text, spinSoTienDaiHan.value, spinSoKy.value)
         }
     }
 }

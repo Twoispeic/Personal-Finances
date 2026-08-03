@@ -28,6 +28,7 @@ Dialog {
             Layout.fillWidth: true
             model: root.danhSachLoai
             textRole: "text"
+            valueRole: "value"
         }
 
         Text { text: "Số tiền:"; color: "white" }
@@ -41,6 +42,7 @@ Dialog {
     }
 
     onAccepted: {
-        appController.chiTieu.them(danhSachLoai[comboLoai.currentIndex].value, spinSoTien.value)
+        var loaiChon = comboLoai.currentValue !== undefined ? comboLoai.currentValue : comboLoai.currentIndex
+        appController.chiTieu.them(loaiChon, spinSoTien.value)
     }
 }

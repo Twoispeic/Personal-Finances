@@ -124,8 +124,10 @@ Item {
                                     }
                                     ColumnLayout {
                                         spacing: 2
-                                        Text { text: "Chưa phân loại"; color: "#F4F5FC"; font.pixelSize: 14 }
-                                        Text { text: modelData.ngay; color: "#5F638F"; font.pixelSize: 12 }
+                                        Text { text: modelData.tenLoai !== undefined ? modelData.tenLoai : "Chưa phân loại"
+                                            color: "#F4F5FC"
+                                            font.pixelSize: 14
+                                        }
                                     }
                                     Item { Layout.fillWidth: true }
                                     Text {
@@ -160,18 +162,14 @@ Item {
                                 Text { text: "Đã để dành"; color: "#F4F5FC"; font.pixelSize: 14; font.bold: true }
                                 Item { Layout.fillWidth: true }
                                 Text {
-                                    text: appController.mucTieu.tongDaTietKiem.toLocaleString('vi-VN') + " / "
-                                        + appController.mucTieu.tongMucTieu.toLocaleString('vi-VN') + " đ"
-                                    color: "#8A8FC0"; font.pixelSize: 12
+                                    text: appController.soDuThang.toLocaleString('vi-VN') + " đ"
+                                    color: appController.soDuThang >= 0 ? "#35DDC0" : "#F2508C"
+                                    font.pixelSize: 20; font.bold: true
                                 }
                             }
-                            Rectangle {
-                                Layout.fillWidth: true; height: 8; radius: 4; color: "#12FFFFFF"
-                                Rectangle {
-                                    width: parent.width * (appController.mucTieu.tongMucTieu > 0
-                                        ? appController.mucTieu.tongDaTietKiem / appController.mucTieu.tongMucTieu : 0)
-                                    height: 8; radius: 4; color: "#35DDC0"
-                                }
+                            Text {
+                                text: "Tính từ thu nhập trừ chi tiêu tháng này"
+                                color: "#5F638F"; font.pixelSize: 11
                             }
                         }
                     }

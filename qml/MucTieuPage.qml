@@ -105,6 +105,29 @@ Item {
                                             color: modelData.mauSac === "green" ? "#35DDC0" : "#F2508C"
                                         }
                                     }
+
+                                    Rectangle {
+                                        visible: modelData.mauSac !== "green"
+                                        Layout.preferredWidth: 100
+                                        Layout.preferredHeight: 28
+                                        radius: 8
+                                        color: "#35DDC0"
+                                        Text {
+                                            anchors.centerIn: parent
+                                            text: "Nộp tiền"
+                                            color: "#0D111F"; font.pixelSize: 12; font.bold: true
+                                        }
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            cursorShape: Qt.PointingHandCursor
+                                            onClicked: {
+                                                gopTietKiemDialog.mucTieuId = modelData.id
+                                                gopTietKiemDialog.tenMucTieu = modelData.ten
+                                                gopTietKiemDialog.soTienConDu = appController.soDuThang
+                                                gopTietKiemDialog.open()
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -117,6 +140,7 @@ Item {
                         ColumnLayout {
                             anchors.fill: parent; anchors.margins: 24; spacing: 16
                             Text { text: "Mục tiêu dài hạn"; color: "#F4F5FC"; font.pixelSize: 16; font.bold: true }
+                            Text { text: "Tự động trích tiền mỗi khi bấm \"Chốt sổ tháng này\""; color: "#5F638F"; font.pixelSize: 11 }
 
                             ListView {
                                 Layout.fillWidth: true; Layout.fillHeight: true
@@ -169,5 +193,8 @@ Item {
 
     TaoMucTieuDialog {
         id: taoMucTieuDialog
+    }
+    GopTietKiemDialog {
+        id: gopTietKiemDialog
     }
 }
