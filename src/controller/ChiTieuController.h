@@ -17,16 +17,21 @@ class ChiTieuController : public QObject {
     // BỔ SUNG: Danh sách lọc riêng "Các khoản chưa xác định" (Loại KHAC)
     Q_PROPERTY(QVariantList danhSachChuaXacDinh READ danhSachChuaXacDinh NOTIFY duLieuThayDoi)
 
+    Q_PROPERTY(QVariantList thongKeTheoLoai READ thongKeTheoLoai NOTIFY duLieuThayDoi)
+
 public:
     explicit ChiTieuController(NguoiDung* nd, QObject* parent = nullptr);
 
     QVariantList danhSach() const;
     QVariantList thongKeBieuDo() const;
     QVariantList danhSachChuaXacDinh() const;
+    QVariantList thongKeTheoLoai() const;
 
     Q_INVOKABLE void them(int loai, double soTien);
     Q_INVOKABLE void locTheoLoai(int loai);
     Q_INVOKABLE void locTatCa();
+    Q_INVOKABLE void xoa(int id);
+
 
 signals:
     void duLieuThayDoi();

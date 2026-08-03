@@ -71,3 +71,8 @@ void ThuNhapController::luuThang(double soTien) {
     // Lưu xong thì gọi taiLai() để cập nhật ngay biểu đồ và các con số
     taiLai();
 }
+
+void ThuNhapController::xoaThangHienTai() {
+    ThuNhapRepository().xoaThangHienTai();
+    taiLai();
+}

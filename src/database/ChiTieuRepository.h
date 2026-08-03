@@ -16,6 +16,9 @@ public:
     QList<ChiTieu> locTheoLoai(LoaiChiTieu loai);
     QList<ChiTieu> locTheoKhoangThoiGian(const QDate& tuNgay, const QDate& denNgay);
 
+    // Trong ChiTieuController.h (dưới mục public:)
+    bool xoa(int id);
+
 private:
     QString loaiSangText(LoaiChiTieu loai) const;
     LoaiChiTieu textSangLoai(const QString &text) const;

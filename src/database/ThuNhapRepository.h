@@ -11,6 +11,7 @@ public:
     bool them(const ThuNhap &thuNhap);
     QList<ThuNhap> layTatCa();
     bool luuThuNhapThang(double soTien);
+    bool xoaThangHienTai();
 };
 
 #endif // THUNHAPREPOSITORY_H
