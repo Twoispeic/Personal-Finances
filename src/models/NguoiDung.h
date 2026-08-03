@@ -44,6 +44,11 @@ public:
     // NguoiDung.h — thêm vào public
     void xoaDanhSachThuNhap();
     void xoaDanhSachChiTieu();
+
+    void xoaDanhSachMucTieu();
+    void themMucTieuVaoDanhSach(MucTieu* mt);
+
+    const QList<MucTieu*>& layDanhSachMucTieu() const;
 };
 
 #endif // NGUOIDUNG_H

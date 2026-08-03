@@ -36,24 +36,20 @@ Item {
 
                 Item { Layout.fillWidth: true }
 
-                Button {
-                    text: "Chốt sổ tháng này"
-                    background: Rectangle {
+                Rectangle {
+                        width: 150; height: 36; radius: 18
                         color: "#35DDC0"
-                        radius: 8
+                        Text {
+                            anchors.centerIn: parent
+                            text: "Chốt sổ tháng này"
+                            color: "#0D111F"; font.pixelSize: 12; font.bold: true
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: xacNhanChotSoDialog.open()
+                        }
                     }
-                    contentItem: Text {
-                        text: parent.text
-                        color: "#12142B"
-                        font.bold: true
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                    onClicked: {
-                        var tienDu = appController.ketThucThang()
-                        console.log("Đã chốt sổ! Tiền dư: " + tienDu)
-                    }
-                }
 
                 Rectangle {
                     width: 44; height: 44; radius: 22

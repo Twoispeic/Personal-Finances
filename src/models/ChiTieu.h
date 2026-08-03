@@ -14,6 +14,7 @@ private:
     LoaiChiTieu loai;
     double soTien;
     QDate ngay;
+    int id = -1;
 
 public:
     ChiTieu();
@@ -26,5 +27,8 @@ public:
     void setSoTien(double soTien);
     void setLoai(LoaiChiTieu loai);
     void setNgay(const QDate& ngay);
+
+    int getId() const;
+    void datId(int idMoi);
 };
 #endif // CHITIEU_H

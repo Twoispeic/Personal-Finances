@@ -12,3 +12,6 @@ QDate ChiTieu::getNgay() const { return ngay; }
 void ChiTieu::setSoTien(double soTien) { this->soTien = soTien; }
 void ChiTieu::setLoai(LoaiChiTieu loai) { this->loai = loai; }
 void ChiTieu::setNgay(const QDate& ngay) { this->ngay = ngay; }
+
+int ChiTieu::getId() const { return id; }
+void ChiTieu::datId(int idMoi) { id = idMoi; }

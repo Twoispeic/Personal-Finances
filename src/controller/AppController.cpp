@@ -2,6 +2,7 @@
 #include "database/NguoiDungRepository.h"
 #include "database/ThuNhapRepository.h"
 #include "database/ChiTieuRepository.h"
+#include "database/MucTieuRepository.h"
 
 AppController::AppController(QObject* parent)
     : QObject(parent), nguoiDungHienTai("", "")
@@ -27,7 +28,10 @@ AppController::AppController(QObject* parent)
         dongBoNguoiDungTuDatabase();
         emit duLieuThayDoi();
     });
-    connect(m_mucTieu, &MucTieuController::duLieuThayDoi, this, &AppController::duLieuThayDoi);
+    connect(m_mucTieu, &MucTieuController::duLieuThayDoi, this, [this]() {
+        dongBoNguoiDungTuDatabase();
+        emit duLieuThayDoi();
+    });
 }
 
 double AppController::tongThuNhap() const { return nguoiDungHienTai.tinhTongThuNhap(); }
@@ -36,18 +40,31 @@ double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(
 
 double AppController::ketThucThang() {
     double conDu = nguoiDungHienTai.phanBoTienTietKiem();
+    dongBoNguoiDungTuDatabase();
+
+    // Cập nhật lại tiền đã tiết kiệm trong DB cho từng mục tiêu dài hạn vừa được cộng thêm
+    MucTieuRepository repo;
+    for (MucTieu* mt : nguoiDungHienTai.layDanhSachMucTieu()) {   // cần getter này, xem ghi chú bên dưới
+        repo.capNhatTienDaTietKiem(mt->getId(), mt->getSoTienDaTietKiem());
+    }
+
     m_mucTieu->taiLai();
     emit duLieuThayDoi();
     return conDu;
 }
 
+
 void AppController::dongBoNguoiDungTuDatabase() {
     nguoiDungHienTai.xoaDanhSachThuNhap();
     nguoiDungHienTai.xoaDanhSachChiTieu();
+    nguoiDungHienTai.xoaDanhSachMucTieu();
 
     for (const ThuNhap& tn : ThuNhapRepository().layTatCa())
         nguoiDungHienTai.themThuNhap(tn);
 
     for (const ChiTieu& ct : ChiTieuRepository().layTatCa())
         nguoiDungHienTai.themChiTieu(ct);
+
+    for (MucTieu* mt : MucTieuRepository().layTatCa())
+        nguoiDungHienTai.themMucTieuVaoDanhSach(mt);   // chuyển quyền sở hữu cho NguoiDung, KHÔNG delete ở đây
 }

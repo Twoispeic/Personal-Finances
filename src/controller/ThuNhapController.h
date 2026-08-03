@@ -24,7 +24,7 @@ public:
 
     Q_INVOKABLE void luuThang(double soTien);
     Q_INVOKABLE void taiLai(); // Hàm để làm mới dữ liệu biểu đồ
-
+    Q_INVOKABLE void xoaThangHienTai();//Xoa thang
 signals:
     void duLieuThayDoi();
 

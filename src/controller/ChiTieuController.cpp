@@ -76,3 +76,31 @@ void ChiTieuController::locTheoLoai(int loai) {
 void ChiTieuController::locTatCa() {
     taiLai();
 }
+
+void ChiTieuController::xoa(int id) {
+    ChiTieuRepository().xoa(id);
+    taiLai();
+}
+
+QVariantList ChiTieuController::thongKeTheoLoai() const {
+    QVariantList ketQua;
+    QMap<LoaiChiTieu, double> tong = ChiTieuRepository().tinhTongTheoLoai();
+
+    struct TT { QString ten; QString mau; };
+    QMap<LoaiChiTieu, TT> info = {
+        { TIEN_SINH_HOAT, {"Tiền sinh hoạt", "#F2508C"} },
+        { TIEN_DIEN_NUOC, {"Tiền điện nước", "#FFB35C"} },
+        { TIEN_NHA,       {"Tiền nhà",       "#6E7BFA"} },
+        { KHAC,           {"Khác",           "#35DDC0"} }
+    };
+
+    for (auto it = tong.constBegin(); it != tong.constEnd(); ++it) {
+        if (it.value() <= 0) continue;
+        QVariantMap m;
+        m["ten"] = info[it.key()].ten;
+        m["mau"] = info[it.key()].mau;
+        m["soTien"] = it.value();
+        ketQua.append(m);
+    }
+    return ketQua;
+}

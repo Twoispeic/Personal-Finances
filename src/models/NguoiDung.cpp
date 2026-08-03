@@ -89,6 +89,16 @@ void NguoiDung::ketThucThang() {
     danhSachChiTieu.clear();
 }
 
-// NguoiDung.cpp
+// Thu nhap
 void NguoiDung::xoaDanhSachThuNhap() { danhSachThuNhap.clear(); }
 void NguoiDung::xoaDanhSachChiTieu() { danhSachChiTieu.clear(); }
+//Muc tieu
+void NguoiDung::xoaDanhSachMucTieu() {
+    qDeleteAll(danhSachMucTieu);
+    danhSachMucTieu.clear();
+}
+void NguoiDung::themMucTieuVaoDanhSach(MucTieu* mt) {
+    danhSachMucTieu.append(mt);
+}
+
+const QList<MucTieu*>& NguoiDung::layDanhSachMucTieu() const { return danhSachMucTieu; }
