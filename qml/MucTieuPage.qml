@@ -36,16 +36,34 @@ Item {
                 }
 
                 // Thẻ tổng tiết kiệm
-                Rectangle {
-                    Layout.fillWidth: true; height: 90
-                    color: "#1B1E42"; radius: 18; border.color: "#12FFFFFF"
-                    ColumnLayout {
-                        anchors.fill: parent; anchors.margins: 20; spacing: 6
-                        Text { text: "TỔNG TIỀN ĐANG TÍCH LŨY"; color: "#8A8FC0"; font.pixelSize: 12; font.bold: true }
-                        Text {
-                            text: appController.mucTieu.tongDaTietKiem.toLocaleString('vi-VN') + " / "
-                                + appController.mucTieu.tongMucTieu.toLocaleString('vi-VN') + " đ"
-                            color: "#35DDC0"; font.pixelSize: 22; font.bold: true
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 18
+
+                    Rectangle {
+                        Layout.fillWidth: true; height: 90
+                        color: "#1B1E42"; radius: 18; border.color: "#12FFFFFF"
+                        ColumnLayout {
+                            anchors.fill: parent; anchors.margins: 20; spacing: 6
+                            Text { text: "TIẾN ĐỘ TỔNG MỤC TIÊU"; color: "#8A8FC0"; font.pixelSize: 12; font.bold: true }
+                            Text {
+                                text: appController.mucTieu.tongDaTietKiem.toLocaleString('vi-VN') + " / "
+                                    + appController.mucTieu.tongMucTieu.toLocaleString('vi-VN') + " đ"
+                                color: "#35DDC0"; font.pixelSize: 22; font.bold: true
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        Layout.fillWidth: true; height: 90
+                        color: "#1B1E42"; radius: 18; border.color: "#12FFFFFF"
+                        ColumnLayout {
+                            anchors.fill: parent; anchors.margins: 20; spacing: 6
+                            Text { text: "HŨ TIẾT KIỆM KHẢ DỤNG"; color: "#8A8FC0"; font.pixelSize: 12; font.bold: true }
+                            Text {
+                                text: appController.huTietKiem.toLocaleString('vi-VN') + " đ"
+                                color: "#FFB35C"; font.pixelSize: 22; font.bold: true
+                            }
                         }
                     }
                 }
@@ -123,7 +141,7 @@ Item {
                                             onClicked: {
                                                 gopTietKiemDialog.mucTieuId = modelData.id
                                                 gopTietKiemDialog.tenMucTieu = modelData.ten
-                                                gopTietKiemDialog.soTienConDu = appController.soDuThang
+                                                gopTietKiemDialog.soTienConDu = appController.huTietKiem   // đổi ở đây
                                                 gopTietKiemDialog.open()
                                             }
                                         }
@@ -134,17 +152,49 @@ Item {
                     }
 
                     // CỘT DÀI HẠN
+                    // CỘT DÀI HẠN
                     Rectangle {
-                        Layout.fillWidth: true; Layout.fillHeight: true
-                        color: "#1B1E42"; radius: 20; border.color: "#12FFFFFF"
-                        ColumnLayout {
-                            anchors.fill: parent; anchors.margins: 24; spacing: 16
-                            Text { text: "Mục tiêu dài hạn"; color: "#F4F5FC"; font.pixelSize: 16; font.bold: true }
-                            Text { text: "Tự động trích tiền mỗi khi bấm \"Chốt sổ tháng này\""; color: "#5F638F"; font.pixelSize: 11 }
+                        Layout.fillWidth: true;
+                        Layout.fillHeight: true
+                        color: "#1B1E42";
+                        radius: 20; border.color: "#12FFFFFF"
 
+                        ColumnLayout {
+                            anchors.fill: parent;
+                            anchors.margins: 24; spacing: 16
+
+                            // HEADER: Bọc riêng vào RowLayout để chống đè chữ (overlap)
+                            RowLayout {
+                                Layout.fillWidth: true
+
+                                ColumnLayout {
+                                    spacing: 4
+                                    Text { text: "Mục tiêu dài hạn"; color: "#F4F5FC"; font.pixelSize: 16; font.bold: true }
+                                    Text { text: "Tự động trích tiền từ hũ tiết kiệm mỗi khi bấm refresh"; color: "#5F638F"; font.pixelSize: 11 }
+                                }
+
+                                Item { Layout.fillWidth: true } // Đẩy nút sang phải
+
+                                Rectangle {
+                                    width: 32; height: 32; radius: 16
+                                    color: "#6E7BFA"
+                                    Text { anchors.centerIn: parent; text: "⟳"; color: "#FFF"; font.pixelSize: 16; font.bold: true }
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        // GỌI HÀM MỚI Ở ĐÂY: Chỉ phân bổ tiền hũ, không reset tháng
+                                        onClicked: appController.thuTrichTienTuHuVaoDaiHan()
+                                    }
+                                }
+                            }
+
+                            // LISTVIEW: Danh sách các thẻ mục tiêu
                             ListView {
-                                Layout.fillWidth: true; Layout.fillHeight: true
-                                clip: true; spacing: 24
+                                Layout.fillWidth: true;
+                                Layout.fillHeight: true
+                                clip: true;
+                                spacing: 24
                                 model: appController.mucTieu.danhSachDaiHan
 
                                 delegate: RowLayout {
@@ -152,15 +202,19 @@ Item {
                                     spacing: 20
 
                                     Item {
-                                        width: 54; height: 86
+                                        width: 54;
+                                        height: 86
                                         Rectangle {
-                                            anchors.fill: parent; radius: 16
-                                            color: "transparent"; border.color: "#26FFFFFF"; border.width: 2.5
+                                            anchors.fill: parent;
+                                            radius: 16
+                                            color: "transparent";
+                                            border.color: "#26FFFFFF"; border.width: 2.5
                                         }
                                         Rectangle {
                                             width: parent.width - 6
                                             height: Math.max((parent.height - 6) * (Math.min(modelData.tienDo, 100) / 100), 0)
-                                            anchors.bottom: parent.bottom; anchors.bottomMargin: 3
+                                            anchors.bottom: parent.bottom;
+                                            anchors.bottomMargin: 3
                                             anchors.horizontalCenter: parent.horizontalCenter
                                             radius: 12
                                             color: "#6E7BFA"
@@ -174,12 +228,14 @@ Item {
                                         Text { text: Math.round(modelData.tienDo) + "%"; color: "#6E7BFA"; font.pixelSize: 18; font.bold: true }
                                         Text {
                                             text: "Đã tiết kiệm: " + modelData.soTienDaTietKiem.toLocaleString('vi-VN')
-                                                + " / " + modelData.soTienMucTieu.toLocaleString('vi-VN') + " đ"
-                                            color: "#8A8FC0"; font.pixelSize: 12
+                                                    + " / " + modelData.soTienMucTieu.toLocaleString('vi-VN') + " đ"
+                                            color: "#8A8FC0";
+                                            font.pixelSize: 12
                                         }
                                         Text {
                                             text: "Đã trả: " + modelData.soKyDaTra + " / " + modelData.soKyTraGop + " tháng"
-                                            color: "#5F638F"; font.pixelSize: 12
+                                            color: "#5F638F";
+                                            font.pixelSize: 12
                                         }
                                     }
                                 }
