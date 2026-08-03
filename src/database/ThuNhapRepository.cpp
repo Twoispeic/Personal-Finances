@@ -64,3 +64,12 @@ bool ThuNhapRepository::luuThuNhapThang(double soTien) {
     query.bindValue(":soTien", soTien);
     return query.exec();
 }
+//Xoa thang hien tai
+bool ThuNhapRepository::xoaThangHienTai() {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+    QString thangHienTai = QDate::currentDate().toString("yyyy-MM");
+    QSqlQuery query;
+    query.prepare("DELETE FROM ThuNhap WHERE strftime('%Y-%m', ngay) = :thang");
+    query.bindValue(":thang", thangHienTai);
+    return query.exec();
+}

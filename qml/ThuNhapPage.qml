@@ -78,6 +78,15 @@ Item {
                                 }
                             }
                         }
+                        Button {
+                                text: "Xóa"
+                                background: Rectangle { color: "#F2508C"; radius: 8 }
+                                contentItem: Text {
+                                    text: parent.text; color: "#FFF"; font.bold: true
+                                    horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                                }
+                                onClicked: appController.thuNhap.xoaThangHienTai()
+                            }
                     }
                 }
             }

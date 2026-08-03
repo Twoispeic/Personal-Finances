@@ -8,5 +8,6 @@
         <file>ThemChiTieuDialog.qml</file>
         <file>TaoMucTieuDialog.qml</file>
         <file>GopTietKiemDialog.qml</file>
+        <file>XacNhanChotSoDialog.qml</file>
     </qresource>
 </RCC>

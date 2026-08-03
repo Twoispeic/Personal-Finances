@@ -1,6 +1,7 @@
 #include "MucTieuController.h"
 #include "database/MucTieuRepository.h"
 #include "goals/MucTieuNganHan.h"
+#include "goals/MucTieuDaiHan.h"
 
 MucTieuController::MucTieuController(NguoiDung* nd, QObject* parent)
     : QObject(parent), nguoiDung(nd)
@@ -50,6 +51,17 @@ void MucTieuController::taiLai() {
         } else {
             m_danhSachDaiHan.append(m);
         }
+        MucTieuNganHan* ngan = dynamic_cast<MucTieuNganHan*>(mt);
+        MucTieuDaiHan* dai = dynamic_cast<MucTieuDaiHan*>(mt);
+        if (ngan) {
+            m["thoiHanThang"] = ngan->getThoiHanThang();
+        } else if (dai) {
+            m["soKyTraGop"] = dai->getSoKyTraGop();
+            m["soTienMoiKy"] = dai->getSoTienMoiKy();
+            int soKyDaTra = dai->getSoTienMoiKy() > 0
+                                ? (int)(dai->getSoTienDaTietKiem() / dai->getSoTienMoiKy()) : 0;
+            m["soKyDaTra"] = soKyDaTra;
+        }
     }
 
     qDeleteAll(ds);
@@ -82,4 +94,20 @@ void MucTieuController::gop(int mucTieuId, double soTien) {
     }
     qDeleteAll(ds);
     taiLai();
+}
+
+double MucTieuController::tongDaTietKiem() const {
+    double tong = 0;
+    for (const QVariant& v : m_danhSach) {
+        tong += v.toMap()["soTienDaTietKiem"].toDouble();
+    }
+    return tong;
+}
+
+double MucTieuController::tongMucTieu() const {
+    double tong = 0;
+    for (const QVariant& v : m_danhSach) {
+        tong += v.toMap()["soTienMucTieu"].toDouble();
+    }
+    return tong;
 }

@@ -47,17 +47,25 @@ bool ChiTieuRepository::them(const ChiTieu &chiTieu) {
 QList<ChiTieu> ChiTieuRepository::layTatCa() {
     QList<ChiTieu> ketQua;
     if (!KetNoiDatabase::getInstance().moKetNoi()) return ketQua;
-
-    QSqlQuery query("SELECT loai, soTien, ngay FROM ChiTieu");
+    QSqlQuery query("SELECT id, loai, soTien, ngay FROM ChiTieu");
     while (query.next()) {
         LoaiChiTieu loai = textSangLoai(query.value("loai").toString());
         double soTien = query.value("soTien").toDouble();
         QDate ngay = QDate::fromString(query.value("ngay").toString(), Qt::ISODate);
-        ketQua.append(ChiTieu(loai, soTien, ngay));
+        ChiTieu ct(loai, soTien, ngay);
+        ct.datId(query.value("id").toInt());   // thêm dòng này
+        ketQua.append(ct);
     }
     return ketQua;
 }
 
+bool ChiTieuRepository::xoa(int id) {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+    QSqlQuery query;
+    query.prepare("DELETE FROM ChiTieu WHERE id = :id");
+    query.bindValue(":id", id);
+    return query.exec();
+}
 
 QMap<LoaiChiTieu, double> ChiTieuRepository::tinhTongTheoLoai() {
     QMap<LoaiChiTieu, double> ketQua;
