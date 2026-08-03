@@ -104,3 +104,12 @@ QVariantList ChiTieuController::thongKeTheoLoai() const {
     }
     return ketQua;
 }
+
+QVariantList ChiTieuController::danhSachPhanLoai() const {
+    return QVariantList{
+        QVariantMap{{"text", "Tiền sinh hoạt"}, {"value", 0}},
+        QVariantMap{{"text", "Tiền điện nước"}, {"value", 1}},
+        QVariantMap{{"text", "Tiền nhà"}, {"value", 2}},
+        QVariantMap{{"text", "Khác"}, {"value", 3}}
+    };
+}

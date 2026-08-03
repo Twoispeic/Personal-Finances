@@ -19,6 +19,8 @@ class ChiTieuController : public QObject {
 
     Q_PROPERTY(QVariantList thongKeTheoLoai READ thongKeTheoLoai NOTIFY duLieuThayDoi)
 
+    Q_PROPERTY(QVariantList danhSachPhanLoai READ danhSachPhanLoai CONSTANT)
+
 public:
     explicit ChiTieuController(NguoiDung* nd, QObject* parent = nullptr);
 
@@ -26,6 +28,7 @@ public:
     QVariantList thongKeBieuDo() const;
     QVariantList danhSachChuaXacDinh() const;
     QVariantList thongKeTheoLoai() const;
+    QVariantList danhSachPhanLoai() const;
 
     Q_INVOKABLE void them(int loai, double soTien);
     Q_INVOKABLE void locTheoLoai(int loai);

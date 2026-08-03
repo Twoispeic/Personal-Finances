@@ -11,26 +11,23 @@ Dialog {
 
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
-    property var danhSachLoai: [
-        { text: "Tiền sinh hoạt", value: 0 },
-        { text: "Tiền điện nước", value: 1 },
-        { text: "Tiền nhà", value: 2 },
-        { text: "Khác", value: 3 }
-    ]
 
     ColumnLayout {
         anchors.fill: parent
         spacing: 12
 
         Text { text: "Loại chi tiêu:"; color: "white" }
+
         ComboBox {
             id: comboLoai
             Layout.fillWidth: true
-            model: root.danhSachLoai
+            // Lấy danh sách phân loại từ C++ (AppController)
+            model: appController.chiTieu.danhSachPhanLoai
             textRole: "text"
         }
 
         Text { text: "Số tiền:"; color: "white" }
+
         SpinBox {
             id: spinSoTien
             Layout.fillWidth: true
@@ -41,6 +38,7 @@ Dialog {
     }
 
     onAccepted: {
-        appController.chiTieu.them(danhSachLoai[comboLoai.currentIndex].value, spinSoTien.value)
+        var loaiValue = appController.chiTieu.danhSachPhanLoai[comboLoai.currentIndex].value
+        appController.chiTieu.them(loaiValue, spinSoTien.value)
     }
 }
