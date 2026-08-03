@@ -45,10 +45,10 @@ Dialog {
     }
 
     onAccepted: {
-            if (tabBar.currentIndex === 0) {
-                appController.mucTieu.themNganHan(txtTenNganHan.text, spinSoTienNganHan.value, spinThoiHan.value)
-            } else {
-                appController.mucTieu.themDaiHan(txtTenDaiHan.text, spinSoTienDaiHan.value, spinSoKy.value)
-            }
+        if (tabBar.currentIndex === 0) {
+            appController.mucTieu.themNganHan(txtTenNganHan.text, spinSoTienNganHan.value, spinThoiHan.value)
+        } else {
+            appController.mucTieu.themDaiHan(txtTenDaiHan.text, spinSoTienDaiHan.value, spinSoKy.value)
         }
+    }
 }

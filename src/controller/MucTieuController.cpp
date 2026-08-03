@@ -2,6 +2,7 @@
 #include "database/MucTieuRepository.h"
 #include "goals/MucTieuNganHan.h"
 #include "goals/MucTieuDaiHan.h"
+#include "goals/MucTieuFactory.h"
 
 MucTieuController::MucTieuController(NguoiDung* nd, QObject* parent)
     : QObject(parent), nguoiDung(nd)
@@ -16,7 +17,6 @@ QVariantList MucTieuController::danhSachDaiHan() const { return m_danhSachDaiHan
 int MucTieuController::soLuongHoanThanh() const { return m_soLuongHoanThanh; }
 
 void MucTieuController::taiLai() {
-    // Reset lại toàn bộ list và biến đếm
     m_danhSach.clear();
     m_danhSachNganHan.clear();
     m_danhSachDaiHan.clear();
@@ -24,7 +24,6 @@ void MucTieuController::taiLai() {
 
     MucTieuRepository repo;
     const QList<MucTieu*> ds = repo.layTatCa();
-
     for (MucTieu* mt : ds) {
         QVariantMap m;
         m["id"] = mt->getId();
@@ -37,20 +36,7 @@ void MucTieuController::taiLai() {
         bool laNganHan = (dynamic_cast<MucTieuNganHan*>(mt) != nullptr);
         m["laNganHan"] = laNganHan;
 
-        // Đếm số lượng mục tiêu đã đạt 100%
-        if (mt->kiemTraHoanThanh()) {
-            m_soLuongHoanThanh++;
-        }
-
-        // Bỏ vào danh sách tổng
-        m_danhSach.append(m);
-
-        // Phân loại vào danh sách hiển thị riêng biệt
-        if (laNganHan) {
-            m_danhSachNganHan.append(m);
-        } else {
-            m_danhSachDaiHan.append(m);
-        }
+        // ĐƯA LÊN TRƯỚC — gán đủ dữ liệu vào "m" trước khi append
         MucTieuNganHan* ngan = dynamic_cast<MucTieuNganHan*>(mt);
         MucTieuDaiHan* dai = dynamic_cast<MucTieuDaiHan*>(mt);
         if (ngan) {
@@ -62,21 +48,31 @@ void MucTieuController::taiLai() {
                                 ? (int)(dai->getSoTienDaTietKiem() / dai->getSoTienMoiKy()) : 0;
             m["soKyDaTra"] = soKyDaTra;
         }
-    }
 
+        if (mt->kiemTraHoanThanh()) {
+            m_soLuongHoanThanh++;
+        }
+
+        m_danhSach.append(m);
+        if (laNganHan) {
+            m_danhSachNganHan.append(m);
+        } else {
+            m_danhSachDaiHan.append(m);
+        }
+    }
     qDeleteAll(ds);
     emit duLieuThayDoi();
 }
 
 void MucTieuController::themNganHan(const QString& ten, double soTien, int thoiHan) {
-    MucTieu* mt = nguoiDung->taoMucTieuNganHan(ten, soTien, thoiHan);
+    MucTieu* mt = MucTieuFactory::taoMucTieuNganHan(ten, soTien, thoiHan);
     MucTieuRepository().them(mt);
     delete mt;
     taiLai();
 }
 
 void MucTieuController::themDaiHan(const QString& ten, double soTien, int soKy) {
-    MucTieu* mt = nguoiDung->taoMucTieuDaiHan(ten, soTien, soKy);
+    MucTieu* mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTien, soKy);
     MucTieuRepository().them(mt);
     delete mt;
     taiLai();

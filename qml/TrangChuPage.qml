@@ -148,5 +148,8 @@ Item {
                 }
             }
         }
+        XacNhanChotSoDialog {
+            id: xacNhanChotSoDialog
+        }
     }
 }
