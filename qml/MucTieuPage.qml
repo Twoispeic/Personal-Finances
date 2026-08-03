@@ -36,16 +36,34 @@ Item {
                 }
 
                 // Thẻ tổng tiết kiệm
-                Rectangle {
-                    Layout.fillWidth: true; height: 90
-                    color: "#1B1E42"; radius: 18; border.color: "#12FFFFFF"
-                    ColumnLayout {
-                        anchors.fill: parent; anchors.margins: 20; spacing: 6
-                        Text { text: "TỔNG TIỀN ĐANG TÍCH LŨY"; color: "#8A8FC0"; font.pixelSize: 12; font.bold: true }
-                        Text {
-                            text: appController.mucTieu.tongDaTietKiem.toLocaleString('vi-VN') + " / "
-                                + appController.mucTieu.tongMucTieu.toLocaleString('vi-VN') + " đ"
-                            color: "#35DDC0"; font.pixelSize: 22; font.bold: true
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 18
+
+                    Rectangle {
+                        Layout.fillWidth: true; height: 90
+                        color: "#1B1E42"; radius: 18; border.color: "#12FFFFFF"
+                        ColumnLayout {
+                            anchors.fill: parent; anchors.margins: 20; spacing: 6
+                            Text { text: "TIẾN ĐỘ TỔNG MỤC TIÊU"; color: "#8A8FC0"; font.pixelSize: 12; font.bold: true }
+                            Text {
+                                text: appController.mucTieu.tongDaTietKiem.toLocaleString('vi-VN') + " / "
+                                    + appController.mucTieu.tongMucTieu.toLocaleString('vi-VN') + " đ"
+                                color: "#35DDC0"; font.pixelSize: 22; font.bold: true
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        Layout.fillWidth: true; height: 90
+                        color: "#1B1E42"; radius: 18; border.color: "#12FFFFFF"
+                        ColumnLayout {
+                            anchors.fill: parent; anchors.margins: 20; spacing: 6
+                            Text { text: "HŨ TIẾT KIỆM KHẢ DỤNG"; color: "#8A8FC0"; font.pixelSize: 12; font.bold: true }
+                            Text {
+                                text: appController.huTietKiem.toLocaleString('vi-VN') + " đ"
+                                color: "#FFB35C"; font.pixelSize: 22; font.bold: true
+                            }
                         }
                     }
                 }
@@ -123,7 +141,7 @@ Item {
                                             onClicked: {
                                                 gopTietKiemDialog.mucTieuId = modelData.id
                                                 gopTietKiemDialog.tenMucTieu = modelData.ten
-                                                gopTietKiemDialog.soTienConDu = appController.soDuThang
+                                                gopTietKiemDialog.soTienConDu = appController.huTietKiem   // đổi ở đây
                                                 gopTietKiemDialog.open()
                                             }
                                         }
@@ -185,6 +203,22 @@ Item {
                                 }
                             }
                         }
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Text { text: "Mục tiêu dài hạn"; color: "#F4F5FC"; font.pixelSize: 16; font.bold: true }
+                            Item { Layout.fillWidth: true }
+                            Rectangle {
+                                width: 32; height: 32; radius: 16
+                                color: "#6E7BFA"
+                                Text { anchors.centerIn: parent; text: "⟳"; color: "#FFF"; font.pixelSize: 16; font.bold: true }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: appController.ketThucThang()
+                                }
+                            }
+                        }
+                        Text { text: "Tự động trích từ hũ tiết kiệm mỗi khi bấm refresh"; color: "#5F638F"; font.pixelSize: 11 }
                     }
                 }
             }

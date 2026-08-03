@@ -68,3 +68,8 @@ void AppController::dongBoNguoiDungTuDatabase() {
     for (MucTieu* mt : MucTieuRepository().layTatCa())
         nguoiDungHienTai.themMucTieuVaoDanhSach(mt);   // chuyển quyền sở hữu cho NguoiDung, KHÔNG delete ở đây
 }
+
+double AppController::huTietKiem() const {
+    double con = soDuThang() - m_mucTieu->tongDaTietKiem();
+    return con > 0 ? con : 0;
+}
