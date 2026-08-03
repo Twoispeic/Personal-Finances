@@ -33,6 +33,7 @@ public:
     MucTieuController* mucTieu() const { return m_mucTieu; }
 
     Q_INVOKABLE double ketThucThang();
+    Q_INVOKABLE bool thuTrichTienTuHuVaoDaiHan();
 
 signals:
     void duLieuThayDoi();
