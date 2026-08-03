@@ -124,8 +124,10 @@ Item {
                                     }
                                     ColumnLayout {
                                         spacing: 2
-                                        Text { text: "Chưa phân loại"; color: "#F4F5FC"; font.pixelSize: 14 }
-                                        Text { text: modelData.ngay; color: "#5F638F"; font.pixelSize: 12 }
+                                        Text { text: modelData.tenLoai !== undefined ? modelData.tenLoai : "Chưa phân loại"
+                                            color: "#F4F5FC"
+                                            font.pixelSize: 14
+                                        }
                                     }
                                     Item { Layout.fillWidth: true }
                                     Text {

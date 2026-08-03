@@ -22,10 +22,23 @@ void ChiTieuController::taiLai() {
 
     double tongChiTieu = 0.0;
 
+    // Hàm lambda hỗ trợ chuyển đổi mã loại sang tên hiển thị
+    auto layTenLoai = [](LoaiChiTieu loai) -> QString {
+        switch (loai) {
+        case TIEN_SINH_HOAT: return "Tiền sinh hoạt";
+        case TIEN_DIEN_NUOC:  return "Tiền điện nước";
+        case TIEN_NHA:       return "Tiền nhà";
+        case KHAC:           return "Khác";
+        default:             return "Chưa phân loại";
+        }
+    };
+
     // 1. Nạp danh sách chi tiết và phân loại
     for (const ChiTieu& ct : ds) {
         QVariantMap m;
+        m["id"] = ct.getId(); // Bổ sung id để phục vụ thao tác xóa/sửa
         m["loai"] = (int)ct.getLoai();
+        m["tenLoai"] = layTenLoai(ct.getLoai()); // <--- Bổ sung tên loại hiển thị
         m["soTien"] = ct.getSoTien();
         m["ngay"] = ct.getNgay().toString("dd/MM/yyyy");
 
@@ -43,6 +56,7 @@ void ChiTieuController::taiLai() {
     for (auto it = tongTheoLoai.begin(); it != tongTheoLoai.end(); ++it) {
         QVariantMap m;
         m["loai"] = (int)it.key();
+        m["tenLoai"] = layTenLoai(it.key()); // <--- Bổ sung tên loại cho biểu đồ
         m["tongTien"] = it.value();
 
         // Tính %, tránh lỗi chia cho 0
