@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE void themNganHan(const QString& ten, double soTien, int thoiHan);
     Q_INVOKABLE void themDaiHan(const QString& ten, double soTien, int soKy);
     Q_INVOKABLE void gop(int mucTieuId, double soTien);
+    Q_INVOKABLE void xoa(int id);
 
     void taiLai();
 

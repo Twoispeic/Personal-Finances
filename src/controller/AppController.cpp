@@ -4,7 +4,15 @@
 #include "database/ChiTieuRepository.h"
 #include "database/MucTieuRepository.h"
 #include "goals/MucTieuDaiHan.h"
-#include "goals/MucTieuNganHan.h"
+#include "AppController.h"
+#include "database/NguoiDungRepository.h"
+#include "database/ThuNhapRepository.h"
+#include "database/ChiTieuRepository.h"
+#include "database/MucTieuRepository.h"
+#include "goals/MucTieuDaiHan.h"
+#include <QSettings>
+#include <QDate>
+#include <QVariant>
 
 AppController::AppController(QObject* parent)
     : QObject(parent), nguoiDungHienTai("", "")
@@ -41,39 +49,21 @@ double AppController::tongChiTieu() const { return nguoiDungHienTai.tinhTongChiT
 double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(); }
 
 double AppController::ketThucThang() {
-    // 1. Tính tổng tiền dư
-    double conDu = tongThuNhap() - tongChiTieu();
-    if (conDu <= 0) return 0.0; // Nếu không dư đồng nào thì kết thúc luôn
+    // Giữ lại thuật toán chốt sổ mới của Kha (Nhánh main)
+    double kha = huTietKiem();
+    double conDu = nguoiDungHienTai.phanBoTienTietKiem(kha);
 
     MucTieuRepository repo;
-    QList<MucTieu*> ds = repo.layTatCa();
+    for (MucTieu* mt : nguoiDungHienTai.layDanhSachMucTieu())
+        repo.capNhatTienDaTietKiem(mt->getId(), mt->getSoTienDaTietKiem());
 
-    // 2. Chạy vòng lặp ưu tiên đắp tiền cho các Mục Tiêu Dài Hạn
-    for (MucTieu* mt : ds) {
-        // Kiểm tra ép kiểu xem đây có phải mục tiêu dài hạn không
-        MucTieuDaiHan* daiHan = dynamic_cast<MucTieuDaiHan*>(mt);
+    // Lưu phần dư còn lại làm gốc cho tháng sau, rồi xoá sạch thu/chi tháng này
+    QSettings settings("MyApp", "TaiChinh");
+    settings.setValue("SoDuLuyKe", huTietKiem());   // tính lại sau khi đã trừ phần vừa phân bổ dài hạn
 
-        // Nếu là dài hạn, mục tiêu chưa đạt 100%, và trong túi vẫn còn dư tiền
-        if (daiHan != nullptr && conDu > 0 && !daiHan->kiemTraHoanThanh()) {
-            double tienCanMoiKy = daiHan->getSoTienMoiKy();
+    ThuNhapRepository().xoaTatCa();
+    ChiTieuRepository().xoaTatCa();
 
-            if (tienCanMoiKy > 0) {
-                // Tính số tiền rót vào: Ưu tiên rót đủ mức cần của 1 kỳ.
-                // Nếu tiền dư trong túi ít hơn mức cần, thì vét sạch túi rót hết vào.
-                double tienRotVao = qMin(conDu, tienCanMoiKy);
-
-                // Cập nhật số tiền đã tích lũy vào Database
-                double tienDaCo = daiHan->getSoTienDaTietKiem();
-                repo.capNhatTienDaTietKiem(daiHan->getId(), tienDaCo + tienRotVao);
-
-                // Trừ đi số tiền dư sau khi rót
-                conDu -= tienRotVao;
-            }
-        }
-    }
-    qDeleteAll(ds);
-
-    // 3. Đồng bộ lại dữ liệu để UI tự động vẽ lại thanh tiến độ
     dongBoNguoiDungTuDatabase();
     m_mucTieu->taiLai();
     emit duLieuThayDoi();
@@ -81,6 +71,7 @@ double AppController::ketThucThang() {
     // Trả về phần tiền dư (nếu còn) sau khi đã rót cho dài hạn
     return conDu;
 }
+
 
 
 void AppController::dongBoNguoiDungTuDatabase() {
@@ -96,4 +87,40 @@ void AppController::dongBoNguoiDungTuDatabase() {
 
     for (MucTieu* mt : MucTieuRepository().layTatCa())
         nguoiDungHienTai.themMucTieuVaoDanhSach(mt);   // chuyển quyền sở hữu cho NguoiDung, KHÔNG delete ở đây
+}
+
+double AppController::huTietKiem() const {
+    QSettings settings("MyApp", "TaiChinh");
+    double luyKe = settings.value("SoDuLuyKe", 0.0).toDouble();
+    double con = luyKe + soDuThang() - m_mucTieu->tongDaTietKiem();
+    return con > 0 ? con : 0;
+}
+
+void AppController::lamMoiMucTieu() {
+    // 1. Lấy danh sách QVariant
+    QVariantList danhSach = m_mucTieu->danhSachDaiHan();
+
+    // 2. Lặp qua từng QVariant thay vì auto*
+    for (const QVariant& var : danhSach) {
+
+        // 3. Ép kiểu QVariant về lại con trỏ MucTieuDaiHan*
+        MucTieuDaiHan* mt = var.value<MucTieuDaiHan*>();
+
+        // Kiểm tra an toàn: nếu ép kiểu thất bại (null) thì bỏ qua
+        if (!mt) continue;
+
+        if (mt->getDaGopThangNay()) continue;
+
+        double tienCanTra = mt->getSoTienMoiKy();
+
+        if (huTietKiem() >= tienCanTra) {
+            double tienDaCo = mt->getSoTienDaTietKiem();
+            mt->datSoTienDaTietKiem(tienDaCo + tienCanTra);
+
+            mt->setSoKyDaTra(mt->getSoKyDaTra() + 1);
+            mt->setDaGopThangNay(true);
+        }
+    }
+
+    emit huTietKiemChanged();
 }

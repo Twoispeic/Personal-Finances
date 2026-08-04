@@ -16,6 +16,7 @@ class AppController : public QObject {
     Q_PROPERTY(ThuNhapController* thuNhap READ thuNhap CONSTANT)
     Q_PROPERTY(MucTieuController* mucTieu READ mucTieu CONSTANT)
     Q_PROPERTY(QString tenNguoiDung READ tenNguoiDung NOTIFY duLieuThayDoi)
+    Q_PROPERTY(double huTietKiem READ huTietKiem NOTIFY duLieuThayDoi)
 
 
 public:
@@ -25,15 +26,18 @@ public:
     double tongThuNhap() const;
     double tongChiTieu() const;
     double soDuThang() const;
+    double huTietKiem() const;
 
     ChiTieuController* chiTieu() const { return m_chiTieu; }
     ThuNhapController* thuNhap() const { return m_thuNhap; }
     MucTieuController* mucTieu() const { return m_mucTieu; }
 
     Q_INVOKABLE double ketThucThang();
+    Q_INVOKABLE void lamMoiMucTieu();   // refresh thuần, không chuyển tiền
 
 signals:
     void duLieuThayDoi();
+    void huTietKiemChanged();
 
 private:
     NguoiDung nguoiDungHienTai;

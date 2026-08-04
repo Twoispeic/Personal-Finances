@@ -111,9 +111,9 @@ Item {
                 color: "#1B1E42"; radius: 18; border.color: "#12FFFFFF"
                 ColumnLayout {
                     anchors.fill: parent; anchors.margins: 20; spacing: 8
-                    Text { text: "TỔNG TIỀN ĐÃ TÍCH LŨY"; color: "#8A8FC0"; font.pixelSize: 12; font.bold: true }
+                    Text { text: "HŨ TIẾT KIỆM KHẢ DỤNG"; color: "#8A8FC0"; font.pixelSize: 12; font.bold: true }
                     Text {
-                        text: appController.thuNhap.tongTienTietKiem.toLocaleString('vi-VN') + " đ"
+                        text: appController.huTietKiem.toLocaleString('vi-VN') + " đ"
                         color: "#FFB35C"; font.pixelSize: 26; font.bold: true
                     }
                 }
