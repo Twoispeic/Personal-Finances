@@ -4,6 +4,12 @@
 #include "database/ChiTieuRepository.h"
 #include "database/MucTieuRepository.h"
 #include "goals/MucTieuDaiHan.h"
+#include "AppController.h"
+#include "database/NguoiDungRepository.h"
+#include "database/ThuNhapRepository.h"
+#include "database/ChiTieuRepository.h"
+#include "database/MucTieuRepository.h"
+#include "goals/MucTieuDaiHan.h"
 #include <QSettings>
 #include <QDate>
 #include <QVariant>
@@ -43,6 +49,7 @@ double AppController::tongChiTieu() const { return nguoiDungHienTai.tinhTongChiT
 double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(); }
 
 double AppController::ketThucThang() {
+    // Giữ lại thuật toán chốt sổ mới của Kha (Nhánh main)
     double kha = huTietKiem();
     double conDu = nguoiDungHienTai.phanBoTienTietKiem(kha);
 
@@ -60,8 +67,11 @@ double AppController::ketThucThang() {
     dongBoNguoiDungTuDatabase();
     m_mucTieu->taiLai();
     emit duLieuThayDoi();
+
+    // Trả về phần tiền dư (nếu còn) sau khi đã rót cho dài hạn
     return conDu;
 }
+
 
 
 void AppController::dongBoNguoiDungTuDatabase() {
