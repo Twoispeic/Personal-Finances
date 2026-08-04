@@ -10,5 +10,12 @@
         <file>GopTietKiemDialog.qml</file>
         <file>XacNhanChotSoDialog.qml</file>
         <file>XacNhanHoanThanhDialog.qml</file>
+        <file>BieuDoTron.qml</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>../icons/home.svg</file>
+        <file>../icons/income.svg</file>
+        <file>../icons/target.svg</file>
+        <file>../icons/wallet.svg</file>
     </qresource>
 </RCC>

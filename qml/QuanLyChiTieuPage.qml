@@ -21,14 +21,6 @@ Item {
                     Text { text: "Chi tiết các khoản chi trong tháng này"; color: "#8A8FC0"; font.pixelSize: 14 }
                 }
                 Item { Layout.fillWidth: true }
-                Rectangle {
-                    width: 44; height: 44; radius: 22; color: "#6E7BFA"
-                    Text {
-                        anchors.centerIn: parent
-                        text: appController.tenNguoiDung !== "" ? appController.tenNguoiDung.charAt(0).toUpperCase() : "U"
-                        color: "#F4F5FC"; font.pixelSize: 18; font.bold: true
-                    }
-                }
             }
 
             // ================= 2. 3 THẺ THỐNG KÊ ================= (giữ nguyên)
@@ -175,18 +167,71 @@ Item {
                     }
                 }
 
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: 1.0
-                    color: "#1B1E42"; radius: 20; border.color: "#12FFFFFF"
-                    Text {
-                        anchors.centerIn: parent
-                        text: "Chỗ để dán code Biểu đồ tròn của Kha"
-                        color: "#5F638F"
-                        font.pixelSize: 14
-                    }
-                }
+                // ================= KHU VỰC BIỂU ĐỒ TRÒN & CHÚ THÍCH (XẾP DỌC) =================
+                                Rectangle {
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 1.0
+                                    color: "#1B1E42"; radius: 20; border.color: "#12FFFFFF"
+
+                                    ColumnLayout {
+                                        anchors.fill: parent; anchors.margins: 24; spacing: 20
+
+                                        Text { text: "Cơ cấu chi tiêu"; color: "#F4F5FC"; font.pixelSize: 16; font.bold: true }
+
+                                        // 1. Cục biểu đồ đẩy lên trên cùng (Đã ép cân thành hình tròn)
+                                                                BieuDoTron {
+                                                                    Layout.preferredWidth: 180
+                                                                    Layout.preferredHeight: 180
+                                                                    Layout.alignment: Qt.AlignHCenter
+                                                                    modelData: appController.chiTieu.thongKeBieuDo
+                                                                }
+
+
+                                        // 2. Cục chú giải (Legend) nằm ngay bên dưới
+                                        ColumnLayout {
+                                            Layout.fillWidth: true
+                                            spacing: 14
+
+                                            Repeater {
+                                                model: appController.chiTieu.thongKeBieuDo
+
+                                                delegate: RowLayout {
+                                                    // Ẩn nếu chưa có khoản chi nào thuộc loại này
+                                                    visible: modelData.tongTien > 0
+
+                                                    Layout.fillWidth: true
+                                                    spacing: 8
+
+                                                    // Chấm tròn màu
+                                                    Rectangle {
+                                                        width: 12; height: 12; radius: 6
+                                                        color: modelData.mau
+                                                    }
+
+                                                    // Tên khoản chi
+                                                    Text {
+                                                        text: modelData.tenLoai + ":"
+                                                        color: "#F4F5FC"
+                                                        font.pixelSize: 14
+                                                        Layout.fillWidth: true
+                                                    }
+
+                                                    // Số tiền
+                                                    Text {
+                                                        text: modelData.tongTien.toLocaleString('vi-VN') + " đ"
+                                                        color: modelData.mau
+                                                        font.pixelSize: 15
+                                                        font.bold: true
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        // 3. Item tàng hình đóng vai trò như lò xo, đẩy toàn bộ nội dung dồn lên trên cho gọn
+                                        Item { Layout.fillHeight: true }
+                                    }
+                                }
             }
         }
     }

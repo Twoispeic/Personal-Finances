@@ -4,6 +4,12 @@
 #include "database/ChiTieuRepository.h"
 #include "database/MucTieuRepository.h"
 #include "goals/MucTieuDaiHan.h"
+#include "AppController.h"
+#include "database/NguoiDungRepository.h"
+#include "database/ThuNhapRepository.h"
+#include "database/ChiTieuRepository.h"
+#include "database/MucTieuRepository.h"
+#include "goals/MucTieuDaiHan.h"
 #include <QSettings>
 #include <QDate>
 #include <QVariant>
@@ -79,6 +85,7 @@ double AppController::ketThucThang() {
     emit duLieuThayDoi();
     return huTietKiem();
 }
+
 
 
 void AppController::dongBoNguoiDungTuDatabase() {
