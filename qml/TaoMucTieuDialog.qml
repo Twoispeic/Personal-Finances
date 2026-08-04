@@ -136,9 +136,11 @@ Dialog {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         if (loaiMucTieu === 0) {
-                            appController.mucTieu.themNganHan(txtTenNganHan.text, spinSoTienNganHan.value, spinThoiHan.value)
+                            var soTienNH = spinSoTienNganHan.valueFromText(spinSoTienNganHan.contentItem.text, spinSoTienNganHan.locale)
+                            appController.mucTieu.themNganHan(txtTenNganHan.text, soTienNH, spinThoiHan.value)
                         } else {
-                            appController.mucTieu.themDaiHan(txtTenDaiHan.text, spinSoTienDaiHan.value, spinSoKy.value)
+                            var soTienDH = spinSoTienDaiHan.valueFromText(spinSoTienDaiHan.contentItem.text, spinSoTienDaiHan.locale)
+                            appController.mucTieu.themDaiHan(txtTenDaiHan.text, soTienDH, spinSoKy.value)
                         }
                         root.accept()
                     }

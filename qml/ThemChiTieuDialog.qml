@@ -104,9 +104,25 @@ Dialog {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        // Gọi hàm C++ để lưu dữ liệu.
-                        // Bồ nhớ kiểm tra lại tên hàm themChiTieu bên C++ cho chuẩn xác nha!
-                        appController.chiTieu.themChiTieu(comboLoai.currentText, spinTien.value)
+                        // FIX: SpinBox chỉ cập nhật "value" từ nội dung gõ tay khi nó
+                        // mất focus (editingFinished). Nút "Thêm" là Rectangle/MouseArea
+                        // nên không tự lấy focus khi bấm -> spinTien.value vẫn là giá trị
+                        // CŨ (0 ở lần thêm đầu tiên, hoặc số của lần thêm trước đó).
+                        // Ép SpinBox mất focus trước để giá trị vừa gõ được commit lại
+                        // trước khi đọc spinTien.value.
+                        spinTien.focus = false
+
+                        // Bỏ qua nếu chưa nhập số tiền hợp lệ
+                        if (spinTien.value <= 0) {
+                            return
+                        }
+
+                        // Sửa tên hàm thành them() và dùng currentIndex thay vì currentText
+                        appController.chiTieu.them(comboLoai.currentIndex, spinTien.value)
+
+                        // Reset lại form để lần mở dialog kế tiếp không bị giữ giá trị cũ
+                        spinTien.value = 0
+                        comboLoai.currentIndex = 0
 
                         root.accept() // Đóng popup
                     }

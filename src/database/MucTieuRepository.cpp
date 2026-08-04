@@ -29,11 +29,6 @@ bool MucTieuRepository::taoBang() {
                   "soTienMocAnToan REAL DEFAULT -1)";
     bool ok = query.exec(sql);
 
-    // QUAN TRỌNG: Migrate cho DB CŨ đã tồn tại từ trước khi có 3 cột này. CREATE TABLE IF NOT EXISTS
-    // sẽ không làm gì nếu bảng đã có sẵn, nên phải ALTER TABLE để thêm cột còn thiếu vào bảng cũ.
-    // Nếu bỏ bước này, mọi UPDATE có nhắc tới soKyDaTra/thangNamDaTra/soTienMocAnToan sẽ THẤT BẠI
-    // TOÀN BỘ (kể cả phần soTienDaTietKiem) vì SQLite báo lỗi "no such column".
-    // exec() lỗi ở đây (do cột đã tồn tại từ lần chạy trước) là chuyện bình thường, bỏ qua được.
     QSqlQuery migrate;
     migrate.exec("ALTER TABLE MucTieu ADD COLUMN soKyDaTra INTEGER DEFAULT 0");
     migrate.exec("ALTER TABLE MucTieu ADD COLUMN thangNamDaTra TEXT DEFAULT ''");

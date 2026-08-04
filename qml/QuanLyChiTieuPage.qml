@@ -109,10 +109,14 @@ Item {
 
                                 delegate: RowLayout {
                                     width: ListView.view.width
+
+                                    // Màu riêng theo từng loại chi tiêu (rơi về hồng mặc định nếu thiếu)
+                                    property color mauLoai: modelData.mau !== undefined ? modelData.mau : "#F2508C"
+
                                     Rectangle {
                                         width: 34; height: 34; radius: 10
-                                        color: "#26F2508C"
-                                        Text { anchors.centerIn: parent; text: "?"; color: "#F2508C"; font.bold: true }
+                                        color: Qt.alpha(mauLoai, 0.15)
+                                        Text { anchors.centerIn: parent; text: "?"; color: mauLoai; font.bold: true }
                                     }
                                     ColumnLayout {
                                         spacing: 2
@@ -124,13 +128,13 @@ Item {
                                     Item { Layout.fillWidth: true }
                                     Text {
                                         text: "-" + modelData.soTien.toLocaleString('vi-VN') + " đ"
-                                        color: "#F2508C"; font.pixelSize: 14; font.bold: true
+                                        color: mauLoai; font.pixelSize: 14; font.bold: true
                                     }
 
                                     Rectangle {
                                         width: 26; height: 26; radius: 13
-                                        color: "#26F2508C"
-                                        Text { anchors.centerIn: parent; text: "✕"; color: "#F2508C"; font.pixelSize: 12; font.bold: true }
+                                        color: Qt.alpha(mauLoai, 0.15)
+                                        Text { anchors.centerIn: parent; text: "✕"; color: mauLoai; font.pixelSize: 12; font.bold: true }
                                         MouseArea {
                                             anchors.fill: parent
                                             cursorShape: Qt.PointingHandCursor
