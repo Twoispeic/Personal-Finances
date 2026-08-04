@@ -33,10 +33,11 @@ public:
     MucTieuController* mucTieu() const { return m_mucTieu; }
 
     Q_INVOKABLE double ketThucThang();
-    Q_INVOKABLE bool thuTrichTienTuHuVaoDaiHan();
+    Q_INVOKABLE void lamMoiMucTieu();   // refresh thuần, không chuyển tiền
 
 signals:
     void duLieuThayDoi();
+    void huTietKiemChanged();
 
 private:
     NguoiDung nguoiDungHienTai;

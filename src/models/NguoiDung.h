@@ -37,6 +37,7 @@ public:
     double tinhSoDuThang() const;
     // tự tính từ soDuThang, không cần tham số vì đã có sẵn 2 hàm tính tổng
     double phanBoTienTietKiem();          // đổi sang trả về double: số tiền còn dư sau khi lo dài hạn
+    double phanBoTienTietKiem(double soTienKhaDung);
     bool gopTietKiemNganHan(MucTieu* mt, double soTien);
     //Conclude thang de review
     void ketThucThang();

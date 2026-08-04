@@ -107,3 +107,8 @@ double MucTieuController::tongMucTieu() const {
     }
     return tong;
 }
+
+void MucTieuController::xoa(int id) {
+    MucTieuRepository().xoa(id);
+    taiLai();
+}

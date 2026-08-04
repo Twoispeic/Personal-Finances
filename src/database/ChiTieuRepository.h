@@ -18,6 +18,7 @@ public:
 
     // Trong ChiTieuController.h (dưới mục public:)
     bool xoa(int id);
+    bool xoaTatCa();
 
 private:
     QString loaiSangText(LoaiChiTieu loai) const;

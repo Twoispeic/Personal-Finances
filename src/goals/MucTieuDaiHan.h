@@ -7,6 +7,7 @@ class MucTieuDaiHan : public MucTieu {
 private:
     int soKyTraGop;     // Thuộc tính riêng theo đúng UML
     double soTienMoiKy; // Thuộc tính riêng theo đúng UML
+    int soKyDaTra = 0;
 
 public:
     MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop);
@@ -16,6 +17,9 @@ public:
     //getter
     int getSoKyTraGop() const;
     double getSoTienMoiKy() const;
+
+    int getSoKyDaTra() const;
+    void setSoKyDaTra(int soKy);
 };
 
 #endif // MUCTIEUDAIHAN_H 

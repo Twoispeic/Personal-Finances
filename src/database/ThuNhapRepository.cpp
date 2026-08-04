@@ -73,3 +73,8 @@ bool ThuNhapRepository::xoaThangHienTai() {
     query.bindValue(":thang", thangHienTai);
     return query.exec();
 }
+
+bool ThuNhapRepository::xoaTatCa() {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+    return QSqlQuery().exec("DELETE FROM ThuNhap");
+}

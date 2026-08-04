@@ -15,7 +15,7 @@ protected:
     TrangThaiMucTieu* trangThai;
     ChienLuocTietKiem* chienLuoc;
     int id = -1;
-
+    bool daGopThangNay = false;
 public:
     MucTieu(const QString& ten, double soTienMucTieu);
     virtual ~MucTieu();
@@ -40,6 +40,7 @@ public:
 
     int getId() const;
     void datId(int idMoi);
+
 };
 
 #endif // MUCTIEU_H 

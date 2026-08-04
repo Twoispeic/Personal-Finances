@@ -11,6 +11,7 @@
         bool them(MucTieu* mucTieu);
         bool capNhatTienDaTietKiem(int id, double soTienMoi);
         QList<MucTieu*> layTatCa();
+        bool xoa(int id);
     };
 
     #endif // MUCTIEUREPOSITORY_H

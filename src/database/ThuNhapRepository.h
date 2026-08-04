@@ -12,6 +12,7 @@ public:
     QList<ThuNhap> layTatCa();
     bool luuThuNhapThang(double soTien);
     bool xoaThangHienTai();
+    bool xoaTatCa();
 };
 
 #endif // THUNHAPREPOSITORY_H

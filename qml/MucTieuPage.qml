@@ -146,6 +146,30 @@ Item {
                                             }
                                         }
                                     }
+                                    Rectangle {
+                                                width: 26
+                                                height: 26
+                                                radius: 13
+                                                color: "#26F2508C" // Màu nền nhẹ cho nút xóa (đỏ hồng mờ)
+                                                Layout.alignment: Qt.AlignVCenter
+
+                                                Text {
+                                                    anchors.centerIn: parent
+                                                    text: "✕"
+                                                    color: "#F2508C"
+                                                    font.bold: true
+                                                    font.pixelSize: 12
+                                                }
+
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    cursorShape: Qt.PointingHandCursor
+                                                    onClicked: {
+                                                        // Gọi hàm xóa theo đúng ID của mục tiêu trên hàng này
+                                                        appController.mucTieu.xoa(modelData.id)
+                                                    }
+                                                }
+                                        }
                                 }
                             }
                         }
@@ -184,7 +208,7 @@ Item {
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
                                         // GỌI HÀM MỚI Ở ĐÂY: Chỉ phân bổ tiền hũ, không reset tháng
-                                        onClicked: appController.thuTrichTienTuHuVaoDaiHan()
+                                        onClicked: appController.lamMoiMucTieu()
                                     }
                                 }
                             }
@@ -237,6 +261,30 @@ Item {
                                             color: "#5F638F";
                                             font.pixelSize: 12
                                         }
+                                    }
+                                    Rectangle {
+                                                width: 26
+                                                height: 26
+                                                radius: 13
+                                                color: "#26F2508C" // Màu nền nhẹ cho nút xóa (đỏ hồng mờ)
+                                                Layout.alignment: Qt.AlignVCenter
+
+                                                Text {
+                                                    anchors.centerIn: parent
+                                                    text: "✕"
+                                                    color: "#F2508C"
+                                                    font.bold: true
+                                                    font.pixelSize: 12
+                                                }
+
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    cursorShape: Qt.PointingHandCursor
+                                                    onClicked: {
+                                                        // Gọi hàm xóa theo đúng ID của mục tiêu trên hàng này
+                                                        appController.mucTieu.xoa(modelData.id)
+                                                    }
+                                                }
                                     }
                                 }
                             }
