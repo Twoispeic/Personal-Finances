@@ -7,6 +7,7 @@
 #include "controller/ThuNhapController.h"
 #include "controller/MucTieuController.h"
 
+
 class AppController : public QObject {
     Q_OBJECT
     Q_PROPERTY(double tongThuNhap READ tongThuNhap NOTIFY duLieuThayDoi)
@@ -34,6 +35,7 @@ public:
 
     Q_INVOKABLE double ketThucThang();
     Q_INVOKABLE void lamMoiMucTieu();   // refresh thuần, không chuyển tiền
+    Q_INVOKABLE void hoanThanhMucTieu(int id);   // xác nhận hoàn thành + xoá, KHÔNG trả tiền về hũ
 
 signals:
     void duLieuThayDoi();
@@ -45,6 +47,12 @@ private:
     ThuNhapController* m_thuNhap;
     MucTieuController* m_mucTieu;
     void dongBoNguoiDungTuDatabase();
+
+    // Logic trả góp mục tiêu dài hạn — DÙNG CHUNG cho cả nút "Refresh" (lamMoiMucTieu)
+    // và "Chốt sổ tháng" (ketThucThang), để 2 nơi này không bao giờ trả trùng 1 tháng.
+    // Trả tối đa 1 lần/tháng/mục tiêu (idempotent — bấm bao nhiêu lần cũng an toàn) và tự
+    // xoá các mục tiêu bị fail-safe (hũ tiền hụt bất thường so với mốc an toàn đã ghi nhận).
+    void traGopMucTieuDaiHanThangNay();
 };
 
 #endif // APPCONTROLLER_H

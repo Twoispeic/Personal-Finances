@@ -6,5 +6,18 @@ MucTieuDaiHan::MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyT
 bool MucTieuDaiHan::kiemTraHoanThanh() {
     return (soTienDaTietKiem >= soTienMucTieu);
 }
-int MucTieuDaiHan::getSoKyTraGop() const { return soKyTraGop; }
-double MucTieuDaiHan::getSoTienMoiKy() const { return soTienMoiKy; }
+int MucTieuDaiHan::getSoKyTraGop() const {
+    return soKyTraGop;
+}
+
+double MucTieuDaiHan::getSoTienMoiKy() const {
+    return soTienMoiKy;
+}
+
+int MucTieuDaiHan::getSoKyDaTra() const {
+    return soKyDaTra;
+}
+
+void MucTieuDaiHan::setSoKyDaTra(int ky) {
+    soKyDaTra = ky;
+}

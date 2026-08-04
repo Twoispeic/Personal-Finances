@@ -9,6 +9,7 @@
         <file>TaoMucTieuDialog.qml</file>
         <file>GopTietKiemDialog.qml</file>
         <file>XacNhanChotSoDialog.qml</file>
+        <file>XacNhanHoanThanhDialog.qml</file>
         <file>BieuDoTron.qml</file>
     </qresource>
     <qresource prefix="/icons">

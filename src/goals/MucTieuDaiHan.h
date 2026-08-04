@@ -9,6 +9,8 @@ private:
     int soKyTraGop;     // Thuộc tính riêng theo đúng UML
     double soTienMoiKy; // Thuộc tính riêng theo đúng UML
     int soKyDaTra = 0;
+    QString thangNamDaTra = "";        // lưu "yyyy-MM" của lần trả gần nhất
+    double soTienMocAnToan = -1;       // mốc an toàn để fail-safe
 
 public:
     MucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop);
@@ -21,9 +23,14 @@ public:
     int getSoKyTraGop() const;
     double getSoTienMoiKy() const;
 
-    //getter & setter cho soKyDaTra
-    int getSoKyDaTra() const { return soKyDaTra; }
-    void setSoKyDaTra(int soKy) { soKyDaTra = soKy; }
+    int getSoKyDaTra() const;
+    void setSoKyDaTra(int ky);
+
+    QString getThangNamDaTra() const { return thangNamDaTra; }
+    void setThangNamDaTra(const QString& t) { thangNamDaTra = t; }
+
+    double getSoTienMocAnToan() const { return soTienMocAnToan; }
+    void setSoTienMocAnToan(double t) { soTienMocAnToan = t; }
 };
 
 #endif // MUCTIEUDAIHAN_H 
