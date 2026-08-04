@@ -116,3 +116,8 @@ QList<ChiTieu> ChiTieuRepository::locTheoKhoangThoiGian(const QDate& tuNgay, con
     }
     return ketQua;
 }
+
+bool ChiTieuRepository::xoaTatCa() {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+    return QSqlQuery().exec("DELETE FROM ChiTieu");
+}

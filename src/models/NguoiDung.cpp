@@ -72,6 +72,21 @@ double NguoiDung::phanBoTienTietKiem() {
     return conLai;   // trả về phần còn dư, để GUI hỏi có muốn góp ngắn hạn không
 }
 
+double NguoiDung::phanBoTienTietKiem(double soTienKhaDung) {
+    double conLai = soTienKhaDung;
+    if (conLai <= 0) return 0.0;
+
+    // Dài hạn — luôn bắt buộc, tự động chạy
+    for (MucTieu* const &mt : danhSachMucTieu) {
+        if (dynamic_cast<MucTieuDaiHan*>(mt) != nullptr) {
+            conLai -= mt->capNhatTietKiem(conLai);
+            if (conLai <= 0) break;
+        }
+    }
+
+    return conLai;   // trả về phần còn dư
+}
+
 bool NguoiDung::gopTietKiemNganHan(MucTieu* mt, double soTien) {
     if (mt == nullptr || soTien <= 0) return false;
     if (dynamic_cast<MucTieuNganHan*>(mt) == nullptr) return false;

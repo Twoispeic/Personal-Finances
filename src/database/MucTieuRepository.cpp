@@ -93,13 +93,17 @@ QList<MucTieu*> MucTieuRepository::layTatCa() {
         }
         mt->datId(id);
         mt->datSoTienDaTietKiem(soTienDTK);   // nạp lại tiến độ, không tính lại qua Strategy
-        if (trangThai == "HoanThanh") {
+        if (mt->kiemTraHoanThanh()) {
             mt->datTrangThai(new TrangThaiHoanThanh());
         } else {
             mt->datTrangThai(new TrangThaiChuaXong());
         }
-
         ketQua.append(mt);
     }
     return ketQua;
+}
+bool MucTieuRepository::xoa(int id) {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+    QSqlQuery q; q.prepare("DELETE FROM MucTieu WHERE id = :id"); q.bindValue(":id", id);
+    return q.exec();
 }

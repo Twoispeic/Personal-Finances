@@ -3,8 +3,10 @@
 #include "database/ThuNhapRepository.h"
 #include "database/ChiTieuRepository.h"
 #include "database/MucTieuRepository.h"
+#include "goals/MucTieuDaiHan.h"
 #include <QSettings>
 #include <QDate>
+#include <QVariant>
 
 AppController::AppController(QObject* parent)
     : QObject(parent), nguoiDungHienTai("", "")
@@ -41,15 +43,21 @@ double AppController::tongChiTieu() const { return nguoiDungHienTai.tinhTongChiT
 double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(); }
 
 double AppController::ketThucThang() {
-    double conDu = nguoiDungHienTai.phanBoTienTietKiem();
-    dongBoNguoiDungTuDatabase();
+    double kha = huTietKiem();
+    double conDu = nguoiDungHienTai.phanBoTienTietKiem(kha);
 
-    // Cập nhật lại tiền đã tiết kiệm trong DB cho từng mục tiêu dài hạn vừa được cộng thêm
     MucTieuRepository repo;
-    for (MucTieu* mt : nguoiDungHienTai.layDanhSachMucTieu()) {   // cần getter này, xem ghi chú bên dưới
+    for (MucTieu* mt : nguoiDungHienTai.layDanhSachMucTieu())
         repo.capNhatTienDaTietKiem(mt->getId(), mt->getSoTienDaTietKiem());
-    }
 
+    // Lưu phần dư còn lại làm gốc cho tháng sau, rồi xoá sạch thu/chi tháng này
+    QSettings settings("MyApp", "TaiChinh");
+    settings.setValue("SoDuLuyKe", huTietKiem());   // tính lại sau khi đã trừ phần vừa phân bổ dài hạn
+
+    ThuNhapRepository().xoaTatCa();
+    ChiTieuRepository().xoaTatCa();
+
+    dongBoNguoiDungTuDatabase();
     m_mucTieu->taiLai();
     emit duLieuThayDoi();
     return conDu;
@@ -72,34 +80,37 @@ void AppController::dongBoNguoiDungTuDatabase() {
 }
 
 double AppController::huTietKiem() const {
-    double con = soDuThang() - m_mucTieu->tongDaTietKiem();
+    QSettings settings("MyApp", "TaiChinh");
+    double luyKe = settings.value("SoDuLuyKe", 0.0).toDouble();
+    double con = luyKe + soDuThang() - m_mucTieu->tongDaTietKiem();
     return con > 0 ? con : 0;
 }
-bool AppController::thuTrichTienTuHuVaoDaiHan() {
-    QSettings settings("MyApp", "TaiChinh");
-    QString thangHienTai = QDate::currentDate().toString("MM-yyyy");
-    QString thangDaTrichCuoi = settings.value("ThangDaTrichDaiHan", "").toString();
 
-    // KIỂM TRA: Nếu đã trích tiền trong tháng này rồi thì không làm gì cả
-    if (thangDaTrichCuoi == thangHienTai) {
-        return false; // Báo lỗi về QML
+void AppController::lamMoiMucTieu() {
+    // 1. Lấy danh sách QVariant
+    QVariantList danhSach = m_mucTieu->danhSachDaiHan();
+
+    // 2. Lặp qua từng QVariant thay vì auto*
+    for (const QVariant& var : danhSach) {
+
+        // 3. Ép kiểu QVariant về lại con trỏ MucTieuDaiHan*
+        MucTieuDaiHan* mt = var.value<MucTieuDaiHan*>();
+
+        // Kiểm tra an toàn: nếu ép kiểu thất bại (null) thì bỏ qua
+        if (!mt) continue;
+
+        if (mt->getDaGopThangNay()) continue;
+
+        double tienCanTra = mt->getSoTienMoiKy();
+
+        if (huTietKiem() >= tienCanTra) {
+            double tienDaCo = mt->getSoTienDaTietKiem();
+            mt->datSoTienDaTietKiem(tienDaCo + tienCanTra);
+
+            mt->setSoKyDaTra(mt->getSoKyDaTra() + 1);
+            mt->setDaGopThangNay(true);
+        }
     }
 
-    // 1. Phân bổ tiền
-    nguoiDungHienTai.phanBoTienTietKiem();
-
-    // 2. Lưu Database
-    MucTieuRepository repo;
-    for (MucTieu* mt : nguoiDungHienTai.layDanhSachMucTieu()) {
-        repo.capNhatTienDaTietKiem(mt->getId(), mt->getSoTienDaTietKiem());
-    }
-
-    // 3. LƯU LẠI THÁNG NÀY ĐÃ TRÍCH THÀNH CÔNG
-    settings.setValue("ThangDaTrichDaiHan", thangHienTai);
-
-    // 4. Cập nhật UI
-    m_mucTieu->taiLai();
-    emit duLieuThayDoi();
-
-    return true; // Thành công
+    emit huTietKiemChanged();
 }
