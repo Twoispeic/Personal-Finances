@@ -109,16 +109,16 @@ double AppController::huTietKiem() const {
     QSettings settings("MyApp", "TaiChinh");
     double luyKe = settings.value("SoDuLuyKe", 0.0).toDouble();
 
-    // Nếu THÁNG THẬT hiện tại đã từng được chốt sổ rồi, phần thu nhập của tháng đó đã được
-    // gộp vào luyKe ở trên rồi -> phải trừ ra để không cộng lại (double count) lần nữa.
-    // Khi sang tháng thật mới, "ThangDaChotSo" không còn khớp nữa nên phần trừ này tự về 0.
     QString thangNamHienTai = QDate::currentDate().toString("yyyy-MM");
     QString thangDaChotSo = settings.value("ThangDaChotSo", "").toString();
+
+    // Vẫn giữ biến này để tránh cộng trùng thu nhập nếu chốt sổ xong vẫn ở nguyên tháng đó
     double thuNhapDaTinh = (thangDaChotSo == thangNamHienTai)
                                ? settings.value("ThuNhapDaTinhLuyKe", 0.0).toDouble()
                                : 0.0;
 
-    double con = luyKe + (soDuThang() - thuNhapDaTinh) - m_mucTieu->tongDaTietKiem();
+    // KHÔNG CẦN trừ tongDaTietKiem() nữa
+    double con = luyKe + (soDuThang() - thuNhapDaTinh);
     return con > 0 ? con : 0;
 }
 

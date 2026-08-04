@@ -33,12 +33,25 @@ void ChiTieuController::taiLai() {
         }
     };
 
+    // Hàm lambda hỗ trợ lấy màu riêng cho từng loại chi tiêu
+    // (đồng bộ với bảng màu dùng trong thongKeTheoLoai())
+    auto layMauLoai = [](LoaiChiTieu loai) -> QString {
+        switch (loai) {
+        case TIEN_SINH_HOAT: return "#F2508C";
+        case TIEN_DIEN_NUOC:  return "#FFB35C";
+        case TIEN_NHA:       return "#6E7BFA";
+        case KHAC:           return "#35DDC0";
+        default:             return "#8A8FC0";
+        }
+    };
+
     // 1. Nạp danh sách chi tiết và phân loại
     for (const ChiTieu& ct : ds) {
         QVariantMap m;
         m["id"] = ct.getId(); // Bổ sung id để phục vụ thao tác xóa/sửa
         m["loai"] = (int)ct.getLoai();
-        m["tenLoai"] = layTenLoai(ct.getLoai()); // Bổ sung tên loại hiển thị
+        m["tenLoai"] = layTenLoai(ct.getLoai()); // <--- Bổ sung tên loại hiển thị
+        m["mau"] = layMauLoai(ct.getLoai());     // <--- Bổ sung màu riêng cho từng loại
         m["soTien"] = ct.getSoTien();
         m["ngay"] = ct.getNgay().toString("dd/MM/yyyy");
 
@@ -52,23 +65,13 @@ void ChiTieuController::taiLai() {
     }
 
     // 2. Chuẩn bị dữ liệu cho Biểu đồ tròn
-    struct TT { QString ten; QString mau; };
-    QMap<LoaiChiTieu, TT> info = {
-        { TIEN_SINH_HOAT, {"Tiền sinh hoạt", "#F2508C"} },
-        { TIEN_DIEN_NUOC, {"Tiền điện nước", "#FFB35C"} },
-        { TIEN_NHA,       {"Tiền nhà",       "#6E7BFA"} },
-        { KHAC,           {"Khác",           "#35DDC0"} }
-    };
-
     QMap<LoaiChiTieu, double> tongTheoLoai = repo.tinhTongTheoLoai();
     for (auto it = tongTheoLoai.begin(); it != tongTheoLoai.end(); ++it) {
         QVariantMap m;
         m["loai"] = (int)it.key();
-        m["tenLoai"] = layTenLoai(it.key());
+        m["tenLoai"] = layTenLoai(it.key()); // <--- Bổ sung tên loại cho biểu đồ
+        m["mau"] = layMauLoai(it.key());     // <--- Bổ sung màu riêng cho biểu đồ tròn/chú giải
         m["tongTien"] = it.value();
-
-        // Bơm mã màu vào để QML Canvas biết đường mà vẽ
-        m["mau"] = info[it.key()].mau;
 
         // Tính %, tránh lỗi chia cho 0
         double phanTram = (tongChiTieu > 0) ? (it.value() / tongChiTieu) * 100.0 : 0.0;
@@ -79,6 +82,7 @@ void ChiTieuController::taiLai() {
 
     emit duLieuThayDoi();
 }
+
 void ChiTieuController::them(int loai, double soTien) {
     ChiTieuRepository().them(ChiTieu((LoaiChiTieu)loai, soTien, QDate::currentDate()));
     taiLai();
@@ -127,13 +131,4 @@ QVariantList ChiTieuController::thongKeTheoLoai() const {
         ketQua.append(m);
     }
     return ketQua;
-}
-
-QVariantList ChiTieuController::danhSachPhanLoai() const {
-    return QVariantList{
-        QVariantMap{{"text", "Tiền sinh hoạt"}, {"value", 0}},
-        QVariantMap{{"text", "Tiền điện nước"}, {"value", 1}},
-        QVariantMap{{"text", "Tiền nhà"}, {"value", 2}},
-        QVariantMap{{"text", "Khác"}, {"value", 3}}
-    };
 }
