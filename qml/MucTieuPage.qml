@@ -99,7 +99,7 @@ Item {
                                         Text { text: modelData.ten; color: "#F4F5FC"; font.pixelSize: 14; font.bold: true }
                                         Item { Layout.fillWidth: true }
                                         Text {
-                                            text: Math.round(modelData.tienDo) + "%"
+                                            text: Number(modelData.tienDo).toFixed(2) + "%"
                                             color: modelData.mauSac === "green" ? "#35DDC0" : "#F2508C"
                                             font.bold: true
                                         }
@@ -249,7 +249,7 @@ Item {
                                     ColumnLayout {
                                         spacing: 4
                                         Text { text: modelData.ten; color: "#F4F5FC"; font.pixelSize: 14; font.bold: true }
-                                        Text { text: Math.round(modelData.tienDo) + "%"; color: "#6E7BFA"; font.pixelSize: 18; font.bold: true }
+                                        Text { text: Number(modelData.tienDo).toFixed(2) + "%"; color: "#6E7BFA"; font.pixelSize: 18; font.bold: true }
                                         Text {
                                             text: "Đã tiết kiệm: " + modelData.soTienDaTietKiem.toLocaleString('vi-VN')
                                                     + " / " + modelData.soTienMucTieu.toLocaleString('vi-VN') + " đ"

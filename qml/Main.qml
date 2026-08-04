@@ -43,31 +43,39 @@ ApplicationWindow {
                         color: stack.currentIndex === index ? "#1B1E42" : "transparent"
 
                         RowLayout {
-                            anchors.fill: parent
-                            anchors.leftMargin: 16
-                            spacing: 12
+                                                    anchors.fill: parent
+                                                    anchors.leftMargin: 16
+                                                    spacing: 12
 
-                            Image {
-                                id: imgIcon
-                                source: model.iconPath
-                                Layout.preferredWidth: 20; Layout.preferredHeight: 20
-                                visible: false // Ẩn ảnh gốc để dùng MultiEffect phủ màu
-                            }
+                                                    // 1. Bọc Image và MultiEffect vào 1 Item để Layout không bị lỗi
+                                                    Item {
+                                                        Layout.preferredWidth: 20
+                                                        Layout.preferredHeight: 20
+                                                        Layout.alignment: Qt.AlignVCenter // CĂN GIỮA DỌC CHO ICON
 
-                            // Hiệu ứng phủ màu icon chuẩn Qt6
-                            MultiEffect {
-                                anchors.fill: imgIcon
-                                source: imgIcon
-                                colorization: 1.0
-                                colorizationColor: stack.currentIndex === index ? "#35DDC0" : "#5F638F"
-                            }
+                                                        Image {
+                                                            id: imgIcon
+                                                            anchors.fill: parent
+                                                            source: model.iconPath
+                                                            visible: false // Ẩn ảnh gốc
+                                                        }
 
-                            Text {
-                                text: model.ten
-                                color: stack.currentIndex === index ? "#35DDC0" : "#5F638F"
-                                font.pixelSize: 15; font.bold: stack.currentIndex === index
-                            }
-                        }
+                                                        MultiEffect {
+                                                            anchors.fill: parent
+                                                            source: imgIcon
+                                                            colorization: 1.0
+                                                            colorizationColor: stack.currentIndex === index ? "#35DDC0" : "#5F638F"
+                                                        }
+                                                    }
+
+                                                    // 2. Thêm căn giữa dọc cho Text
+                                                    Text {
+                                                        text: model.ten
+                                                        color: stack.currentIndex === index ? "#35DDC0" : "#5F638F"
+                                                        font.pixelSize: 15; font.bold: stack.currentIndex === index
+                                                        Layout.alignment: Qt.AlignVCenter // CĂN GIỮA DỌC CHO TEXT
+                                                    }
+                                                }
 
                         MouseArea {
                             anchors.fill: parent

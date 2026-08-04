@@ -206,19 +206,173 @@ Item {
                     }
                 }
 
-                // --- KHỐI BÊN PHẢI (Mục tiêu dài hạn) ---
-                Rectangle {
-                    Layout.fillWidth: true; Layout.fillHeight: true
-                    Layout.preferredWidth: 1.0
-                    color: "#1B1E42"; radius: 20; border.color: "#12FFFFFF"
+                // --- KHỐI BÊN PHẢI (Mục tiêu tài chính - Có Toggle gạt) ---
+                                Rectangle {
+                                    id: rightBlock
+                                    Layout.fillWidth: true; Layout.fillHeight: true
+                                    Layout.preferredWidth: 1.0
+                                    color: "#1B1E42"; radius: 20; border.color: "#12FFFFFF"
 
-                    Text {
-                        anchors.centerIn: parent
-                        text: "Chỗ của MT Dài Hạn (Hình bình nước)"
-                        color: "#5F638F"
-                        font.pixelSize: 14
-                    }
-                }
+                                    // Biến theo dõi đang ở trang nào (0: Ngắn hạn, 1: Dài hạn)
+                                    property int currentTabIndex: 0
+
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        anchors.margins: 20
+                                        spacing: 20
+
+                                        // 1. THANH GẠT (TOGGLE BAR)
+                                        Rectangle {
+                                            Layout.fillWidth: true
+                                            height: 44
+                                            radius: 12
+                                            color: "#0D111F" // Màu nền chìm bên dưới
+
+                                            RowLayout {
+                                                anchors.fill: parent
+                                                anchors.margins: 4
+                                                spacing: 4
+
+                                                // Nút: Ngắn hạn
+                                                Rectangle {
+                                                    Layout.fillWidth: true; Layout.fillHeight: true
+                                                    radius: 10
+                                                    color: rightBlock.currentTabIndex === 0 ? "#35DDC0" : "transparent"
+
+                                                    Text {
+                                                        anchors.centerIn: parent
+                                                        text: "Mục tiêu ngắn hạn"
+                                                        color: rightBlock.currentTabIndex === 0 ? "#0D111F" : "#8A8FC0"
+                                                        font.pixelSize: 14; font.bold: true
+                                                    }
+                                                    MouseArea {
+                                                        anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                                                        onClicked: rightBlock.currentTabIndex = 0
+                                                    }
+                                                }
+
+                                                // Nút: Dài hạn
+                                                Rectangle {
+                                                    Layout.fillWidth: true; Layout.fillHeight: true
+                                                    radius: 10
+                                                    color: rightBlock.currentTabIndex === 1 ? "#35DDC0" : "transparent"
+
+                                                    Text {
+                                                        anchors.centerIn: parent
+                                                        text: "Mục tiêu dài hạn"
+                                                        color: rightBlock.currentTabIndex === 1 ? "#0D111F" : "#8A8FC0"
+                                                        font.pixelSize: 14; font.bold: true
+                                                    }
+                                                    MouseArea {
+                                                        anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                                                        onClicked: rightBlock.currentTabIndex = 1
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        // 2. KHU VỰC HIỂN THỊ NỘI DUNG (LẬT TRANG)
+                                        StackLayout {
+                                            Layout.fillWidth: true
+                                            Layout.fillHeight: true
+                                            currentIndex: rightBlock.currentTabIndex // Liên kết với thanh gạt ở trên
+
+                                            // --- TRANG 0: NGẮN HẠN (Progress Bar ngang) ---
+                                            ScrollView {
+                                                Layout.fillWidth: true; Layout.fillHeight: true
+                                                clip: true
+
+                                                ColumnLayout {
+                                                    width: parent.width; spacing: 20
+
+                                                    Repeater {
+                                                        model: appController.mucTieu.danhSachNganHan
+                                                        delegate: ColumnLayout {
+                                                            Layout.fillWidth: true; spacing: 8
+
+                                                            RowLayout {
+                                                                Layout.fillWidth: true
+                                                                Text { text: modelData.ten; color: "#F4F5FC"; font.pixelSize: 14; font.bold: true }
+                                                                Item { Layout.fillWidth: true }
+                                                                Text {text: Math.min(100, (modelData.soTienDaTietKiem / modelData.soTienMucTieu * 100)).toFixed(2) + "%"
+                                                                      color: "#35DDC0"; font.pixelSize: 14; font.bold: true}
+                                                            }
+
+                                                            // Thanh tiến trình
+                                                            Rectangle {
+                                                                Layout.fillWidth: true; height: 8; radius: 4; color: "#0D111F"
+                                                                Rectangle {
+                                                                    // Tính toán độ dài phần trăm
+                                                                    width: parent.width * Math.min(1.0, (modelData.soTienDaTietKiem / (modelData.soTienMucTieu > 0 ? modelData.soTienMucTieu : 1)))
+                                                                    height: parent.height; radius: 4; color: "#35DDC0"
+                                                                }
+                                                            }
+
+                                                            Text {
+                                                                text: modelData.soTienDaTietKiem.toLocaleString('vi-VN') + " / " + modelData.soTienMucTieu.toLocaleString('vi-VN') + " đ"
+                                                                color: "#8A8FC0"; font.pixelSize: 12
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            // --- TRANG 1: DÀI HẠN (Lọ thủy tinh xếp dọc) ---
+                                            ScrollView {
+                                                Layout.fillWidth: true; Layout.fillHeight: true
+                                                clip: true
+
+                                                ColumnLayout {
+                                                    width: parent.width; spacing: 24
+
+                                                    Repeater {
+                                                        model: appController.mucTieu.danhSachDaiHan
+                                                        delegate: RowLayout {
+                                                            Layout.fillWidth: true; spacing: 16
+
+                                                            // Vẽ cái Lọ Thủy Tinh
+                                                            Rectangle {
+                                                                width: 44; height: 70
+                                                                radius: 8
+                                                                color: "#0D111F"
+                                                                border.color: "#35DDC0"; border.width: 1.5
+                                                                clip: true
+
+                                                                // Nước dâng lên từ đáy lọ
+                                                                Rectangle {
+                                                                    width: parent.width
+                                                                    height: parent.height * Math.min(1.0, (modelData.soTienDaTietKiem / (modelData.soTienMucTieu > 0 ? modelData.soTienMucTieu : 1)))
+                                                                    anchors.bottom: parent.bottom
+                                                                    color: "#35DDC0"
+                                                                    opacity: 0.8
+                                                                }
+                                                                // Nắp lọ cho chân thực
+                                                                Rectangle {
+                                                                    width: 24; height: 4; color: "#8A8FC0"
+                                                                    anchors.top: parent.top; anchors.horizontalCenter: parent.horizontalCenter
+                                                                }
+                                                            }
+
+                                                            // Thông tin bên cạnh lọ thủy tinh
+                                                            ColumnLayout {
+                                                                Layout.fillWidth: true; spacing: 4
+                                                                Text { text: modelData.ten; color: "#F4F5FC"; font.pixelSize: 15; font.bold: true }
+                                                                Text {
+                                                                    text: modelData.soTienDaTietKiem.toLocaleString('vi-VN') + " đ"
+                                                                    color: "#35DDC0"; font.pixelSize: 14; font.bold: true
+                                                                }
+                                                                Text {
+                                                                    text: "Mục tiêu: " + modelData.soTienMucTieu.toLocaleString('vi-VN') + " đ"
+                                                                    color: "#8A8FC0"; font.pixelSize: 12
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } // End StackLayout
+                                    }
+                                }
             }
         }
     }
