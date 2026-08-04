@@ -50,7 +50,8 @@ HEADERS += \
     src/patterns/ChienLuocTietKiem.h \
     src/patterns/TrangThaiChuaXong.h \
     src/patterns/TrangThaiHoanThanh.h \
-    src/patterns/TrangThaiMucTieu.h
+    src/patterns/TrangThaiMucTieu.h\
+    src/utils/MatKhauUtil.h
 
 RESOURCES += \
     qml/qml.qrc

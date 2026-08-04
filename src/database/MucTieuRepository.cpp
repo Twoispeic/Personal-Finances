@@ -23,8 +23,23 @@ bool MucTieuRepository::taoBang() {
                   "trangThai TEXT, "
                   "thoiHanThang INTEGER, "
                   "soKyTraGop INTEGER, "
-                  "soTienMoiKy REAL)";
-    return query.exec(sql);
+                  "soTienMoiKy REAL, "
+                  "soKyDaTra INTEGER DEFAULT 0, "
+                  "thangNamDaTra TEXT DEFAULT '', "
+                  "soTienMocAnToan REAL DEFAULT -1)";
+    bool ok = query.exec(sql);
+
+    // QUAN TRỌNG: Migrate cho DB CŨ đã tồn tại từ trước khi có 3 cột này. CREATE TABLE IF NOT EXISTS
+    // sẽ không làm gì nếu bảng đã có sẵn, nên phải ALTER TABLE để thêm cột còn thiếu vào bảng cũ.
+    // Nếu bỏ bước này, mọi UPDATE có nhắc tới soKyDaTra/thangNamDaTra/soTienMocAnToan sẽ THẤT BẠI
+    // TOÀN BỘ (kể cả phần soTienDaTietKiem) vì SQLite báo lỗi "no such column".
+    // exec() lỗi ở đây (do cột đã tồn tại từ lần chạy trước) là chuyện bình thường, bỏ qua được.
+    QSqlQuery migrate;
+    migrate.exec("ALTER TABLE MucTieu ADD COLUMN soKyDaTra INTEGER DEFAULT 0");
+    migrate.exec("ALTER TABLE MucTieu ADD COLUMN thangNamDaTra TEXT DEFAULT ''");
+    migrate.exec("ALTER TABLE MucTieu ADD COLUMN soTienMocAnToan REAL DEFAULT -1");
+
+    return ok;
 }
 
 bool MucTieuRepository::them(MucTieu* mucTieu) {
@@ -35,8 +50,10 @@ bool MucTieuRepository::them(MucTieu* mucTieu) {
     MucTieuDaiHan* dai = dynamic_cast<MucTieuDaiHan*>(mucTieu);
 
     query.prepare("INSERT INTO MucTieu "
-                  "(loaiMucTieu, tenMucTieu, soTienMucTieu, soTienDaTietKiem, trangThai, thoiHanThang, soKyTraGop, soTienMoiKy) "
-                  "VALUES (:loai, :ten, :soTienMT, :soTienDTK, :trangThai, :thoiHan, :soKy, :soTienKy)");
+                  "(loaiMucTieu, tenMucTieu, soTienMucTieu, soTienDaTietKiem, trangThai, thoiHanThang, soKyTraGop, soTienMoiKy, "
+                  "soKyDaTra, thangNamDaTra, soTienMocAnToan) "
+                  "VALUES (:loai, :ten, :soTienMT, :soTienDTK, :trangThai, :thoiHan, :soKy, :soTienKy, "
+                  ":soKyDaTra, :thangNamDaTra, :soTienMocAnToan)");
 
     query.bindValue(":ten", mucTieu->getTenMucTieu());
     query.bindValue(":soTienMT", mucTieu->getSoTienMucTieu());
@@ -48,14 +65,23 @@ bool MucTieuRepository::them(MucTieu* mucTieu) {
         query.bindValue(":thoiHan", ngan->getThoiHanThang());
         query.bindValue(":soKy", QVariant());
         query.bindValue(":soTienKy", QVariant());
+        query.bindValue(":soKyDaTra", QVariant());
+        query.bindValue(":thangNamDaTra", QVariant());
+        query.bindValue(":soTienMocAnToan", QVariant());
     } else if (dai != nullptr) {
         query.bindValue(":loai", "DaiHan");
         query.bindValue(":thoiHan", QVariant());
         query.bindValue(":soKy", dai->getSoKyTraGop());
         query.bindValue(":soTienKy", dai->getSoTienMoiKy());
+        // Mục tiêu dài hạn mới tạo: chưa từng trả góp -> 0 kỳ, chưa có tháng, chưa có mốc an toàn
+        query.bindValue(":soKyDaTra", 0);
+        query.bindValue(":thangNamDaTra", "");
+        query.bindValue(":soTienMocAnToan", -1.0);
     }
 
-    return query.exec();
+    bool ok = query.exec();
+    if (!ok) qWarning() << "[MucTieuRepository::them] Loi INSERT:" << query.lastError().text();
+    return ok;
 }
 
 bool MucTieuRepository::capNhatTienDaTietKiem(int id, double soTienMoi) {
@@ -73,7 +99,8 @@ QList<MucTieu*> MucTieuRepository::layTatCa() {
     if (!KetNoiDatabase::getInstance().moKetNoi()) return ketQua;
 
     QSqlQuery query("SELECT id,loaiMucTieu, tenMucTieu, soTienMucTieu, soTienDaTietKiem, "
-                    "trangThai, thoiHanThang, soKyTraGop, soTienMoiKy FROM MucTieu");
+                    "trangThai, thoiHanThang, soKyTraGop, soTienMoiKy, "
+                    "soKyDaTra, thangNamDaTra, soTienMocAnToan FROM MucTieu");
 
     while (query.next()) {
         int id = query.value("id").toInt();
@@ -90,6 +117,16 @@ QList<MucTieu*> MucTieuRepository::layTatCa() {
         } else {
             int soKy = query.value("soKyTraGop").toInt();
             mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTienMT, soKy);
+
+            // QUAN TRỌNG: nạp lại trạng thái trả góp theo tháng từ DB — nếu thiếu bước này,
+            // mỗi lần layTatCa() sẽ tạo object DaiHan với giá trị MẶC ĐỊNH (soKyDaTra=0,
+            // thangNamDaTra="", soTienMocAnToan=-1), khiến app luôn nghĩ "chưa từng trả góp"
+            // dù thực tế DB đã có dữ liệu, và làm khoá "1 lần/tháng" không bao giờ hoạt động.
+            MucTieuDaiHan* dai = static_cast<MucTieuDaiHan*>(mt);
+            dai->setSoKyDaTra(query.value("soKyDaTra").toInt());
+            dai->setThangNamDaTra(query.value("thangNamDaTra").toString());
+            QVariant mocRaw = query.value("soTienMocAnToan");
+            dai->setSoTienMocAnToan(mocRaw.isNull() ? -1.0 : mocRaw.toDouble());
         }
         mt->datId(id);
         mt->datSoTienDaTietKiem(soTienDTK);   // nạp lại tiến độ, không tính lại qua Strategy
@@ -106,4 +143,21 @@ bool MucTieuRepository::xoa(int id) {
     if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
     QSqlQuery q; q.prepare("DELETE FROM MucTieu WHERE id = :id"); q.bindValue(":id", id);
     return q.exec();
+}
+
+bool MucTieuRepository::capNhatTrangThaiThang(int id, double soTienDaTietKiemMoi, int soKyDaTraMoi,
+                                              const QString& thangNamDaTraMoi, double soTienMocAnToanMoi) {
+    if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
+
+    QSqlQuery query;
+    query.prepare("UPDATE MucTieu SET soTienDaTietKiem = :soTien, soKyDaTra = :soKy, "
+                  "thangNamDaTra = :thangNam, soTienMocAnToan = :moc WHERE id = :id");
+    query.bindValue(":soTien", soTienDaTietKiemMoi);
+    query.bindValue(":soKy", soKyDaTraMoi);
+    query.bindValue(":thangNam", thangNamDaTraMoi);
+    query.bindValue(":moc", soTienMocAnToanMoi);
+    query.bindValue(":id", id);
+    bool ok = query.exec();
+    if (!ok) qWarning() << "[MucTieuRepository::capNhatTrangThaiThang] Loi UPDATE:" << query.lastError().text();
+    return ok;
 }

@@ -124,25 +124,53 @@ Item {
                                         }
                                     }
 
-                                    Rectangle {
-                                        visible: modelData.mauSac !== "green"
-                                        Layout.preferredWidth: 100
-                                        Layout.preferredHeight: 28
-                                        radius: 8
-                                        color: "#35DDC0"
-                                        Text {
-                                            anchors.centerIn: parent
-                                            text: "Nộp tiền"
-                                            color: "#0D111F"; font.pixelSize: 12; font.bold: true
+                                    RowLayout {
+                                        spacing: 8
+
+                                        Rectangle {
+                                            visible: modelData.mauSac !== "green"
+                                            Layout.preferredWidth: 100
+                                            Layout.preferredHeight: 28
+                                            radius: 8
+                                            color: "#35DDC0"
+                                            Text {
+                                                anchors.centerIn: parent
+                                                text: "Nộp tiền"
+                                                color: "#0D111F"; font.pixelSize: 12; font.bold: true
+                                            }
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                cursorShape: Qt.PointingHandCursor
+                                                onClicked: {
+                                                    gopTietKiemDialog.mucTieuId = modelData.id
+                                                    gopTietKiemDialog.tenMucTieu = modelData.ten
+                                                    gopTietKiemDialog.soTienConDu = appController.huTietKiem   // đổi ở đây
+                                                    gopTietKiemDialog.open()
+                                                }
+                                            }
                                         }
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            cursorShape: Qt.PointingHandCursor
-                                            onClicked: {
-                                                gopTietKiemDialog.mucTieuId = modelData.id
-                                                gopTietKiemDialog.tenMucTieu = modelData.ten
-                                                gopTietKiemDialog.soTienConDu = appController.huTietKiem   // đổi ở đây
-                                                gopTietKiemDialog.open()
+
+                                        // Mục tiêu đã đạt 100% -> cho phép xác nhận hoàn thành thay vì nộp tiền
+                                        Rectangle {
+                                            visible: modelData.mauSac === "green"
+                                            Layout.preferredWidth: 100
+                                            Layout.preferredHeight: 28
+                                            radius: 8
+                                            color: "#6E7BFA"
+                                            Text {
+                                                anchors.centerIn: parent
+                                                text: "Hoàn thành"
+                                                color: "#0D111F"; font.pixelSize: 12; font.bold: true
+                                            }
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                cursorShape: Qt.PointingHandCursor
+                                                onClicked: {
+                                                    xacNhanHoanThanhDialog.mucTieuId = modelData.id
+                                                    xacNhanHoanThanhDialog.tenMucTieu = modelData.ten
+                                                    xacNhanHoanThanhDialog.soTienDaTietKiem = modelData.soTienDaTietKiem
+                                                    xacNhanHoanThanhDialog.open()
+                                                }
                                             }
                                         }
                                     }
@@ -262,6 +290,30 @@ Item {
                                             font.pixelSize: 12
                                         }
                                     }
+                                    // Mục tiêu dài hạn đã đạt 100% -> cho phép xác nhận hoàn thành
+                                    Rectangle {
+                                        visible: modelData.mauSac === "green"
+                                        Layout.preferredWidth: 92
+                                        Layout.preferredHeight: 28
+                                        radius: 8
+                                        color: "#6E7BFA"
+                                        Layout.alignment: Qt.AlignVCenter
+                                        Text {
+                                            anchors.centerIn: parent
+                                            text: "Hoàn thành"
+                                            color: "#0D111F"; font.pixelSize: 11; font.bold: true
+                                        }
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            cursorShape: Qt.PointingHandCursor
+                                            onClicked: {
+                                                xacNhanHoanThanhDialog.mucTieuId = modelData.id
+                                                xacNhanHoanThanhDialog.tenMucTieu = modelData.ten
+                                                xacNhanHoanThanhDialog.soTienDaTietKiem = modelData.soTienDaTietKiem
+                                                xacNhanHoanThanhDialog.open()
+                                            }
+                                        }
+                                    }
                                     Rectangle {
                                                 width: 26
                                                 height: 26
@@ -300,5 +352,8 @@ Item {
     }
     GopTietKiemDialog {
         id: gopTietKiemDialog
+    }
+    XacNhanHoanThanhDialog {
+        id: xacNhanHoanThanhDialog
     }
 }
