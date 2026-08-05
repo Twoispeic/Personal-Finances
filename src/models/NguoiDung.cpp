@@ -87,12 +87,14 @@ double NguoiDung::phanBoTienTietKiem(double soTienKhaDung) {
     return conLai;   // trả về phần còn dư
 }
 
-bool NguoiDung::gopTietKiemNganHan(MucTieu* mt, double soTien) {
-    if (mt == nullptr || soTien <= 0) return false;
-    if (dynamic_cast<MucTieuNganHan*>(mt) == nullptr) return false;
+double NguoiDung::gopTietKiemNganHan(MucTieu* mt, double soTien) {
+    if (mt == nullptr || soTien <= 0) return 0.0;
+    if (dynamic_cast<MucTieuNganHan*>(mt) == nullptr) return 0.0;
 
-    mt->capNhatTietKiem(soTien);
-    return true;
+    // capNhatTietKiem() trả về số tiền THỰC SỰ được dùng (đã tự cắt bớt nếu soTien vượt
+    // quá phần còn thiếu của mục tiêu) — phải trả đúng số này ra ngoài, KHÔNG trả nguyên
+    // soTien gốc, để nơi gọi (MucTieuController::gop) trừ đúng số đó khỏi hũ tiết kiệm.
+    return mt->capNhatTietKiem(soTien);
 }
 
 // demo conclude
