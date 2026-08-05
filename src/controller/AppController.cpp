@@ -44,6 +44,26 @@ AppController::AppController(QObject* parent)
         dongBoNguoiDungTuDatabase();
         emit duLieuThayDoi();
     });
+
+    // FIX: mục tiêu NGẮN HẠN góp tiền qua MucTieuController::gop() trước đây không hề trừ
+    // vào SoDuLuyKe (giống hệt bug mục tiêu dài hạn đã sửa ở traGopMucTieuDaiHanThangNay) —
+    // tiền vừa nằm trong mục tiêu vừa còn nguyên trong hũ. Nối signal để trừ đúng số tiền
+    // THỰC SỰ đã dùng (daGopTuHuTietKiem mang theo giá trị đã được cắt bớt nếu góp dư).
+    connect(m_mucTieu, &MucTieuController::daGopTuHuTietKiem, this, [this](double soTien) {
+        QSettings settings("MyApp", "TaiChinh");
+        double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
+        settings.setValue(khoaSoDuLuyKe(), luyKe - soTien);
+        emit huTietKiemChanged();
+    });
+
+    // FIX: khi XÓA (huỷ) mục tiêu dang dở, hoàn lại đúng số tiền đã góp về hũ tiết kiệm —
+    // ngược chiều với connect ở trên (cộng thay vì trừ).
+    connect(m_mucTieu, &MucTieuController::hoanTienVeHu, this, [this](double soTien) {
+        QSettings settings("MyApp", "TaiChinh");
+        double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
+        settings.setValue(khoaSoDuLuyKe(), luyKe + soTien);
+        emit huTietKiemChanged();
+    });
 }
 
 double AppController::tongThuNhap() const { return nguoiDungHienTai.tinhTongThuNhap(); }
@@ -109,31 +129,16 @@ double AppController::huTietKiem() const {
 
 
 void AppController::hoanThanhMucTieu(int id) {
+    // FIX: tiền đã bị trừ khỏi hũ NGAY LÚC GÓP rồi (traGopMucTieuDaiHanThangNay cho dài hạn,
+    // MucTieuController::gop cho ngắn hạn — xem 2 bản sửa trước). "Hoàn thành" ở đây CHỈ có
+    // nghĩa là xác nhận mục tiêu đã đủ tiền + xoá record theo dõi, KHÔNG được trừ thêm lần
+    // nữa vào SoDuLuyKe — trước đây trừ ở đây là vì lúc đó góp tiền CHƯA trừ hũ, giờ đã trừ
+    // từ gốc nên chỗ này trừ thêm sẽ bị trừ 2 lần (đúng bug bạn phát hiện).
     MucTieuRepository repo;
-    QList<MucTieu*> ds = repo.layTatCa();
-
-    double soTienDaTietKiemCuaMucTieu = 0.0;
-    bool timThay = false;
-    for (MucTieu* mt : ds) {
-        if (mt->getId() == id) {
-            soTienDaTietKiemCuaMucTieu = mt->getSoTienDaTietKiem();
-            timThay = true;
-            break;
-        }
-    }
-    qDeleteAll(ds);
-
-    if (!timThay) return;
-
-    QSettings settings("MyApp", "TaiChinh");
-    double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
-    settings.setValue(khoaSoDuLuyKe(), luyKe - soTienDaTietKiemCuaMucTieu);
-
     repo.xoa(id);
 
     dongBoNguoiDungTuDatabase();
     m_mucTieu->taiLai();
-    emit huTietKiemChanged();
     emit duLieuThayDoi();
 }
 
@@ -173,6 +178,7 @@ void AppController::traGopMucTieuDaiHanThangNay() {
     // BƯỚC 2: TRẢ GÓP — dùng 1 "hũ khả dụng" cục bộ, trừ dần cho từng mục tiêu dài hạn
     // chưa được trả trong tháng này (đảm bảo không chia vượt quá số tiền thực sự có).
     double khaDung = huTietKiem();
+    double tongDaTraKyNay = 0.0;   // cộng dồn để trừ ngược lại SoDuLuyKe sau vòng lặp
     for (MucTieu* baseMt : conLai) {
         MucTieuDaiHan* mt = dynamic_cast<MucTieuDaiHan*>(baseMt);
         if (!mt) continue;
@@ -195,9 +201,19 @@ void AppController::traGopMucTieuDaiHanThangNay() {
 
             repo.capNhatTrangThaiThang(mt->getId(), tienMoi, kyMoi, thangNamHienTai, tienMoi);
             khaDung -= tienCanTra;
+            tongDaTraKyNay += tienCanTra;
         }
         // Nếu chưa đủ tiền: không làm gì cả — người dùng có thể thêm thu nhập / giảm chi tiêu
         // rồi bấm refresh lại sau, vẫn trong tháng này thì vẫn hợp lệ để trả.
+    }
+
+    // BUG CŨ: tiền trả góp chỉ trừ trên biến cục bộ "khaDung", KHÔNG trừ vào SoDuLuyKe đã lưu
+    // trong Registry -> huTietKiem() tính lại vẫn ra y như cũ, tiền bị đếm 2 lần (vừa nằm
+    // trong mục tiêu, vừa còn nguyên trong hũ). Sửa: trừ thẳng vào SoDuLuyKe ngay tại đây.
+    if (tongDaTraKyNay > 0) {
+        QSettings settings("MyApp", "TaiChinh");
+        double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
+        settings.setValue(khoaSoDuLuyKe(), luyKe - tongDaTraKyNay);
     }
 
     qDeleteAll(conLai);
@@ -244,11 +260,11 @@ void AppController::refreshDuLieu() {
 
 void AppController::resetThangVaHuTietKiem() {
     // SoDuLuyKe và ThangMoPhongHienTai KHÔNG nằm trong bất kỳ file .db nào — chúng nằm
-    // trong QSettings("MyApp","TaiChinh") (Windows: Registry HKCU\Software\MyApp\TaiChinh).
-    // Đây là lý do xoá file .db không reset được 2 giá trị này ("orphan" so với database).
+    // trong QSettings("MyApp","TaiChinh") (Windows: Registry HKCU\Software\MyApp\TaiChinh),
+    // và từ bản sửa "tách theo tài khoản" thì cả 2 đều có hậu tố "_<id>".
     QSettings settings("MyApp", "TaiChinh");
     settings.remove(khoaSoDuLuyKe());
-    settings.remove("ThangMoPhongHienTai");
+    settings.remove(QString("ThangMoPhongHienTai_%1").arg(m_nguoiDungId));
 
     // layNgayHienTai() sẽ tự ghi lại tháng thật của hệ thống ngay lần gọi tiếp theo
     // (xem NgayMoPhong.cpp) vì key vừa bị remove ở trên rỗng.

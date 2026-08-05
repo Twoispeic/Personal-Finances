@@ -33,6 +33,15 @@ public:
 
 signals:
     void duLieuThayDoi();
+    // Phát ra ngay sau khi góp tiền ngắn hạn thành công, mang theo số tiền THỰC SỰ đã dùng
+    // (có thể nhỏ hơn số người dùng nhập, nếu mục tiêu gần đầy) — để AppController trừ
+    // đúng số này khỏi hũ tiết kiệm (SoDuLuyKe).
+    void daGopTuHuTietKiem(double soTien);
+
+    // Phát ra khi XÓA (hủy) một mục tiêu còn đang dang dở — khác với "Hoàn thành".
+    // Xóa nghĩa là huỷ giữa chừng, nên số tiền đã góp vào mục tiêu đó phải HOÀN LẠI vào hũ
+    // tiết kiệm (không mất tiền oan), ngược chiều với daGopTuHuTietKiem ở trên.
+    void hoanTienVeHu(double soTien);
 
 private:
     NguoiDung* nguoiDung;
