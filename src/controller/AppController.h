@@ -39,6 +39,12 @@ public:
     Q_INVOKABLE void quaThangMoi();
     Q_INVOKABLE void refreshDuLieu();
 
+    // Xoá SẠCH dữ liệu "orphan" nằm ngoài các file .db (SoDuLuyKe + ThangMoPhongHienTai
+    // trong Registry qua QSettings("MyApp","TaiChinh")) — dùng khi muốn app coi như mới cài
+    // lần đầu: tháng mô phỏng tự quay về đúng tháng thật của hệ thống, hũ tiết kiệm về 0.
+    // KHÔNG đụng tới các file .db — nếu muốn xoá cả dữ liệu account, tự xoá file .db riêng.
+    Q_INVOKABLE void resetThangVaHuTietKiem();
+
     // THÊM MỚI cho đăng nhập: gọi hàm này ngay sau khi LoginController phát tín hiệu
     // dangNhapThanhCong(id) — chỉ nạp lại tên/công việc hiển thị + refresh dữ liệu,
     // KHÔNG đụng gì tới logic ketThucThang/lamMoiMucTieu/traGopMucTieuDaiHanThangNay ở trên.
@@ -56,6 +62,10 @@ private:
     ThuNhapController* m_thuNhap;
     MucTieuController* m_mucTieu;
     void dongBoNguoiDungTuDatabase();
+
+    // "SoDuLuyKe" lưu Registry, RIÊNG theo từng tài khoản (m_nguoiDungId) — tránh tài khoản
+    // mới bị thừa kế hũ tiết kiệm luỹ kế của tài khoản khác dùng chung máy.
+    QString khoaSoDuLuyKe() const { return QString("SoDuLuyKe_%1").arg(m_nguoiDungId); }
 
     // Logic trả góp mục tiêu dài hạn — DÙNG CHUNG cho cả nút "Refresh" (lamMoiMucTieu)
     // và "Chốt sổ tháng" (ketThucThang), để 2 nơi này không bao giờ trả trùng 1 tháng.
