@@ -25,7 +25,9 @@ Dialog {
     }
 
     onAccepted: {
-        var conDu = appController.ketThucThang()
-        console.log("Con du sau khi chot so:", conDu)
+        // ketThucThang() giờ tự lo luôn việc chuyển sang tháng mới + refresh toàn bộ,
+        // không cần gọi thêm appController.quaThangMoi() nữa.
+        var conDu = appController.ketThucThang();
+        console.log("Con du sau khi chot so:", conDu);
     }
 }

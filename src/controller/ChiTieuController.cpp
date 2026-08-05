@@ -1,5 +1,6 @@
 #include "ChiTieuController.h"
 #include "database/ChiTieuRepository.h"
+#include "database/NgayMoPhong.h"
 
 ChiTieuController::ChiTieuController(NguoiDung* nd, QObject* parent)
     : QObject(parent), nguoiDung(nd)
@@ -84,7 +85,7 @@ void ChiTieuController::taiLai() {
 }
 
 void ChiTieuController::them(int loai, double soTien) {
-    ChiTieuRepository().them(ChiTieu((LoaiChiTieu)loai, soTien, QDate::currentDate()));
+    ChiTieuRepository().them(ChiTieu((LoaiChiTieu)loai, soTien, NgayMoPhong::layNgayHienTai()));
     taiLai();
 }
 

@@ -31,13 +31,13 @@ public:
     Q_INVOKABLE void locTheoLoai(int loai);
     Q_INVOKABLE void locTatCa();
     Q_INVOKABLE void xoa(int id);
-
+    void taiLai();
 
 signals:
     void duLieuThayDoi();
 
 private:
-    void taiLai();
+
     NguoiDung* nguoiDung;
     QVariantList m_danhSach;
     QVariantList m_thongKeBieuDo;

@@ -1,6 +1,7 @@
 #include "ThuNhapController.h"
 #include "database/ThuNhapRepository.h"
 #include "database/MucTieuRepository.h"
+#include "database/NgayMoPhong.h"
 #include <QDate>
 #include <QMap>
 
@@ -20,7 +21,7 @@ void ThuNhapController::taiLai() {
     m_tongThuNhap12Thang = 0.0;
     m_tongTienTietKiem = 0.0;
 
-    QDate thoiDiemHienTai = QDate::currentDate();
+    QDate thoiDiemHienTai = NgayMoPhong::layNgayHienTai();
 
     // 1. Tạo danh sách 12 tháng gần nhất (để đảm bảo biểu đồ không bị thiếu cột tháng nào)
     QMap<QString, double> banDoThuNhap;
