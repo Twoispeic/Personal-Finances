@@ -13,6 +13,7 @@ KetNoiDatabase::KetNoiDatabase() {
 
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(thuMuc + "/PersonalFinances.db");
+    qDebug() << "Duong dan Database:" << (thuMuc + "/PersonalFinances.db");
 }
 
 KetNoiDatabase::~KetNoiDatabase() {

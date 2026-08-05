@@ -14,6 +14,7 @@
 #include <QSettings>
 #include <QDate>
 #include <QVariant>
+#include <QtGlobal>
 
 AppController::AppController(QObject* parent)
     : QObject(parent), nguoiDungHienTai("", "")
@@ -179,7 +180,15 @@ void AppController::traGopMucTieuDaiHanThangNay() {
         // Đã trả trong tháng này rồi -> bỏ qua, dù bấm lại bao nhiêu lần cũng không sao
         if (mt->getThangNamDaTra() == thangNamHienTai) continue;
 
-        double tienCanTra = mt->getSoTienMoiKy();
+        // ĐÃ ĐẠT 100% (hoặc vượt) RỒI -> mục tiêu đã hoàn thành, KHÔNG trả góp thêm nữa,
+        // dù đã sang tháng mới và thangNamDaTra không còn khớp tháng hiện tại.
+        // Đây chính là chỗ gây bug: thiếu điều kiện này khiến qua tháng mới lại bị trả tiếp.
+        if (mt->getSoTienDaTietKiem() >= mt->getSoTienMucTieu()) continue;
+
+        // Số tiền cần trả kỳ này: không vượt quá phần còn thiếu để đạt 100%
+        // (tránh trả dư ở kỳ cuối cùng nếu soTienMoiKy làm tổng vượt soTienMucTieu).
+        double tienConThieu = mt->getSoTienMucTieu() - mt->getSoTienDaTietKiem();
+        double tienCanTra = qMin(mt->getSoTienMoiKy(), tienConThieu);
         if (khaDung >= tienCanTra) {
             double tienMoi = mt->getSoTienDaTietKiem() + tienCanTra;
             int kyMoi = mt->getSoKyDaTra() + 1;
