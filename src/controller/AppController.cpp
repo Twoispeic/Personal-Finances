@@ -10,6 +10,7 @@
 #include "database/ChiTieuRepository.h"
 #include "database/MucTieuRepository.h"
 #include "goals/MucTieuDaiHan.h"
+#include "database/NgayMoPhong.h"
 #include <QSettings>
 #include <QDate>
 #include <QVariant>
@@ -49,16 +50,6 @@ double AppController::tongChiTieu() const { return nguoiDungHienTai.tinhTongChiT
 double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(); }
 
 double AppController::ketThucThang() {
-    QSettings settings("MyApp", "TaiChinh");
-    QString thangNamHienTai = QDate::currentDate().toString("yyyy-MM");
-    QString thangDaChotSo = settings.value("ThangDaChotSo", "").toString();
-
-    // Khoá: 1 tháng chỉ chốt sổ 1 lần. Bấm lại trong cùng tháng (vd. bấm nhầm 2 lần) sẽ KHÔNG
-    // cộng dồn số dư luỹ kế lần nữa — tránh cộng trùng tiền vì ThuNhap tháng này không bị xoá.
-    if (thangDaChotSo == thangNamHienTai) {
-        return huTietKiem();
-    }
-
     // Trả góp dài hạn tháng này nếu CHƯA được trả (vd. người dùng chưa từng bấm refresh tháng này).
     // Nếu đã trả rồi (do bấm refresh trước đó) thì hàm này sẽ tự bỏ qua — không trả trùng.
     traGopMucTieuDaiHanThangNay();
@@ -67,22 +58,22 @@ double AppController::ketThucThang() {
     // tính đúng phần tiền vừa bị trừ đi cho mục tiêu dài hạn (tránh lưu dư số dư luỹ kế).
     m_mucTieu->taiLai();
 
-    // Lưu phần dư còn lại làm gốc cho tháng sau
+    // Chốt số dư luỹ kế của tháng đang đóng lại, làm gốc cho tháng sau.
+    QSettings settings("MyApp", "TaiChinh");
     settings.setValue("SoDuLuyKe", huTietKiem());
-    settings.setValue("ThangDaChotSo", thangNamHienTai);
-    // Ghi nhớ phần thu nhập ĐÃ được gộp vào SoDuLuyKe ở trên — vì ThuNhap của tháng này
-    // không bị xoá nữa (để giữ biểu đồ), nên phải trừ lại phần này ra khi tính huTietKiem()
-    // trong những lần gọi sau, tránh bị cộng dư (double count) cho tới khi sang tháng thật mới.
-    settings.setValue("ThuNhapDaTinhLuyKe", tongThuNhap());
 
     // CHỈ xoá Chi Tiêu tháng này để bắt đầu tháng mới (ChiTieu không cần giữ lịch sử).
-    // KHÔNG xoá ThuNhap nữa: mỗi tháng chỉ có đúng 1 dòng (do luuThang() upsert theo tháng),
+    // KHÔNG xoá ThuNhap: mỗi tháng chỉ có đúng 1 dòng (do luuThang() upsert theo tháng),
     // xoá đi sẽ làm mất luôn dữ liệu biểu đồ 12 tháng ở trang Thu Nhập.
+    // KHÔNG đụng vào MucTieu: giữ nguyên toàn bộ mục tiêu ngắn/dài hạn.
     ChiTieuRepository().xoaTatCa();
 
-    dongBoNguoiDungTuDatabase();
-    m_thuNhap->taiLai();
-    emit duLieuThayDoi();
+    // Gộp luôn bước sang tháng mới + refresh toàn bộ VÀO CHUNG 1 lần gọi atomic — tránh việc
+    // QML phải tự gọi thêm quaThangMoi() riêng, dễ quên/lệch thứ tự gây ra bug hũ tiết kiệm
+    // "reset" sai và ChiTieuController không được taiLai() nên vẫn hiện chi tiêu cũ.
+    NgayMoPhong::quaThangMoi();
+    refreshDuLieu();   // dongBoNguoiDungTuDatabase() + taiLai() cho cả 3 controller + emit đủ tín hiệu
+
     return huTietKiem();
 }
 
@@ -106,32 +97,16 @@ void AppController::dongBoNguoiDungTuDatabase() {
 }
 
 double AppController::huTietKiem() const {
+    // Hũ tiết kiệm = phần dư luỹ kế đã chốt của các tháng trước + số dư (thu - chi) đang chạy
+    // của tháng hiện tại (chưa chốt). Ngay sau khi ketThucThang() chạy xong, tháng mới chưa có
+    // ThuNhap/ChiTieu nào -> soDuThang() = 0 -> huTietKiem() = đúng bằng SoDuLuyKe vừa lưu.
     QSettings settings("MyApp", "TaiChinh");
     double luyKe = settings.value("SoDuLuyKe", 0.0).toDouble();
-
-    QString thangNamHienTai = QDate::currentDate().toString("yyyy-MM");
-    QString thangDaChotSo = settings.value("ThangDaChotSo", "").toString();
-
-    // Vẫn giữ biến này để tránh cộng trùng thu nhập nếu chốt sổ xong vẫn ở nguyên tháng đó
-    double thuNhapDaTinh = (thangDaChotSo == thangNamHienTai)
-                               ? settings.value("ThuNhapDaTinhLuyKe", 0.0).toDouble()
-                               : 0.0;
-
-    // KHÔNG CẦN trừ tongDaTietKiem() nữa
-    double con = luyKe + (soDuThang() - thuNhapDaTinh);
+    double con = luyKe + soDuThang();
     return con > 0 ? con : 0;
 }
 
-// ==========================================================================
-// Xác nhận HOÀN THÀNH 1 mục tiêu (áp dụng cho cả Ngắn Hạn lẫn Dài Hạn) và xoá nó khỏi danh sách.
-// KHÔNG trả tiền về hũ tiết kiệm khả dụng — số tiền đã tiết kiệm được coi như đã dùng đúng mục
-// đích của mục tiêu (mua đồ, hoàn thành kế hoạch...), không phải huỷ bỏ giữa chừng.
-//
-// Vì huTietKiem() = luyKe + soDuThang() - tongDaTietKiem(), nếu chỉ xoá mục tiêu (làm
-// tongDaTietKiem() giảm đi) mà không xử lý gì thêm, số tiền đó sẽ tự động "hiện ra" lại trong
-// hũ khả dụng — coi như được hoàn tiền, điều KHÔNG mong muốn ở đây. Để bù trừ, ta trừ đúng số
-// tiền đã tiết kiệm của mục tiêu này ra khỏi SoDuLuyKe, giữ cho huTietKiem() không đổi sau khi xoá.
-// ==========================================================================
+
 void AppController::hoanThanhMucTieu(int id) {
     MucTieuRepository repo;
     QList<MucTieu*> ds = repo.layTatCa();
@@ -171,19 +146,9 @@ void AppController::lamMoiMucTieu() {
     emit duLieuThayDoi();
 }
 
-// ==========================================================================
-// Trả góp mục tiêu dài hạn cho THÁNG HIỆN TẠI.
-// - Đọc thẳng từ DB (không dùng biến static trong RAM) để trạng thái "đã trả tháng này chưa"
-//   luôn đúng kể cả sau khi tắt/mở lại app.
-// - Idempotent: bấm refresh (hoặc chốt sổ) bao nhiêu lần trong tháng cũng chỉ trả ĐÚNG 1 LẦN
-//   cho mỗi mục tiêu — vì mỗi mục tiêu tự nhớ "thangNamDaTra" của lần trả gần nhất.
-// - Fail-safe: nếu hũ tiền (soTienDaTietKiem) của 1 mục tiêu ĐÃ TỪNG CÓ TIẾN ĐỘ (soTienMocAnToan > 0)
-//   bỗng dưng thấp hơn mốc an toàn đã ghi nhận lần trả gần nhất -> dữ liệu bất thường (bị sửa tay,
-//   đồng bộ lỗi...) -> xoá mục tiêu đó để người dùng biết mà tạo lại, tránh tính toán sai dây chuyền.
-// ==========================================================================
 void AppController::traGopMucTieuDaiHanThangNay() {
     MucTieuRepository repo;
-    QString thangNamHienTai = QDate::currentDate().toString("yyyy-MM");
+    QString thangNamHienTai = NgayMoPhong::layNgayHienTai().toString("yyyy-MM");
 
     QList<MucTieu*> danhSachTuDB = repo.layTatCa();
 
@@ -228,4 +193,18 @@ void AppController::traGopMucTieuDaiHanThangNay() {
 
     qDeleteAll(conLai);
     dongBoNguoiDungTuDatabase();
+}
+void AppController::quaThangMoi() {
+    NgayMoPhong::quaThangMoi();
+    // Sau khi chuyển tháng, cần refresh toàn bộ
+    refreshDuLieu();
+}
+
+void AppController::refreshDuLieu() {
+    dongBoNguoiDungTuDatabase();   // private, nhưng gọi trong class
+    m_thuNhap->taiLai();
+    m_chiTieu->taiLai();
+    m_mucTieu->taiLai();
+    emit duLieuThayDoi();
+    emit huTietKiemChanged();      // nếu signal này tồn tại
 }

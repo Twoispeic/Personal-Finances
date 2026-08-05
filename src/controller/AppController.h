@@ -36,6 +36,8 @@ public:
     Q_INVOKABLE double ketThucThang();
     Q_INVOKABLE void lamMoiMucTieu();   // refresh thuần, không chuyển tiền
     Q_INVOKABLE void hoanThanhMucTieu(int id);   // xác nhận hoàn thành + xoá, KHÔNG trả tiền về hũ
+    Q_INVOKABLE void quaThangMoi();
+    Q_INVOKABLE void refreshDuLieu();
 
 signals:
     void duLieuThayDoi();
