@@ -8,6 +8,7 @@
 #include "controller/ChiTieuController.h" // Khai báo thêm để QML biết
 #include "controller/ThuNhapController.h" // Khai báo thêm để QML biết
 #include "controller/MucTieuController.h" // Khai báo thêm để QML biết
+#include "controller/LoginController.h"   // THÊM MỚI: cho màn hình đăng nhập
 #include "database/KetNoiDatabase.h"
 
 int main(int argc, char *argv[]) {
@@ -27,6 +28,10 @@ int main(int argc, char *argv[]) {
 
     AppController controller;
     engine.rootContext()->setContextProperty("appController", &controller);
+
+    // THÊM MỚI: LoginController cho màn hình đăng nhập/đăng ký
+    LoginController loginController;
+    engine.rootContext()->setContextProperty("loginController", &loginController);
 
     const QUrl url(QStringLiteral("qrc:/qml/Main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
