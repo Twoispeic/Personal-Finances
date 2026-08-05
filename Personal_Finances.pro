@@ -9,6 +9,7 @@ SOURCES += \
     main.cpp \
     src/controller/AppController.cpp \
     src/controller/ChiTieuController.cpp \
+    src/controller/LoginController.cpp \
     src/controller/MucTieuController.cpp \
     src/controller/ThuNhapController.cpp \
     src/database/ChiTieuRepository.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
 HEADERS += \
     src/controller/AppController.h \
     src/controller/ChiTieuController.h \
+    src/controller/LoginController.h \
     src/controller/MucTieuController.h \
     src/controller/ThuNhapController.h \
     src/database/ChiTieuRepository.h \

@@ -39,12 +39,19 @@ public:
     Q_INVOKABLE void quaThangMoi();
     Q_INVOKABLE void refreshDuLieu();
 
+    // THÊM MỚI cho đăng nhập: gọi hàm này ngay sau khi LoginController phát tín hiệu
+    // dangNhapThanhCong(id) — chỉ nạp lại tên/công việc hiển thị + refresh dữ liệu,
+    // KHÔNG đụng gì tới logic ketThucThang/lamMoiMucTieu/traGopMucTieuDaiHanThangNay ở trên.
+    Q_INVOKABLE void datNguoiDungHienTai(int id);
+
 signals:
     void duLieuThayDoi();
     void huTietKiemChanged();
 
 private:
     NguoiDung nguoiDungHienTai;
+    int m_nguoiDungId = 1;   // id của user đang đăng nhập — hiện chỉ dùng để hiển thị tên,
+    // CHƯA lọc riêng ChiTieu/ThuNhap/MucTieu theo id này (xem ghi chú ở .cpp)
     ChiTieuController* m_chiTieu;
     ThuNhapController* m_thuNhap;
     MucTieuController* m_mucTieu;

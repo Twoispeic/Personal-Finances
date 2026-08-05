@@ -203,6 +203,25 @@ void AppController::traGopMucTieuDaiHanThangNay() {
     qDeleteAll(conLai);
     dongBoNguoiDungTuDatabase();
 }
+void AppController::datNguoiDungHienTai(int id) {
+    // QUAN TRỌNG: KetNoiDatabase đã đổi sang file .db RIÊNG của tài khoản này rồi (xem
+    // LoginController::dangNhap/dangKy — chạy TRƯỚC khi hàm này được gọi). File đó có thể
+    // hoàn toàn trống (tài khoản mới) nên phải tạo lại bảng ở đây trước khi đọc/ghi gì cả.
+    // taoBang() dùng CREATE TABLE IF NOT EXISTS nên gọi lại nhiều lần vẫn an toàn.
+    ChiTieuRepository().taoBang();
+    ThuNhapRepository().taoBang();
+    MucTieuRepository().taoBang();
+
+    // Nạp tên hiển thị / công việc theo tài khoản vừa đăng nhập.
+    NguoiDungRepository ndRepo;
+    NguoiDung nd = ndRepo.layThongTinTheoId(id);
+    nguoiDungHienTai.setTen(nd.getTen());
+    nguoiDungHienTai.setCongViec(nd.getCongViec());
+    m_nguoiDungId = id;
+
+    refreshDuLieu();
+}
+
 void AppController::quaThangMoi() {
     NgayMoPhong::quaThangMoi();
     // Sau khi chuyển tháng, cần refresh toàn bộ
