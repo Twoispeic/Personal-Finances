@@ -14,6 +14,7 @@
 #include <QSettings>
 #include <QDate>
 #include <QVariant>
+#include <QtGlobal>
 
 AppController::AppController(QObject* parent)
     : QObject(parent), nguoiDungHienTai("", "")
@@ -60,7 +61,7 @@ double AppController::ketThucThang() {
 
     // Chốt số dư luỹ kế của tháng đang đóng lại, làm gốc cho tháng sau.
     QSettings settings("MyApp", "TaiChinh");
-    settings.setValue("SoDuLuyKe", huTietKiem());
+    settings.setValue(khoaSoDuLuyKe(), huTietKiem());
 
     // CHỈ xoá Chi Tiêu tháng này để bắt đầu tháng mới (ChiTieu không cần giữ lịch sử).
     // KHÔNG xoá ThuNhap: mỗi tháng chỉ có đúng 1 dòng (do luuThang() upsert theo tháng),
@@ -101,7 +102,7 @@ double AppController::huTietKiem() const {
     // của tháng hiện tại (chưa chốt). Ngay sau khi ketThucThang() chạy xong, tháng mới chưa có
     // ThuNhap/ChiTieu nào -> soDuThang() = 0 -> huTietKiem() = đúng bằng SoDuLuyKe vừa lưu.
     QSettings settings("MyApp", "TaiChinh");
-    double luyKe = settings.value("SoDuLuyKe", 0.0).toDouble();
+    double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
     double con = luyKe + soDuThang();
     return con > 0 ? con : 0;
 }
@@ -125,8 +126,8 @@ void AppController::hoanThanhMucTieu(int id) {
     if (!timThay) return;
 
     QSettings settings("MyApp", "TaiChinh");
-    double luyKe = settings.value("SoDuLuyKe", 0.0).toDouble();
-    settings.setValue("SoDuLuyKe", luyKe - soTienDaTietKiemCuaMucTieu);
+    double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
+    settings.setValue(khoaSoDuLuyKe(), luyKe - soTienDaTietKiemCuaMucTieu);
 
     repo.xoa(id);
 
@@ -179,7 +180,15 @@ void AppController::traGopMucTieuDaiHanThangNay() {
         // Đã trả trong tháng này rồi -> bỏ qua, dù bấm lại bao nhiêu lần cũng không sao
         if (mt->getThangNamDaTra() == thangNamHienTai) continue;
 
-        double tienCanTra = mt->getSoTienMoiKy();
+        // ĐÃ ĐẠT 100% (hoặc vượt) RỒI -> mục tiêu đã hoàn thành, KHÔNG trả góp thêm nữa,
+        // dù đã sang tháng mới và thangNamDaTra không còn khớp tháng hiện tại.
+        // Đây chính là chỗ gây bug: thiếu điều kiện này khiến qua tháng mới lại bị trả tiếp.
+        if (mt->getSoTienDaTietKiem() >= mt->getSoTienMucTieu()) continue;
+
+        // Số tiền cần trả kỳ này: không vượt quá phần còn thiếu để đạt 100%
+        // (tránh trả dư ở kỳ cuối cùng nếu soTienMoiKy làm tổng vượt soTienMucTieu).
+        double tienConThieu = mt->getSoTienMucTieu() - mt->getSoTienDaTietKiem();
+        double tienCanTra = qMin(mt->getSoTienMoiKy(), tienConThieu);
         if (khaDung >= tienCanTra) {
             double tienMoi = mt->getSoTienDaTietKiem() + tienCanTra;
             int kyMoi = mt->getSoKyDaTra() + 1;
@@ -194,6 +203,30 @@ void AppController::traGopMucTieuDaiHanThangNay() {
     qDeleteAll(conLai);
     dongBoNguoiDungTuDatabase();
 }
+void AppController::datNguoiDungHienTai(int id) {
+    // QUAN TRỌNG: KetNoiDatabase đã đổi sang file .db RIÊNG của tài khoản này rồi (xem
+    // LoginController::dangNhap/dangKy — chạy TRƯỚC khi hàm này được gọi). File đó có thể
+    // hoàn toàn trống (tài khoản mới) nên phải tạo lại bảng ở đây trước khi đọc/ghi gì cả.
+    // taoBang() dùng CREATE TABLE IF NOT EXISTS nên gọi lại nhiều lần vẫn an toàn.
+    ChiTieuRepository().taoBang();
+    ThuNhapRepository().taoBang();
+    MucTieuRepository().taoBang();
+
+    // Nạp tên hiển thị / công việc theo tài khoản vừa đăng nhập.
+    NguoiDungRepository ndRepo;
+    NguoiDung nd = ndRepo.layThongTinTheoId(id);
+    nguoiDungHienTai.setTen(nd.getTen());
+    nguoiDungHienTai.setCongViec(nd.getCongViec());
+    m_nguoiDungId = id;
+
+    // QUAN TRỌNG: đặt id TRƯỚC khi refreshDuLieu()/huTietKiem() chạy, vì khoaSoDuLuyKe()
+    // và NgayMoPhong đều dựa vào id này để tách dữ liệu Registry riêng cho từng tài khoản
+    // — nếu thiếu dòng này, tài khoản mới sẽ vẫn đọc nhầm hũ tiết kiệm/tháng của tài khoản khác.
+    NgayMoPhong::datTaiKhoanHienTai(id);
+
+    refreshDuLieu();
+}
+
 void AppController::quaThangMoi() {
     NgayMoPhong::quaThangMoi();
     // Sau khi chuyển tháng, cần refresh toàn bộ
@@ -207,4 +240,17 @@ void AppController::refreshDuLieu() {
     m_mucTieu->taiLai();
     emit duLieuThayDoi();
     emit huTietKiemChanged();      // nếu signal này tồn tại
+}
+
+void AppController::resetThangVaHuTietKiem() {
+    // SoDuLuyKe và ThangMoPhongHienTai KHÔNG nằm trong bất kỳ file .db nào — chúng nằm
+    // trong QSettings("MyApp","TaiChinh") (Windows: Registry HKCU\Software\MyApp\TaiChinh).
+    // Đây là lý do xoá file .db không reset được 2 giá trị này ("orphan" so với database).
+    QSettings settings("MyApp", "TaiChinh");
+    settings.remove(khoaSoDuLuyKe());
+    settings.remove("ThangMoPhongHienTai");
+
+    // layNgayHienTai() sẽ tự ghi lại tháng thật của hệ thống ngay lần gọi tiếp theo
+    // (xem NgayMoPhong.cpp) vì key vừa bị remove ở trên rỗng.
+    refreshDuLieu();
 }

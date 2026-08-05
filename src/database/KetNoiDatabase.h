@@ -22,6 +22,9 @@ public:
     bool moKetNoi();
     void dongKetNoi();
     QSqlDatabase getDatabase() const;
+
+    bool chuyenSangDuLieuTaiKhoan(const QString& taiKhoan);
+    static QSqlDatabase moKetNoiTaiKhoan();
 };
 
 #endif // KETNOIDATABASE_H

@@ -5,15 +5,20 @@ import QtQuick.Layouts 1.15
 import QtQuick.Effects
 
 ApplicationWindow {
+    id: window
     visible: true
     width: 1000
     height: 650
     color: "#12172B"
     title: "Quản lý tài chính"
 
+    // THÊM MỚI cho đăng nhập — mặc định chưa đăng nhập, ẩn hết giao diện chính đi
+    property bool daDangNhap: false
+
     RowLayout {
         anchors.fill: parent
         spacing: 0
+        visible: window.daDangNhap   // THÊM MỚI: chỉ hiện sau khi đăng nhập xong
 
         // THANH SIDEBAR BÊN TRÁI
         Rectangle {
@@ -102,5 +107,12 @@ ApplicationWindow {
 
     XacNhanChotSoDialog {
         id: xacNhanChotSoDialog
+    }
+
+    // THÊM MỚI: màn hình đăng nhập, che lên trên toàn bộ khi chưa đăng nhập
+    LoginPage {
+        anchors.fill: parent
+        visible: !window.daDangNhap
+        onDangNhapThanhCong: window.daDangNhap = true
     }
 }

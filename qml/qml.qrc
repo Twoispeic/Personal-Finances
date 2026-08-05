@@ -11,6 +11,7 @@
         <file>XacNhanChotSoDialog.qml</file>
         <file>XacNhanHoanThanhDialog.qml</file>
         <file>BieuDoTron.qml</file>
+        <file>LoginPage.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file>../icons/home.svg</file>

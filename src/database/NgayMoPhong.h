@@ -4,6 +4,7 @@
 #include <QDate>
 class NgayMoPhong {
 public:
+    static void datTaiKhoanHienTai(int idNguoiDung);
     static QDate layNgayHienTai();
     static QDate quaThangMoi();
 };
