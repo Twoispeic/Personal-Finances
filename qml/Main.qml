@@ -98,7 +98,9 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            TrangChuPage {}
+            TrangChuPage {
+                onDangXuat: window.daDangNhap = false
+            }
             QuanLyChiTieuPage {}
             ThuNhapPage {}
             MucTieuPage {}
@@ -113,6 +115,9 @@ ApplicationWindow {
     LoginPage {
         anchors.fill: parent
         visible: !window.daDangNhap
-        onDangNhapThanhCong: window.daDangNhap = true
+        onDangNhapThanhCong: function(nguoiDungId) {
+            appController.napNguoiDung(nguoiDungId)
+            window.daDangNhap = true
+        }
     }
 }
