@@ -81,6 +81,7 @@ Item {
                                 Item { Layout.fillWidth: true }
 
                                 Rectangle {
+                                    Layout.rightMargin: 6
                                     width: 32; height: 32; radius: 16
                                     color: "#35DDC0"
                                     Text {
@@ -96,8 +97,6 @@ Item {
                                         onClicked: themChiTieuDialog.open()
                                     }
                                 }
-
-                                Text { text: "Xem tất cả"; color: "#35DDC0"; font.pixelSize: 12; font.bold: true }
                             }
 
                             ListView {

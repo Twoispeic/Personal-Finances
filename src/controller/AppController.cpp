@@ -21,9 +21,7 @@ AppController::AppController(QObject* parent)
 {
     NguoiDungRepository ndRepo;
     ndRepo.taoBang();
-    NguoiDung daLuu = ndRepo.layThongTinNguoiDung();
-    nguoiDungHienTai.setTen(daLuu.getTen());
-    nguoiDungHienTai.setCongViec(daLuu.getCongViec());
+    // Tên/công việc thật được nạp SAU khi đăng nhập qua napNguoiDung(id) — xem LoginController.
 
     m_chiTieu = new ChiTieuController(&nguoiDungHienTai, this);
     m_thuNhap = new ThuNhapController(&nguoiDungHienTai, this);
@@ -67,6 +65,14 @@ AppController::AppController(QObject* parent)
 }
 
 double AppController::tongThuNhap() const { return nguoiDungHienTai.tinhTongThuNhap(); }
+
+void AppController::napNguoiDung(int id) {
+    NguoiDungRepository ndRepo;
+    NguoiDung daLuu = ndRepo.layThongTinTheoId(id);
+    nguoiDungHienTai.setTen(daLuu.getTen());
+    nguoiDungHienTai.setCongViec(daLuu.getCongViec());
+    emit duLieuThayDoi();
+}
 double AppController::tongChiTieu() const { return nguoiDungHienTai.tinhTongChiTieu(); }
 double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(); }
 
