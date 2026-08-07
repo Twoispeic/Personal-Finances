@@ -3,6 +3,5 @@
 QString TrangThaiHoanThanh::layMauSac()const{
     return "green";
 }
-void TrangThaiHoanThanh::kiemTraChuyen(MucTieu *mucTieu){
-
+void TrangThaiHoanThanh::kiemTraChuyen(MucTieu *) {
 }
