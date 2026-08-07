@@ -38,6 +38,7 @@ public:
     Q_INVOKABLE void hoanThanhMucTieu(int id);   // xác nhận hoàn thành + xoá, KHÔNG trả tiền về hũ
     Q_INVOKABLE void quaThangMoi();
     Q_INVOKABLE void refreshDuLieu();
+    Q_INVOKABLE void napNguoiDung(int id);
 
     // Xoá SẠCH dữ liệu "orphan" nằm ngoài các file .db (SoDuLuyKe + ThangMoPhongHienTai
     // trong Registry qua QSettings("MyApp","TaiChinh")) — dùng khi muốn app coi như mới cài

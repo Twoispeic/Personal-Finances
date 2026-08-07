@@ -5,6 +5,8 @@ import QtQuick.Layouts 2.15
 Item {
     anchors.fill: parent
 
+    signal dangXuat()
+
     Item {
         anchors.fill: parent
         anchors.margins: 40
@@ -48,12 +50,26 @@ Item {
                 }
 
                 Rectangle {
+                    id: avatarNguoiDung
                     width: 44; height: 44; radius: 22
                     color: "#F2508C"
                     Text {
                         anchors.centerIn: parent
                         text: appController.tenNguoiDung !== "" ? appController.tenNguoiDung.charAt(0).toUpperCase() : "U"
                         color: "#F4F5FC"; font.pixelSize: 18; font.bold: true
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: menuNguoiDung.open()
+                    }
+                    Menu {
+                        id: menuNguoiDung
+                        y: avatarNguoiDung.height + 6
+                        MenuItem {
+                            text: "Đăng xuất"
+                            onTriggered: dangXuat()
+                        }
                     }
                 }
             }

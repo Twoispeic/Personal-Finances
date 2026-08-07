@@ -21,9 +21,7 @@ AppController::AppController(QObject* parent)
 {
     NguoiDungRepository ndRepo;
     ndRepo.taoBang();
-    NguoiDung daLuu = ndRepo.layThongTinNguoiDung();
-    nguoiDungHienTai.setTen(daLuu.getTen());
-    nguoiDungHienTai.setCongViec(daLuu.getCongViec());
+    // Tên/công việc thật được nạp SAU khi đăng nhập qua napNguoiDung(id) — xem LoginController.
 
     m_chiTieu = new ChiTieuController(&nguoiDungHienTai, this);
     m_thuNhap = new ThuNhapController(&nguoiDungHienTai, this);
@@ -44,9 +42,37 @@ AppController::AppController(QObject* parent)
         dongBoNguoiDungTuDatabase();
         emit duLieuThayDoi();
     });
+
+    // FIX: mục tiêu NGẮN HẠN góp tiền qua MucTieuController::gop() trước đây không hề trừ
+    // vào SoDuLuyKe (giống hệt bug mục tiêu dài hạn đã sửa ở traGopMucTieuDaiHanThangNay) —
+    // tiền vừa nằm trong mục tiêu vừa còn nguyên trong hũ. Nối signal để trừ đúng số tiền
+    // THỰC SỰ đã dùng (daGopTuHuTietKiem mang theo giá trị đã được cắt bớt nếu góp dư).
+    connect(m_mucTieu, &MucTieuController::daGopTuHuTietKiem, this, [this](double soTien) {
+        QSettings settings("MyApp", "TaiChinh");
+        double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
+        settings.setValue(khoaSoDuLuyKe(), luyKe - soTien);
+        emit huTietKiemChanged();
+    });
+
+    // FIX: khi XÓA (huỷ) mục tiêu dang dở, hoàn lại đúng số tiền đã góp về hũ tiết kiệm —
+    // ngược chiều với connect ở trên (cộng thay vì trừ).
+    connect(m_mucTieu, &MucTieuController::hoanTienVeHu, this, [this](double soTien) {
+        QSettings settings("MyApp", "TaiChinh");
+        double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
+        settings.setValue(khoaSoDuLuyKe(), luyKe + soTien);
+        emit huTietKiemChanged();
+    });
 }
 
 double AppController::tongThuNhap() const { return nguoiDungHienTai.tinhTongThuNhap(); }
+
+void AppController::napNguoiDung(int id) {
+    NguoiDungRepository ndRepo;
+    NguoiDung daLuu = ndRepo.layThongTinTheoId(id);
+    nguoiDungHienTai.setTen(daLuu.getTen());
+    nguoiDungHienTai.setCongViec(daLuu.getCongViec());
+    emit duLieuThayDoi();
+}
 double AppController::tongChiTieu() const { return nguoiDungHienTai.tinhTongChiTieu(); }
 double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(); }
 
@@ -110,36 +136,14 @@ double AppController::huTietKiem() const {
 
 void AppController::hoanThanhMucTieu(int id) {
     MucTieuRepository repo;
-    QList<MucTieu*> ds = repo.layTatCa();
-
-    double soTienDaTietKiemCuaMucTieu = 0.0;
-    bool timThay = false;
-    for (MucTieu* mt : ds) {
-        if (mt->getId() == id) {
-            soTienDaTietKiemCuaMucTieu = mt->getSoTienDaTietKiem();
-            timThay = true;
-            break;
-        }
-    }
-    qDeleteAll(ds);
-
-    if (!timThay) return;
-
-    QSettings settings("MyApp", "TaiChinh");
-    double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
-    settings.setValue(khoaSoDuLuyKe(), luyKe - soTienDaTietKiemCuaMucTieu);
-
     repo.xoa(id);
 
     dongBoNguoiDungTuDatabase();
     m_mucTieu->taiLai();
-    emit huTietKiemChanged();
     emit duLieuThayDoi();
 }
 
 void AppController::lamMoiMucTieu() {
-    // Toàn bộ logic (khoá 1 lần/tháng + fail-safe) nằm trong hàm dùng chung này,
-    // để refresh và chốt sổ không bao giờ trả trùng nhau trong cùng 1 tháng.
     traGopMucTieuDaiHanThangNay();
 
     m_mucTieu->taiLai();
@@ -153,14 +157,11 @@ void AppController::traGopMucTieuDaiHanThangNay() {
 
     QList<MucTieu*> danhSachTuDB = repo.layTatCa();
 
-    // BƯỚC 1: FAIL-SAFE — dọn các mục tiêu bị hụt hũ bất thường trước khi tính toán tiếp
     QList<MucTieu*> conLai;
     for (MucTieu* baseMt : danhSachTuDB) {
         MucTieuDaiHan* mt = dynamic_cast<MucTieuDaiHan*>(baseMt);
         if (mt) {
             double moc = mt->getSoTienMocAnToan();
-            // Chỉ áp dụng cho mục tiêu ĐÃ TỪNG có tiến độ hợp lệ (moc > 0).
-            // Mục tiêu vừa tạo (moc == -1, chưa trả lần nào) không bị ảnh hưởng.
             if (moc > 0 && mt->getSoTienDaTietKiem() < moc) {
                 repo.xoa(mt->getId());
                 delete baseMt;
@@ -170,44 +171,40 @@ void AppController::traGopMucTieuDaiHanThangNay() {
         conLai.append(baseMt);
     }
 
-    // BƯỚC 2: TRẢ GÓP — dùng 1 "hũ khả dụng" cục bộ, trừ dần cho từng mục tiêu dài hạn
-    // chưa được trả trong tháng này (đảm bảo không chia vượt quá số tiền thực sự có).
     double khaDung = huTietKiem();
+    double tongDaTraKyNay = 0.0;   // cộng dồn để trừ ngược lại SoDuLuyKe sau vòng lặp
     for (MucTieu* baseMt : conLai) {
         MucTieuDaiHan* mt = dynamic_cast<MucTieuDaiHan*>(baseMt);
         if (!mt) continue;
 
-        // Đã trả trong tháng này rồi -> bỏ qua, dù bấm lại bao nhiêu lần cũng không sao
         if (mt->getThangNamDaTra() == thangNamHienTai) continue;
 
-        // ĐÃ ĐẠT 100% (hoặc vượt) RỒI -> mục tiêu đã hoàn thành, KHÔNG trả góp thêm nữa,
-        // dù đã sang tháng mới và thangNamDaTra không còn khớp tháng hiện tại.
-        // Đây chính là chỗ gây bug: thiếu điều kiện này khiến qua tháng mới lại bị trả tiếp.
         if (mt->getSoTienDaTietKiem() >= mt->getSoTienMucTieu()) continue;
 
-        // Số tiền cần trả kỳ này: không vượt quá phần còn thiếu để đạt 100%
-        // (tránh trả dư ở kỳ cuối cùng nếu soTienMoiKy làm tổng vượt soTienMucTieu).
         double tienConThieu = mt->getSoTienMucTieu() - mt->getSoTienDaTietKiem();
         double tienCanTra = qMin(mt->getSoTienMoiKy(), tienConThieu);
         if (khaDung >= tienCanTra) {
-            double tienMoi = mt->getSoTienDaTietKiem() + tienCanTra;
+            double tienThucTra = mt->capNhatTietKiem(khaDung);
+            double tienMoi = mt->getSoTienDaTietKiem();   // Strategy đã cộng dồn sẵn bên trong
             int kyMoi = mt->getSoKyDaTra() + 1;
 
             repo.capNhatTrangThaiThang(mt->getId(), tienMoi, kyMoi, thangNamHienTai, tienMoi);
-            khaDung -= tienCanTra;
+            khaDung -= tienThucTra;
+            tongDaTraKyNay += tienThucTra;
         }
-        // Nếu chưa đủ tiền: không làm gì cả — người dùng có thể thêm thu nhập / giảm chi tiêu
-        // rồi bấm refresh lại sau, vẫn trong tháng này thì vẫn hợp lệ để trả.
+    }
+
+
+    if (tongDaTraKyNay > 0) {
+        QSettings settings("MyApp", "TaiChinh");
+        double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
+        settings.setValue(khoaSoDuLuyKe(), luyKe - tongDaTraKyNay);
     }
 
     qDeleteAll(conLai);
     dongBoNguoiDungTuDatabase();
 }
 void AppController::datNguoiDungHienTai(int id) {
-    // QUAN TRỌNG: KetNoiDatabase đã đổi sang file .db RIÊNG của tài khoản này rồi (xem
-    // LoginController::dangNhap/dangKy — chạy TRƯỚC khi hàm này được gọi). File đó có thể
-    // hoàn toàn trống (tài khoản mới) nên phải tạo lại bảng ở đây trước khi đọc/ghi gì cả.
-    // taoBang() dùng CREATE TABLE IF NOT EXISTS nên gọi lại nhiều lần vẫn an toàn.
     ChiTieuRepository().taoBang();
     ThuNhapRepository().taoBang();
     MucTieuRepository().taoBang();
@@ -218,10 +215,6 @@ void AppController::datNguoiDungHienTai(int id) {
     nguoiDungHienTai.setTen(nd.getTen());
     nguoiDungHienTai.setCongViec(nd.getCongViec());
     m_nguoiDungId = id;
-
-    // QUAN TRỌNG: đặt id TRƯỚC khi refreshDuLieu()/huTietKiem() chạy, vì khoaSoDuLuyKe()
-    // và NgayMoPhong đều dựa vào id này để tách dữ liệu Registry riêng cho từng tài khoản
-    // — nếu thiếu dòng này, tài khoản mới sẽ vẫn đọc nhầm hũ tiết kiệm/tháng của tài khoản khác.
     NgayMoPhong::datTaiKhoanHienTai(id);
 
     refreshDuLieu();
@@ -243,14 +236,9 @@ void AppController::refreshDuLieu() {
 }
 
 void AppController::resetThangVaHuTietKiem() {
-    // SoDuLuyKe và ThangMoPhongHienTai KHÔNG nằm trong bất kỳ file .db nào — chúng nằm
-    // trong QSettings("MyApp","TaiChinh") (Windows: Registry HKCU\Software\MyApp\TaiChinh).
-    // Đây là lý do xoá file .db không reset được 2 giá trị này ("orphan" so với database).
     QSettings settings("MyApp", "TaiChinh");
     settings.remove(khoaSoDuLuyKe());
-    settings.remove("ThangMoPhongHienTai");
+    settings.remove(QString("ThangMoPhongHienTai_%1").arg(m_nguoiDungId));
 
-    // layNgayHienTai() sẽ tự ghi lại tháng thật của hệ thống ngay lần gọi tiếp theo
-    // (xem NgayMoPhong.cpp) vì key vừa bị remove ở trên rỗng.
     refreshDuLieu();
 }
