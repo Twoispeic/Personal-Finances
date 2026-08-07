@@ -135,11 +135,6 @@ double AppController::huTietKiem() const {
 
 
 void AppController::hoanThanhMucTieu(int id) {
-    // FIX: tiền đã bị trừ khỏi hũ NGAY LÚC GÓP rồi (traGopMucTieuDaiHanThangNay cho dài hạn,
-    // MucTieuController::gop cho ngắn hạn — xem 2 bản sửa trước). "Hoàn thành" ở đây CHỈ có
-    // nghĩa là xác nhận mục tiêu đã đủ tiền + xoá record theo dõi, KHÔNG được trừ thêm lần
-    // nữa vào SoDuLuyKe — trước đây trừ ở đây là vì lúc đó góp tiền CHƯA trừ hũ, giờ đã trừ
-    // từ gốc nên chỗ này trừ thêm sẽ bị trừ 2 lần (đúng bug bạn phát hiện).
     MucTieuRepository repo;
     repo.xoa(id);
 
@@ -149,8 +144,6 @@ void AppController::hoanThanhMucTieu(int id) {
 }
 
 void AppController::lamMoiMucTieu() {
-    // Toàn bộ logic (khoá 1 lần/tháng + fail-safe) nằm trong hàm dùng chung này,
-    // để refresh và chốt sổ không bao giờ trả trùng nhau trong cùng 1 tháng.
     traGopMucTieuDaiHanThangNay();
 
     m_mucTieu->taiLai();
@@ -164,14 +157,11 @@ void AppController::traGopMucTieuDaiHanThangNay() {
 
     QList<MucTieu*> danhSachTuDB = repo.layTatCa();
 
-    // BƯỚC 1: FAIL-SAFE — dọn các mục tiêu bị hụt hũ bất thường trước khi tính toán tiếp
     QList<MucTieu*> conLai;
     for (MucTieu* baseMt : danhSachTuDB) {
         MucTieuDaiHan* mt = dynamic_cast<MucTieuDaiHan*>(baseMt);
         if (mt) {
             double moc = mt->getSoTienMocAnToan();
-            // Chỉ áp dụng cho mục tiêu ĐÃ TỪNG có tiến độ hợp lệ (moc > 0).
-            // Mục tiêu vừa tạo (moc == -1, chưa trả lần nào) không bị ảnh hưởng.
             if (moc > 0 && mt->getSoTienDaTietKiem() < moc) {
                 repo.xoa(mt->getId());
                 delete baseMt;
@@ -181,41 +171,30 @@ void AppController::traGopMucTieuDaiHanThangNay() {
         conLai.append(baseMt);
     }
 
-    // BƯỚC 2: TRẢ GÓP — dùng 1 "hũ khả dụng" cục bộ, trừ dần cho từng mục tiêu dài hạn
-    // chưa được trả trong tháng này (đảm bảo không chia vượt quá số tiền thực sự có).
     double khaDung = huTietKiem();
     double tongDaTraKyNay = 0.0;   // cộng dồn để trừ ngược lại SoDuLuyKe sau vòng lặp
     for (MucTieu* baseMt : conLai) {
         MucTieuDaiHan* mt = dynamic_cast<MucTieuDaiHan*>(baseMt);
         if (!mt) continue;
 
-        // Đã trả trong tháng này rồi -> bỏ qua, dù bấm lại bao nhiêu lần cũng không sao
         if (mt->getThangNamDaTra() == thangNamHienTai) continue;
 
-        // ĐÃ ĐẠT 100% (hoặc vượt) RỒI -> mục tiêu đã hoàn thành, KHÔNG trả góp thêm nữa,
-        // dù đã sang tháng mới và thangNamDaTra không còn khớp tháng hiện tại.
-        // Đây chính là chỗ gây bug: thiếu điều kiện này khiến qua tháng mới lại bị trả tiếp.
         if (mt->getSoTienDaTietKiem() >= mt->getSoTienMucTieu()) continue;
 
-        // Số tiền cần trả kỳ này: không vượt quá phần còn thiếu để đạt 100%
-        // (tránh trả dư ở kỳ cuối cùng nếu soTienMoiKy làm tổng vượt soTienMucTieu).
         double tienConThieu = mt->getSoTienMucTieu() - mt->getSoTienDaTietKiem();
         double tienCanTra = qMin(mt->getSoTienMoiKy(), tienConThieu);
         if (khaDung >= tienCanTra) {
-            double tienMoi = mt->getSoTienDaTietKiem() + tienCanTra;
+            double tienThucTra = mt->capNhatTietKiem(khaDung);
+            double tienMoi = mt->getSoTienDaTietKiem();   // Strategy đã cộng dồn sẵn bên trong
             int kyMoi = mt->getSoKyDaTra() + 1;
 
             repo.capNhatTrangThaiThang(mt->getId(), tienMoi, kyMoi, thangNamHienTai, tienMoi);
-            khaDung -= tienCanTra;
-            tongDaTraKyNay += tienCanTra;
+            khaDung -= tienThucTra;
+            tongDaTraKyNay += tienThucTra;
         }
-        // Nếu chưa đủ tiền: không làm gì cả — người dùng có thể thêm thu nhập / giảm chi tiêu
-        // rồi bấm refresh lại sau, vẫn trong tháng này thì vẫn hợp lệ để trả.
     }
 
-    // BUG CŨ: tiền trả góp chỉ trừ trên biến cục bộ "khaDung", KHÔNG trừ vào SoDuLuyKe đã lưu
-    // trong Registry -> huTietKiem() tính lại vẫn ra y như cũ, tiền bị đếm 2 lần (vừa nằm
-    // trong mục tiêu, vừa còn nguyên trong hũ). Sửa: trừ thẳng vào SoDuLuyKe ngay tại đây.
+
     if (tongDaTraKyNay > 0) {
         QSettings settings("MyApp", "TaiChinh");
         double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
@@ -226,10 +205,6 @@ void AppController::traGopMucTieuDaiHanThangNay() {
     dongBoNguoiDungTuDatabase();
 }
 void AppController::datNguoiDungHienTai(int id) {
-    // QUAN TRỌNG: KetNoiDatabase đã đổi sang file .db RIÊNG của tài khoản này rồi (xem
-    // LoginController::dangNhap/dangKy — chạy TRƯỚC khi hàm này được gọi). File đó có thể
-    // hoàn toàn trống (tài khoản mới) nên phải tạo lại bảng ở đây trước khi đọc/ghi gì cả.
-    // taoBang() dùng CREATE TABLE IF NOT EXISTS nên gọi lại nhiều lần vẫn an toàn.
     ChiTieuRepository().taoBang();
     ThuNhapRepository().taoBang();
     MucTieuRepository().taoBang();
@@ -240,10 +215,6 @@ void AppController::datNguoiDungHienTai(int id) {
     nguoiDungHienTai.setTen(nd.getTen());
     nguoiDungHienTai.setCongViec(nd.getCongViec());
     m_nguoiDungId = id;
-
-    // QUAN TRỌNG: đặt id TRƯỚC khi refreshDuLieu()/huTietKiem() chạy, vì khoaSoDuLuyKe()
-    // và NgayMoPhong đều dựa vào id này để tách dữ liệu Registry riêng cho từng tài khoản
-    // — nếu thiếu dòng này, tài khoản mới sẽ vẫn đọc nhầm hũ tiết kiệm/tháng của tài khoản khác.
     NgayMoPhong::datTaiKhoanHienTai(id);
 
     refreshDuLieu();
@@ -265,14 +236,9 @@ void AppController::refreshDuLieu() {
 }
 
 void AppController::resetThangVaHuTietKiem() {
-    // SoDuLuyKe và ThangMoPhongHienTai KHÔNG nằm trong bất kỳ file .db nào — chúng nằm
-    // trong QSettings("MyApp","TaiChinh") (Windows: Registry HKCU\Software\MyApp\TaiChinh),
-    // và từ bản sửa "tách theo tài khoản" thì cả 2 đều có hậu tố "_<id>".
     QSettings settings("MyApp", "TaiChinh");
     settings.remove(khoaSoDuLuyKe());
     settings.remove(QString("ThangMoPhongHienTai_%1").arg(m_nguoiDungId));
 
-    // layNgayHienTai() sẽ tự ghi lại tháng thật của hệ thống ngay lần gọi tiếp theo
-    // (xem NgayMoPhong.cpp) vì key vừa bị remove ở trên rỗng.
     refreshDuLieu();
 }
