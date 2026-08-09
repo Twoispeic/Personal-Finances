@@ -3,10 +3,6 @@
 #include "utils/MatKhauUtil.h"
 NguoiDungRepository::NguoiDungRepository() {}
 
-// LƯU Ý: Repository này CỐ TÌNH dùng KetNoiDatabase::moKetNoiTaiKhoan() (1 connection RIÊNG,
-// CỐ ĐỊNH, không đổi theo ai đang đăng nhập) thay vì connection mặc định — vì phải tra được
-// tài khoản/mật khẩu TRƯỚC KHI biết nên mở file dữ liệu tài chính nào cho đúng người.
-// Nhờ vậy ChiTieuRepository/ThuNhapRepository/MucTieuRepository không cần sửa gì cả.
 
 bool NguoiDungRepository::taoBang() {
     QSqlDatabase db = KetNoiDatabase::moKetNoiTaiKhoan();
@@ -64,8 +60,6 @@ NguoiDung NguoiDungRepository::layThongTinNguoiDung() {
     }
     return nd;
 }
-
-// ===== BỔ SUNG cho đăng nhập/đăng ký =====
 
 int NguoiDungRepository::dangKy(const QString& taiKhoan, const QString& matKhau, const QString& ten) {
     QSqlDatabase db = KetNoiDatabase::moKetNoiTaiKhoan();
