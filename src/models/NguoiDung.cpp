@@ -24,7 +24,7 @@ void NguoiDung::themThuNhap(const ThuNhap &thuNhap) {
 void NguoiDung::themChiTieu(const ChiTieu &chiTieu) {
     danhSachChiTieu.append(chiTieu);
 }
-
+//dead code
 MucTieu* NguoiDung::taoMucTieuNganHan(const QString& ten, double soTienMucTieu, int thoiHanThang) {
     MucTieu* mt = MucTieuFactory::taoMucTieuNganHan(ten, soTienMucTieu, thoiHanThang);
     danhSachMucTieu.append(mt);
@@ -36,7 +36,7 @@ MucTieu* NguoiDung::taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, i
     danhSachMucTieu.append(mt);
     return mt;
 }
-
+//end of dead code
 double NguoiDung::tinhTongThuNhap() const {
     double tong = 0;
     for (const auto &tn : danhSachThuNhap) {
@@ -71,7 +71,7 @@ double NguoiDung::phanBoTienTietKiem() {
 
     return conLai;   // trả về phần còn dư, để GUI hỏi có muốn góp ngắn hạn không
 }
-
+//Dead code
 double NguoiDung::phanBoTienTietKiem(double soTienKhaDung) {
     double conLai = soTienKhaDung;
     if (conLai <= 0) return 0.0;
@@ -86,22 +86,18 @@ double NguoiDung::phanBoTienTietKiem(double soTienKhaDung) {
 
     return conLai;   // trả về phần còn dư
 }
-
+//end of dead code
 double NguoiDung::gopTietKiemNganHan(MucTieu* mt, double soTien) {
     if (mt == nullptr || soTien <= 0) return 0.0;
     if (dynamic_cast<MucTieuNganHan*>(mt) == nullptr) return 0.0;
 
-    // capNhatTietKiem() trả về số tiền THỰC SỰ được dùng (đã tự cắt bớt nếu soTien vượt
-    // quá phần còn thiếu của mục tiêu) — phải trả đúng số này ra ngoài, KHÔNG trả nguyên
-    // soTien gốc, để nơi gọi (MucTieuController::gop) trừ đúng số đó khỏi hũ tiết kiệm.
     return mt->capNhatTietKiem(soTien);
 }
 
 // demo conclude
 void NguoiDung::ketThucThang() {
-    phanBoTienTietKiem();   // phân bổ tiền dư theo đúng logic đã có
+    phanBoTienTietKiem();
 
-    // "Đóng sổ" tháng: xoá buffer trong RAM, vì dữ liệu thật đã lưu xuống DB rồi
     danhSachThuNhap.clear();
     danhSachChiTieu.clear();
 }
