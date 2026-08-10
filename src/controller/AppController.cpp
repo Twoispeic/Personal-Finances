@@ -43,10 +43,6 @@ AppController::AppController(QObject* parent)
         emit duLieuThayDoi();
     });
 
-    // FIX: mục tiêu NGẮN HẠN góp tiền qua MucTieuController::gop() trước đây không hề trừ
-    // vào SoDuLuyKe (giống hệt bug mục tiêu dài hạn đã sửa ở traGopMucTieuDaiHanThangNay) —
-    // tiền vừa nằm trong mục tiêu vừa còn nguyên trong hũ. Nối signal để trừ đúng số tiền
-    // THỰC SỰ đã dùng (daGopTuHuTietKiem mang theo giá trị đã được cắt bớt nếu góp dư).
     connect(m_mucTieu, &MucTieuController::daGopTuHuTietKiem, this, [this](double soTien) {
         QSettings settings("MyApp", "TaiChinh");
         double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
@@ -77,27 +73,15 @@ double AppController::tongChiTieu() const { return nguoiDungHienTai.tinhTongChiT
 double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(); }
 
 double AppController::ketThucThang() {
-    // Trả góp dài hạn tháng này nếu CHƯA được trả (vd. người dùng chưa từng bấm refresh tháng này).
-    // Nếu đã trả rồi (do bấm refresh trước đó) thì hàm này sẽ tự bỏ qua — không trả trùng.
     traGopMucTieuDaiHanThangNay();
 
-    // QUAN TRỌNG: phải làm mới cache của m_mucTieu NGAY sau khi trả góp, để huTietKiem() bên dưới
-    // tính đúng phần tiền vừa bị trừ đi cho mục tiêu dài hạn (tránh lưu dư số dư luỹ kế).
     m_mucTieu->taiLai();
 
-    // Chốt số dư luỹ kế của tháng đang đóng lại, làm gốc cho tháng sau.
     QSettings settings("MyApp", "TaiChinh");
     settings.setValue(khoaSoDuLuyKe(), huTietKiem());
 
-    // CHỈ xoá Chi Tiêu tháng này để bắt đầu tháng mới (ChiTieu không cần giữ lịch sử).
-    // KHÔNG xoá ThuNhap: mỗi tháng chỉ có đúng 1 dòng (do luuThang() upsert theo tháng),
-    // xoá đi sẽ làm mất luôn dữ liệu biểu đồ 12 tháng ở trang Thu Nhập.
-    // KHÔNG đụng vào MucTieu: giữ nguyên toàn bộ mục tiêu ngắn/dài hạn.
     ChiTieuRepository().xoaTatCa();
 
-    // Gộp luôn bước sang tháng mới + refresh toàn bộ VÀO CHUNG 1 lần gọi atomic — tránh việc
-    // QML phải tự gọi thêm quaThangMoi() riêng, dễ quên/lệch thứ tự gây ra bug hũ tiết kiệm
-    // "reset" sai và ChiTieuController không được taiLai() nên vẫn hiện chi tiêu cũ.
     NgayMoPhong::quaThangMoi();
     refreshDuLieu();   // dongBoNguoiDungTuDatabase() + taiLai() cho cả 3 controller + emit đủ tín hiệu
 
@@ -124,9 +108,6 @@ void AppController::dongBoNguoiDungTuDatabase() {
 }
 
 double AppController::huTietKiem() const {
-    // Hũ tiết kiệm = phần dư luỹ kế đã chốt của các tháng trước + số dư (thu - chi) đang chạy
-    // của tháng hiện tại (chưa chốt). Ngay sau khi ketThucThang() chạy xong, tháng mới chưa có
-    // ThuNhap/ChiTieu nào -> soDuThang() = 0 -> huTietKiem() = đúng bằng SoDuLuyKe vừa lưu.
     QSettings settings("MyApp", "TaiChinh");
     double luyKe = settings.value(khoaSoDuLuyKe(), 0.0).toDouble();
     double con = luyKe + soDuThang();
@@ -185,12 +166,14 @@ void AppController::traGopMucTieuDaiHanThangNay() {
         double tienCanTra = qMin(mt->getSoTienMoiKy(), tienConThieu);
         if (khaDung >= tienCanTra) {
             double tienThucTra = mt->capNhatTietKiem(khaDung);
-            double tienMoi = mt->getSoTienDaTietKiem();   // Strategy đã cộng dồn sẵn bên trong
-            int kyMoi = mt->getSoKyDaTra() + 1;
+            if (tienThucTra > 0) {
+                double tienMoi = mt->getSoTienDaTietKiem();   // Strategy đã cộng dồn sẵn bên trong
+                int kyMoi = mt->getSoKyDaTra() + 1;
 
-            repo.capNhatTrangThaiThang(mt->getId(), tienMoi, kyMoi, thangNamHienTai, tienMoi);
-            khaDung -= tienThucTra;
-            tongDaTraKyNay += tienThucTra;
+                repo.capNhatTrangThaiThang(mt->getId(), tienMoi, kyMoi, thangNamHienTai, tienMoi);
+                khaDung -= tienThucTra;
+                tongDaTraKyNay += tienThucTra;
+            }
         }
     }
 
