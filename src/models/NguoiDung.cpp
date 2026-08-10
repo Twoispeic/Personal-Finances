@@ -56,7 +56,7 @@ double NguoiDung::tinhTongChiTieu() const {
 double NguoiDung::tinhSoDuThang() const {
     return tinhTongThuNhap() - tinhTongChiTieu();
 }
-
+//Dead but still used
 double NguoiDung::phanBoTienTietKiem() {
     double conLai = tinhSoDuThang();
     if (conLai <= 0) return 0.0;
@@ -94,7 +94,7 @@ double NguoiDung::gopTietKiemNganHan(MucTieu* mt, double soTien) {
     return mt->capNhatTietKiem(soTien);
 }
 
-// demo conclude
+//Dead code
 void NguoiDung::ketThucThang() {
     phanBoTienTietKiem();
 

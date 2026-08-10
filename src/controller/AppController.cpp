@@ -61,7 +61,7 @@ AppController::AppController(QObject* parent)
 }
 
 double AppController::tongThuNhap() const { return nguoiDungHienTai.tinhTongThuNhap(); }
-
+//Dead code
 void AppController::napNguoiDung(int id) {
     NguoiDungRepository ndRepo;
     NguoiDung daLuu = ndRepo.layThongTinTheoId(id);
@@ -69,6 +69,7 @@ void AppController::napNguoiDung(int id) {
     nguoiDungHienTai.setCongViec(daLuu.getCongViec());
     emit duLieuThayDoi();
 }
+//end
 double AppController::tongChiTieu() const { return nguoiDungHienTai.tinhTongChiTieu(); }
 double AppController::soDuThang() const { return nguoiDungHienTai.tinhSoDuThang(); }
 
@@ -166,14 +167,12 @@ void AppController::traGopMucTieuDaiHanThangNay() {
         double tienCanTra = qMin(mt->getSoTienMoiKy(), tienConThieu);
         if (khaDung >= tienCanTra) {
             double tienThucTra = mt->capNhatTietKiem(khaDung);
-            if (tienThucTra > 0) {
                 double tienMoi = mt->getSoTienDaTietKiem();   // Strategy đã cộng dồn sẵn bên trong
                 int kyMoi = mt->getSoKyDaTra() + 1;
 
                 repo.capNhatTrangThaiThang(mt->getId(), tienMoi, kyMoi, thangNamHienTai, tienMoi);
                 khaDung -= tienThucTra;
                 tongDaTraKyNay += tienThucTra;
-            }
         }
     }
 
