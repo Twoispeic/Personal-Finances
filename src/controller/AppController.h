@@ -40,10 +40,6 @@ public:
     Q_INVOKABLE void refreshDuLieu();
     Q_INVOKABLE void napNguoiDung(int id);
 
-    // Xoá SẠCH dữ liệu "orphan" nằm ngoài các file .db (SoDuLuyKe + ThangMoPhongHienTai
-    // trong Registry qua QSettings("MyApp","TaiChinh")) — dùng khi muốn app coi như mới cài
-    // lần đầu: tháng mô phỏng tự quay về đúng tháng thật của hệ thống, hũ tiết kiệm về 0.
-    // KHÔNG đụng tới các file .db — nếu muốn xoá cả dữ liệu account, tự xoá file .db riêng.
     Q_INVOKABLE void resetThangVaHuTietKiem();
 
     // THÊM MỚI cho đăng nhập: gọi hàm này ngay sau khi LoginController phát tín hiệu
@@ -57,7 +53,7 @@ signals:
 
 private:
     NguoiDung nguoiDungHienTai;
-    int m_nguoiDungId = 1;   // id của user đang đăng nhập — hiện chỉ dùng để hiển thị tên,
+    int m_nguoiDungId = -1;   // id của user đang đăng nhập — hiện chỉ dùng để hiển thị tên,
     // CHƯA lọc riêng ChiTieu/ThuNhap/MucTieu theo id này (xem ghi chú ở .cpp)
     ChiTieuController* m_chiTieu;
     ThuNhapController* m_thuNhap;

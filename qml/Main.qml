@@ -115,8 +115,7 @@ ApplicationWindow {
     LoginPage {
         anchors.fill: parent
         visible: !window.daDangNhap
-        onDangNhapThanhCong: function(nguoiDungId) {
-            appController.napNguoiDung(nguoiDungId)
+        onDangNhapThanhCong:{
             window.daDangNhap = true
         }
     }
