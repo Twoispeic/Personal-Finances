@@ -2,17 +2,17 @@
 #include "NgayMoPhong.h"
 #include <QSettings>
 
-// id = 0 nghĩa là "chưa đăng nhập tài khoản nào" (fallback an toàn, không vỡ code cũ).
-// Mỗi tài khoản có id riêng (AUTOINCREMENT, không bao giờ trùng/tái sử dụng) nên dùng id
-// làm hậu tố key là đủ để đảm bảo tài khoản mới KHÔNG đọc nhầm tháng mô phỏng của tài khoản khác.
-static int s_idTaiKhoanHienTai = 0;
+NgayMoPhong& NgayMoPhong::getInstance() {
+    static NgayMoPhong instance;   // tạo đúng 1 lần, lần gọi getInstance() đầu tiên; sống tới khi app thoát
+    return instance;
+}
 
-static QString khoaThangMoPhong() {
-    return QString("ThangMoPhongHienTai_%1").arg(s_idTaiKhoanHienTai);
+QString NgayMoPhong::khoaThangMoPhong() const {
+    return QString("ThangMoPhongHienTai_%1").arg(idTaiKhoanHienTai);
 }
 
 void NgayMoPhong::datTaiKhoanHienTai(int idNguoiDung) {
-    s_idTaiKhoanHienTai = idNguoiDung;
+    idTaiKhoanHienTai = idNguoiDung;
 }
 
 QDate NgayMoPhong::layNgayHienTai() {
@@ -26,6 +26,7 @@ QDate NgayMoPhong::layNgayHienTai() {
     }
     return QDate::fromString(luu, "yyyy-MM-dd");
 }
+
 QDate NgayMoPhong::quaThangMoi() {
     QDate moi = layNgayHienTai().addMonths(1);
     QSettings("MyApp", "TaiChinh").setValue(khoaThangMoPhong(), moi.toString("yyyy-MM-dd"));
