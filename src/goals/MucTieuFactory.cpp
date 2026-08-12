@@ -1,4 +1,4 @@
-#include "MucTieuFactory.h"
+/*#include "MucTieuFactory.h"
 #include "MucTieu.h"
 #include "MucTieuNganHan.h"
 #include "MucTieuDaiHan.h"
@@ -20,3 +20,4 @@ MucTieu* MucTieuFactory::taoMucTieuDaiHan(const QString& ten, double soTienMucTi
     mt->datTrangThai(new TrangThaiChuaXong());
     return mt;
 }
+*/

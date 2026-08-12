@@ -2,7 +2,7 @@
 #include "KetNoiDatabase.h"
 #include "src/goals/MucTieuNganHan.h"
 #include "src/goals/MucTieuDaiHan.h"
-#include "src/goals/MucTieuFactory.h"
+#include "src/goals/MucTieu.h"
 #include "src/patterns/TrangThaiChuaXong.h"
 #include "src/patterns/TrangThaiHoanThanh.h"
 #include <QtSql/QSqlQuery>
@@ -108,10 +108,10 @@ QList<MucTieu*> MucTieuRepository::layTatCa() {
         MucTieu* mt = nullptr;
         if (loai == "NganHan") {
             int thoiHan = query.value("thoiHanThang").toInt();
-            mt = MucTieuFactory::taoMucTieuNganHan(ten, soTienMT, thoiHan);
+            mt = MucTieu::taoMucTieuNganHan(ten, soTienMT, thoiHan);
         } else {
             int soKy = query.value("soKyTraGop").toInt();
-            mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTienMT, soKy);
+            mt = MucTieu::taoMucTieuDaiHan(ten, soTienMT, soKy);
 
             // QUAN TRỌNG: nạp lại trạng thái trả góp theo tháng từ DB — nếu thiếu bước này,
             // mỗi lần layTatCa() sẽ tạo object DaiHan với giá trị MẶC ĐỊNH (soKyDaTra=0,

@@ -2,7 +2,7 @@
 #include "database/MucTieuRepository.h"
 #include "goals/MucTieuNganHan.h"
 #include "goals/MucTieuDaiHan.h"
-#include "goals/MucTieuFactory.h"
+#include "goals/MucTieu.h"
 
 MucTieuController::MucTieuController(NguoiDung* nd, QObject* parent)
     : QObject(parent), nguoiDung(nd)
@@ -65,14 +65,14 @@ void MucTieuController::taiLai() {
 }
 
 void MucTieuController::themNganHan(const QString& ten, double soTien, int thoiHan) {
-    MucTieu* mt = MucTieuFactory::taoMucTieuNganHan(ten, soTien, thoiHan);
+    MucTieu* mt = MucTieu::taoMucTieuNganHan(ten, soTien, thoiHan);
     MucTieuRepository().them(mt);
     delete mt;
     taiLai();
 }
 
 void MucTieuController::themDaiHan(const QString& ten, double soTien, int soKy) {
-    MucTieu* mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTien, soKy);
+    MucTieu* mt = MucTieu::taoMucTieuDaiHan(ten, soTien, soKy);
     MucTieuRepository().them(mt);
     delete mt;
     taiLai();

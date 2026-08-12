@@ -20,6 +20,11 @@ public:
     MucTieu(const QString& ten, double soTienMucTieu);
     virtual ~MucTieu();
 
+    // Gộp từ MucTieuFactory — static factory method ngay trên chính class được tạo ra
+    // (Static Factory Method, biến thể của Factory pattern không cần tách class riêng).
+    // Tạo MucTieu đúng loại + tự gắn sẵn Strategy/State tương ứng.
+    static MucTieu* taoMucTieuNganHan(const QString& ten, double soTienMucTieu, int thoiHanThang);
+    static MucTieu* taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop);
 
     //Từ factory mà ra
     void datChienLuoc(ChienLuocTietKiem* cl);
@@ -43,4 +48,4 @@ public:
 
 };
 
-#endif // MUCTIEU_H 
+#endif // MUCTIEU_H
