@@ -85,7 +85,7 @@ void ChiTieuController::taiLai() {
 }
 
 void ChiTieuController::them(int loai, double soTien) {
-    ChiTieuRepository().them(ChiTieu((LoaiChiTieu)loai, soTien, NgayMoPhong::layNgayHienTai()));
+    ChiTieuRepository().them(ChiTieu((LoaiChiTieu)loai, soTien, NgayMoPhong::getInstance().layNgayHienTai()));
     taiLai();
 }
 

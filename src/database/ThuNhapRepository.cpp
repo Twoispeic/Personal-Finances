@@ -47,7 +47,7 @@ QList<ThuNhap> ThuNhapRepository::layThangHienTai() {
     QList<ThuNhap> ketQua;
     if (!KetNoiDatabase::getInstance().moKetNoi()) return ketQua;
 
-    QString thangHienTai = NgayMoPhong::layNgayHienTai().toString("yyyy-MM");
+    QString thangHienTai = NgayMoPhong::getInstance().layNgayHienTai().toString("yyyy-MM");
     QSqlQuery query;
     query.prepare("SELECT loai, soTien, ngay FROM ThuNhap WHERE strftime('%Y-%m', ngay) = :thang");
     query.bindValue(":thang", thangHienTai);
@@ -65,7 +65,7 @@ QList<ThuNhap> ThuNhapRepository::layThangHienTai() {
 bool ThuNhapRepository::luuThuNhapThang(double soTien) {
     if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
 
-    QString thangHienTai = NgayMoPhong::layNgayHienTai().toString("yyyy-MM");
+    QString thangHienTai = NgayMoPhong::getInstance().layNgayHienTai().toString("yyyy-MM");
 
     QSqlQuery kiemTra;
     kiemTra.prepare("SELECT id FROM ThuNhap WHERE strftime('%Y-%m', ngay) = :thang");
@@ -79,7 +79,7 @@ bool ThuNhapRepository::luuThuNhapThang(double soTien) {
         query.bindValue(":id", id);
     } else {
         query.prepare("INSERT INTO ThuNhap (loai, soTien, ngay) VALUES ('Thu nhap thang', :soTien, :ngay)");
-        query.bindValue(":ngay", NgayMoPhong::layNgayHienTai().toString(Qt::ISODate));
+        query.bindValue(":ngay", NgayMoPhong::getInstance().layNgayHienTai().toString(Qt::ISODate));
     }
     query.bindValue(":soTien", soTien);
     return query.exec();
@@ -87,7 +87,7 @@ bool ThuNhapRepository::luuThuNhapThang(double soTien) {
 //Xoa thang hien tai
 bool ThuNhapRepository::xoaThangHienTai() {
     if (!KetNoiDatabase::getInstance().moKetNoi()) return false;
-    QString thangHienTai = NgayMoPhong::layNgayHienTai().toString("yyyy-MM");
+    QString thangHienTai = NgayMoPhong::getInstance().layNgayHienTai().toString("yyyy-MM");
     QSqlQuery query;
     query.prepare("DELETE FROM ThuNhap WHERE strftime('%Y-%m', ngay) = :thang");
     query.bindValue(":thang", thangHienTai);

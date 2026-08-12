@@ -110,11 +110,6 @@ double MucTieuController::tongMucTieu() const {
 }
 
 void MucTieuController::xoa(int id) {
-    // FIX: xoá (huỷ) mục tiêu giữa chừng phải HOÀN LẠI tiền đã góp về hũ tiết kiệm — vì tiền
-    // đó đã bị trừ khỏi hũ ngay lúc góp rồi (xem daGopTuHuTietKiem / traGopMucTieuDaiHanThangNay),
-    // nếu xoá mà không hoàn lại thì tiền biến mất luôn, không nằm ở đâu cả.
-    // Khác với hoanThanhMucTieu() (AppController) — hoàn thành = mục tiêu ĐÃ xong, tiền coi như
-    // đã tiêu đúng mục đích nên KHÔNG hoàn; xoá = huỷ giữa chừng nên PHẢI hoàn.
     MucTieuRepository repo;
     QList<MucTieu*> ds = repo.layTatCa();
     double soTienHoanLai = 0.0;
