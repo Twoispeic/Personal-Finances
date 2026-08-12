@@ -1,4 +1,4 @@
-#ifndef MUCTIEUFACTORY_H
+/*#ifndef MUCTIEUFACTORY_H
 #define MUCTIEUFACTORY_H
 
 #include <QString>
@@ -12,3 +12,4 @@ public:
 };
 
 #endif
+*/

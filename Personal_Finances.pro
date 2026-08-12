@@ -19,7 +19,6 @@ SOURCES += \
     src/database/NguoiDungRepository.cpp \
     src/database/ThuNhapRepository.cpp \
     src/goals/MucTieu.cpp \
-    src/goals/MucTieuFactory.cpp \
     src/goals/MucTieuNganHan.cpp \
     src/goals/MucTieuDaiHan.cpp \
     src/models/ChiTieu.cpp \
@@ -43,7 +42,6 @@ HEADERS += \
     src/database/NguoiDungRepository.h \
     src/database/ThuNhapRepository.h \
     src/goals/MucTieu.h \
-    src/goals/MucTieuFactory.h \
     src/goals/MucTieuNganHan.h \
     src/goals/MucTieuDaiHan.h \
     src/models/ChiTieu.h \

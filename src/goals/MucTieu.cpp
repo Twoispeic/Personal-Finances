@@ -1,10 +1,32 @@
 #include "MucTieu.h"
+#include "MucTieuNganHan.h"
+#include "MucTieuDaiHan.h"
 #include "src/patterns/ChienLuocTietKiem.h"
+#include "src/patterns/ChienLuocNganHan.h"
+#include "src/patterns/ChienLuocDaiHan.h"
 #include "src/patterns/TrangThaiMucTieu.h"
+#include "src/patterns/TrangThaiChuaXong.h"
 
 MucTieu::MucTieu(const QString& ten, double soTienMucTieu)
     : tenMucTieu(ten), soTienMucTieu(soTienMucTieu), soTienDaTietKiem(0.0),
     trangThai(nullptr), chienLuoc(nullptr) {}
+
+// Gộp từ MucTieuFactory — tạo đúng loại MucTieu + tự gắn sẵn Strategy/State tương ứng.
+MucTieu* MucTieu::taoMucTieuNganHan(const QString& ten, double soTienMucTieu, int thoiHanThang) {
+    MucTieu* mt = new MucTieuNganHan(ten, soTienMucTieu, thoiHanThang);
+    mt->datChienLuoc(new ChienLuocNganHan());
+    mt->datTrangThai(new TrangThaiChuaXong());
+    return mt;
+}
+
+MucTieu* MucTieu::taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop) {
+    MucTieu* mt = new MucTieuDaiHan(ten, soTienMucTieu, soKyTraGop);
+    double soTienMoiKy = static_cast<MucTieuDaiHan*>(mt)->getSoTienMoiKy();
+    mt->datChienLuoc(new ChienLuocDaiHan(soTienMoiKy));   // Strategy vẫn cần số tiền/kỳ, lấy từ MucTieu vừa tạo
+    mt->datTrangThai(new TrangThaiChuaXong());
+    return mt;
+}
+
 //Factory
 void MucTieu::datChienLuoc(ChienLuocTietKiem* cl) {
     chienLuoc = cl;

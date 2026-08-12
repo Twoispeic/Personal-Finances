@@ -1,5 +1,4 @@
 #include "NguoiDung.h"
-#include"src/goals/MucTieuFactory.h"
 #include "goals/MucTieuNganHan.h"
 #include "goals/MucTieuDaiHan.h"
 NguoiDung::NguoiDung() : ten(""), congViec("") {}
@@ -26,13 +25,13 @@ void NguoiDung::themChiTieu(const ChiTieu &chiTieu) {
 }
 //dead code
 MucTieu* NguoiDung::taoMucTieuNganHan(const QString& ten, double soTienMucTieu, int thoiHanThang) {
-    MucTieu* mt = MucTieuFactory::taoMucTieuNganHan(ten, soTienMucTieu, thoiHanThang);
+    MucTieu* mt = MucTieu::taoMucTieuNganHan(ten, soTienMucTieu, thoiHanThang);
     danhSachMucTieu.append(mt);
     return mt;
 }
 
 MucTieu* NguoiDung::taoMucTieuDaiHan(const QString& ten, double soTienMucTieu, int soKyTraGop) {
-    MucTieu* mt = MucTieuFactory::taoMucTieuDaiHan(ten, soTienMucTieu, soKyTraGop);
+    MucTieu* mt = MucTieu::taoMucTieuDaiHan(ten, soTienMucTieu, soKyTraGop);
     danhSachMucTieu.append(mt);
     return mt;
 }
